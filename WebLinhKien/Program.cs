@@ -1,5 +1,7 @@
 using WebLinhKien.Data;
 using WebLinhKien.Helpers;
+using WebLinhKien.WebSockets;
+
 namespace WebLinhKien
 {
     public class Program
@@ -14,6 +16,7 @@ namespace WebLinhKien
             builder.Services.AddDataLayer();
             builder.Services.AddDataLayer();
             builder.Services.AddAdminAuthentication();
+            builder.Services.AddAdminWebSockets();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -30,7 +33,7 @@ namespace WebLinhKien
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
-            app.UseAuthorization();
+            app.UseAdminWebSockets();
 
             app.MapStaticAssets();
             app.MapControllerRoute(

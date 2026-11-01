@@ -1,0 +1,271 @@
+/* =====================================================================
+   dat-hang.css - Giao diện trang đặt hàng
+   - Mọi class có tiền tố "dh-" để không đụng Tailwind/CSS khác khi ghép vào dự án.
+   - Muốn đổi màu, font, bo góc: sửa các biến ở khối :root ngay bên dưới.
+   ===================================================================== */
+
+:root {
+    --dh-primary: #2563eb;
+    --dh-primary-dark: #1d4ed8;
+    --dh-primary-soft: #eff6ff;
+    --dh-bg: #f1f5f9;
+    --dh-card: #ffffff;
+    --dh-text: #0f172a;
+    --dh-muted: #64748b;
+    --dh-border: #e2e8f0;
+    --dh-danger: #dc2626;
+    --dh-danger-soft: #fef2f2;
+    --dh-success: #16a34a;
+    --dh-success-soft: #f0fdf4;
+    --dh-warn: #d97706;
+    --dh-radius: 14px;
+    --dh-shadow: 0 1px 2px rgba(15, 23, 42, .06), 0 8px 24px rgba(15, 23, 42, .06);
+    --dh-font: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* ---------- Nền tảng (đặt trong .dh-page để không ảnh hưởng trang khác) ---------- */
+.dh-page, .dh-page *, .dh-page *::before, .dh-page *::after { box-sizing: border-box; }
+.dh-page {
+    margin: 0;
+    min-height: 100vh;
+    font-family: var(--dh-font);
+    color: var(--dh-text);
+    background: var(--dh-bg);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+}
+.dh-page [hidden] { display: none !important; }
+.dh-page button, .dh-page input, .dh-page textarea { font: inherit; color: inherit; }
+.dh-page a { color: inherit; text-decoration: none; }
+.dh-page.dh-noscroll { overflow: hidden; }
+
+/* ---------- Header ---------- */
+.dh-header { background: var(--dh-card); border-bottom: 1px solid var(--dh-border); position: sticky; top: 0; z-index: 20; }
+.dh-header__inner {
+    max-width: 1120px; margin: 0 auto; padding: 14px 20px;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+}
+.dh-logo { font-size: 1.25rem; font-weight: 700; color: var(--dh-primary); display: flex; align-items: center; gap: 8px; }
+
+.dh-steps { list-style: none; margin: 0; padding: 0; display: flex; align-items: center; gap: 8px; }
+.dh-steps__item { display: flex; align-items: center; gap: 8px; font-size: .875rem; color: var(--dh-muted); }
+.dh-steps__item + .dh-steps__item::before { content: ""; width: 28px; height: 2px; background: var(--dh-border); margin-right: 8px; }
+.dh-steps__item span {
+    width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center;
+    font-size: .75rem; font-weight: 600; background: var(--dh-border); color: var(--dh-muted);
+}
+.dh-steps__item.is-active { color: var(--dh-text); font-weight: 600; }
+.dh-steps__item.is-active span { background: var(--dh-primary); color: #fff; }
+.dh-steps__item.is-done span { background: var(--dh-success); color: #fff; }
+
+/* ---------- Khung chính ---------- */
+.dh-container { max-width: 1120px; margin: 0 auto; padding: 24px 20px 48px; }
+.dh-title { margin: 0 0 18px; font-size: 1.6rem; }
+
+.dh-layout { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 24px; align-items: start; }
+.dh-main { display: flex; flex-direction: column; gap: 20px; }
+.dh-side { position: sticky; top: 84px; }
+
+.dh-card { background: var(--dh-card); border-radius: var(--dh-radius); box-shadow: var(--dh-shadow); padding: 22px; }
+.dh-card__title { margin: 0 0 18px; font-size: 1.1rem; display: flex; align-items: center; gap: 10px; }
+.dh-card__title > i { color: var(--dh-primary); }
+
+/* ---------- Banner lỗi chung ---------- */
+.dh-banner { display: flex; gap: 10px; align-items: flex-start; border-radius: 10px; padding: 12px 14px; margin-bottom: 16px; font-size: .9rem; }
+.dh-banner--error { background: var(--dh-danger-soft); color: var(--dh-danger); border: 1px solid #fecaca; }
+
+/* ---------- Form ---------- */
+/* minmax(0, 1fr) + min-width: 0 để ô nhập co lại vừa khung, không tràn ra ngoài thẻ ở màn hình vừa */
+.dh-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.dh-field { min-width: 0; }
+.dh-field--full { grid-column: 1 / -1; }
+.dh-field label { display: block; font-size: .875rem; font-weight: 600; margin-bottom: 6px; }
+.dh-req { color: var(--dh-danger); }
+.dh-optional { color: var(--dh-muted); font-weight: 400; }
+
+.dh-input {
+    display: flex; align-items: center; gap: 10px; padding: 0 14px;
+    background: #fff; border: 1.5px solid var(--dh-border); border-radius: 10px;
+    transition: border-color .15s, box-shadow .15s;
+}
+.dh-input > i { color: var(--dh-muted); width: 16px; text-align: center; }
+.dh-input input, .dh-input textarea { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; padding: 12px 0; }
+.dh-input textarea { resize: vertical; min-height: 80px; }
+.dh-input--area { align-items: flex-start; }
+/* Khi bấm vào ô: chỉ đổi màu viền, không vòng sáng ngoài, không khung xanh bên trong */
+.dh-input:focus-within { border-color: var(--dh-primary); }
+.dh-page .dh-input input:focus-visible,
+.dh-page .dh-input textarea:focus-visible { outline: none; }
+.dh-input input::placeholder, .dh-input textarea::placeholder { color: #94a3b8; }
+
+.dh-field.has-error .dh-input { border-color: var(--dh-danger); background: var(--dh-danger-soft); }
+.dh-error { margin: 6px 0 0; font-size: .8rem; color: var(--dh-danger); min-height: 1em; }
+.dh-error:empty { display: none; }
+.dh-field__foot { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; }
+.dh-counter { margin-top: 6px; font-size: .8rem; color: var(--dh-muted); margin-left: auto; white-space: nowrap; }
+
+/* ---------- Hình thức thanh toán ---------- */
+.dh-pays { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.dh-pay { display: block; cursor: pointer; position: relative; }
+.dh-pay input { position: absolute; opacity: 0; pointer-events: none; }
+.dh-pay__box {
+    position: relative; display: flex; gap: 12px; align-items: flex-start; height: 100%;
+    padding: 14px; border: 1.5px solid var(--dh-border); border-radius: 12px; background: #fff;
+    transition: border-color .15s, background .15s, box-shadow .15s;
+}
+.dh-pay__icon { font-size: 1.4rem; color: var(--dh-muted); margin-top: 2px; }
+.dh-pay__text { display: flex; flex-direction: column; gap: 2px; padding-right: 22px; }
+.dh-pay__text strong { font-size: .95rem; }
+.dh-pay__text small { color: var(--dh-muted); font-size: .8rem; }
+.dh-pay__tick { position: absolute; top: 12px; right: 12px; color: var(--dh-primary); opacity: 0; transform: scale(.6); transition: .15s; }
+.dh-pay:hover .dh-pay__box { border-color: #93c5fd; }
+.dh-pay input:checked + .dh-pay__box { border-color: var(--dh-primary); background: var(--dh-primary-soft); box-shadow: 0 0 0 4px rgba(37, 99, 235, .1); }
+.dh-pay input:checked + .dh-pay__box .dh-pay__icon { color: var(--dh-primary); }
+.dh-pay input:checked + .dh-pay__box .dh-pay__tick { opacity: 1; transform: scale(1); }
+.dh-pay input:focus-visible + .dh-pay__box { outline: 3px solid rgba(37, 99, 235, .4); outline-offset: 2px; }
+
+.dh-hint { display: flex; gap: 10px; margin: 14px 0 0; padding: 12px 14px; border-radius: 10px; background: var(--dh-primary-soft); color: #1e40af; font-size: .85rem; }
+
+/* ---------- Tóm tắt đơn hàng ---------- */
+.dh-badge { margin-left: auto; min-width: 24px; padding: 0 8px; height: 24px; border-radius: 999px; display: inline-grid; place-items: center; font-size: .75rem; background: var(--dh-primary); color: #fff; }
+
+.dh-items { list-style: none; margin: 0; padding: 0; max-height: 340px; overflow-y: auto; }
+.dh-item { display: grid; grid-template-columns: 56px 1fr; gap: 12px; padding: 12px 0; border-bottom: 1px dashed var(--dh-border); }
+.dh-item:last-child { border-bottom: 0; }
+.dh-item__thumb {
+    width: 56px; height: 56px; border-radius: 12px; display: grid; place-items: center; font-size: 1.4rem; color: #fff;
+    background: linear-gradient(135deg, #3b82f6, #6366f1);
+}
+.dh-item__name { font-size: .9rem; font-weight: 600; line-height: 1.35; margin: 0 0 2px; }
+.dh-item__price { font-size: .8rem; color: var(--dh-muted); }
+.dh-item__stock { font-size: .75rem; color: var(--dh-warn); margin-top: 2px; }
+.dh-item__row { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 8px; }
+.dh-item__line { font-weight: 700; font-size: .9rem; }
+
+.dh-qty { display: inline-flex; align-items: center; border: 1.5px solid var(--dh-border); border-radius: 8px; overflow: hidden; }
+.dh-qty button { width: 28px; height: 28px; border: 0; background: #fff; cursor: pointer; color: var(--dh-text); }
+.dh-qty button:hover:not(:disabled) { background: var(--dh-primary-soft); color: var(--dh-primary); }
+.dh-qty button:disabled { color: #cbd5e1; cursor: not-allowed; }
+.dh-qty span { min-width: 30px; text-align: center; font-size: .85rem; font-weight: 600; }
+.dh-item__remove { border: 0; background: transparent; color: var(--dh-muted); cursor: pointer; padding: 4px 6px; border-radius: 6px; }
+.dh-item__remove:hover { color: var(--dh-danger); background: var(--dh-danger-soft); }
+
+.dh-empty { text-align: center; padding: 24px 8px; color: var(--dh-muted); }
+.dh-empty > i { font-size: 2rem; margin-bottom: 8px; color: #cbd5e1; }
+.dh-empty p { margin: 4px 0 10px; }
+.dh-link { display: block; margin: 6px auto; background: none; border: 0; cursor: pointer; color: var(--dh-primary); font-size: .9rem; text-decoration: underline; }
+.dh-demo-only { color: var(--dh-muted); font-size: .8rem; }
+
+.dh-ship { margin: 14px 0 4px; padding: 12px; border-radius: 10px; background: var(--dh-primary-soft); }
+.dh-ship__text { margin: 0 0 8px; font-size: .82rem; color: #1e40af; }
+.dh-ship.is-free { background: var(--dh-success-soft); }
+.dh-ship.is-free .dh-ship__text { color: #166534; margin-bottom: 0; }
+.dh-ship.is-free .dh-progress { display: none; }
+.dh-progress { height: 6px; border-radius: 999px; background: #dbeafe; overflow: hidden; }
+.dh-progress__bar { height: 100%; width: 0; border-radius: inherit; background: var(--dh-primary); transition: width .3s ease; }
+
+.dh-totals { margin: 14px 0 16px; }
+.dh-totals > div { display: flex; justify-content: space-between; padding: 5px 0; font-size: .92rem; }
+.dh-totals dt { color: var(--dh-muted); }
+.dh-totals dd { margin: 0; font-weight: 600; }
+.dh-totals__grand { margin-top: 8px; padding-top: 12px !important; border-top: 1px solid var(--dh-border); }
+.dh-totals__grand dt { color: var(--dh-text); font-weight: 700; }
+.dh-totals__grand dd { font-size: 1.3rem; color: var(--dh-primary); font-weight: 800; }
+.dh-note { margin: 12px 0 0; font-size: .75rem; color: var(--dh-muted); text-align: center; }
+
+/* ---------- Nút ---------- */
+.dh-btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer;
+    padding: 13px 20px; border-radius: 10px; border: 1.5px solid transparent; font-weight: 700; font-size: 1rem;
+    transition: background .15s, transform .05s, box-shadow .15s;
+}
+.dh-btn:active:not(:disabled) { transform: translateY(1px); }
+.dh-btn--block { width: 100%; }
+.dh-btn--primary { background: var(--dh-primary); color: #fff; box-shadow: 0 6px 16px rgba(37, 99, 235, .28); }
+.dh-btn--primary:hover:not(:disabled) { background: var(--dh-primary-dark); }
+.dh-btn--primary:disabled { background: #94a3b8; box-shadow: none; cursor: not-allowed; }
+.dh-btn--ghost { background: #fff; color: var(--dh-text); border-color: var(--dh-border); }
+.dh-btn--ghost:hover { background: var(--dh-bg); }
+.dh-btn__label { display: inline-flex; align-items: center; gap: 8px; }
+.dh-page :focus-visible { outline: 3px solid rgba(37, 99, 235, .45); outline-offset: 2px; }
+
+.dh-spinner { width: 18px; height: 18px; border-radius: 50%; border: 3px solid rgba(255, 255, 255, .4); border-top-color: #fff; animation: dh-spin .7s linear infinite; }
+@keyframes dh-spin { to { transform: rotate(360deg); } }
+
+/* ---------- Thanh đáy điện thoại ---------- */
+.dh-mobilebar {
+    display: none; position: fixed; left: 0; right: 0; bottom: 0; z-index: 30;
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px));
+    background: #fff; border-top: 1px solid var(--dh-border); box-shadow: 0 -6px 20px rgba(15, 23, 42, .08);
+    align-items: center; justify-content: space-between; gap: 12px;
+}
+.dh-mobilebar__sum { display: flex; flex-direction: column; line-height: 1.2; }
+.dh-mobilebar__sum small { color: var(--dh-muted); font-size: .75rem; }
+.dh-mobilebar__sum strong { color: var(--dh-primary); font-size: 1.15rem; }
+
+/* ---------- Hộp thoại thành công ---------- */
+.dh-modal {
+    position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; padding: 16px;
+    background: rgba(15, 23, 42, .55); overflow-y: auto;
+}
+.dh-modal__panel {
+    width: 100%; max-width: 480px; max-height: 100%; overflow-y: auto; text-align: center;
+    background: #fff; border-radius: 18px; padding: 28px 24px 24px; box-shadow: 0 24px 60px rgba(15, 23, 42, .35);
+    animation: dh-pop .25s ease-out;
+}
+@keyframes dh-pop { from { opacity: 0; transform: translateY(12px) scale(.97); } to { opacity: 1; transform: none; } }
+.dh-success-icon {
+    width: 68px; height: 68px; margin: 0 auto 14px; border-radius: 50%; display: grid; place-items: center;
+    font-size: 1.9rem; color: #fff; background: var(--dh-success); box-shadow: 0 0 0 8px var(--dh-success-soft);
+}
+.dh-modal__panel h2 { margin: 0 0 6px; font-size: 1.35rem; }
+.dh-modal__message { margin: 0 0 16px; color: var(--dh-muted); font-size: .92rem; }
+
+.dh-info { margin: 0 0 16px; padding: 12px 14px; background: var(--dh-bg); border-radius: 12px; text-align: left; }
+.dh-info > div { display: flex; justify-content: space-between; gap: 12px; padding: 4px 0; font-size: .9rem; }
+.dh-info dt { color: var(--dh-muted); }
+.dh-info dd { margin: 0; font-weight: 600; text-align: right; word-break: break-all; }
+
+.dh-transfer { margin: 0 0 16px; padding: 14px; border: 1.5px dashed #93c5fd; border-radius: 12px; background: var(--dh-primary-soft); text-align: left; }
+.dh-transfer h3 { margin: 0 0 10px; font-size: .95rem; text-align: center; }
+.dh-transfer__body { display: flex; gap: 14px; align-items: flex-start; flex-wrap: wrap; justify-content: center; }
+.dh-qr { text-align: center; max-width: 170px; }
+.dh-qr canvas { width: 150px; height: 150px; border-radius: 8px; background: #fff; border: 1px solid var(--dh-border); image-rendering: pixelated; }
+.dh-qr small { display: block; margin-top: 6px; font-size: .68rem; color: var(--dh-muted); line-height: 1.3; }
+.dh-bank { flex: 1; min-width: 190px; margin: 0; }
+.dh-bank > div { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 5px 0; font-size: .85rem; border-bottom: 1px solid #dbeafe; }
+.dh-bank > div:last-child { border-bottom: 0; }
+.dh-bank dt { color: var(--dh-muted); white-space: nowrap; }
+.dh-bank dd { margin: 0; font-weight: 600; word-break: break-all; text-align: right; display: flex; align-items: center; gap: 6px; }
+.dh-copy { border: 0; background: #fff; color: var(--dh-primary); border-radius: 6px; width: 26px; height: 26px; cursor: pointer; flex: none; }
+.dh-copy:hover { background: var(--dh-primary); color: #fff; }
+
+/* ---------- Thông báo nhỏ góc phải trên ---------- */
+.dh-toast {
+    position: fixed; top: 16px; right: 16px; z-index: 60; max-width: min(360px, calc(100vw - 32px));
+    padding: 12px 16px; border-radius: 10px; color: #fff; font-size: .9rem; font-weight: 600;
+    background: #0f172a; box-shadow: 0 10px 30px rgba(15, 23, 42, .3); animation: dh-pop .2s ease-out;
+}
+.dh-toast.is-error { background: var(--dh-danger); }
+.dh-toast.is-success { background: var(--dh-success); }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 900px) {
+    .dh-layout { grid-template-columns: 1fr; }
+    .dh-side { position: static; }
+    .dh-submit-desktop, .dh-side .dh-note { display: none; }
+    .dh-mobilebar { display: flex; }
+    .dh-container { padding-bottom: 110px; }
+    .dh-items { max-height: none; }
+}
+@media (max-width: 600px) {
+    .dh-steps__item:not(.is-active) { font-size: 0; gap: 0; }   /* thu gọn: chỉ giữ chữ của bước hiện tại */
+    .dh-steps__item + .dh-steps__item::before { width: 14px; margin-right: 6px; }
+    .dh-steps__item span { font-size: .75rem; }
+    .dh-title { font-size: 1.35rem; }
+    .dh-card { padding: 16px; }
+    .dh-grid, .dh-pays { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .dh-page *, .dh-page *::before, .dh-page *::after { animation: none !important; transition: none !important; }
+}

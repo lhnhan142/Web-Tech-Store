@@ -1,0 +1,225 @@
+@model WebLinhKien.Models.ViewModels.DatHangViewModel
+@{
+    Layout = null;   // trang tự có header riêng; sau này muốn dùng _Layout chung thì bỏ dòng này
+    ViewData["Title"] = "Đặt hàng";
+
+    // Dữ liệu thật đưa cho JavaScript (thay cho giỏ hàng mẫu và các con số cấu hình)
+    var cfg = new
+    {
+        demo = false,
+        endpoint = Url.Action("Gui", "DatHang"),
+        trangChu = Url.Content("~/"),
+        phiGiaoHang = Model.PhiGiaoHang,
+        nguongMienPhi = Model.NguongMienPhi,
+        soLuongToiDa = WebLinhKien.Helpers.WebConstants.SoLuongToiDa,
+        cart = Model.Items.Select(i => new
+        {
+            uid = i.Uid, ten = i.Ten, gia = i.Gia, soLuong = i.SoLuong, tonKho = i.TonKho, icon = i.Icon
+        })
+    };
+}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Đặt hàng - WebLinhKien</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+    <link rel="stylesheet" href="~/css/dat-hang.css" asp-append-version="true" />
+</head>
+<body class="dh-page">
+
+    <!-- ===== Thanh đầu trang ===== -->
+    <header class="dh-header">
+        <div class="dh-header__inner">
+            <a href="~/" class="dh-logo"><i class="fa-solid fa-microchip"></i> WebLinhKien</a>
+            <ol class="dh-steps" aria-label="Các bước đặt hàng">
+                <li class="dh-steps__item is-done"><span><i class="fa-solid fa-check"></i></span> Giỏ hàng</li>
+                <li class="dh-steps__item is-active"><span>2</span> Đặt hàng</li>
+                <li class="dh-steps__item"><span>3</span> Hoàn tất</li>
+            </ol>
+        </div>
+    </header>
+
+    <main class="dh-container">
+        <h1 class="dh-title">Đặt hàng</h1>
+
+        <!-- Thông báo lỗi chung của cả form (lỗi từ server) -->
+        <div class="dh-banner dh-banner--error" id="dh-form-error" role="alert" hidden>
+            <i class="fa-solid fa-circle-exclamation"></i>
+            <span id="dh-form-error-text"></span>
+        </div>
+
+        <form id="dh-form" class="dh-layout" novalidate>
+            @Html.AntiForgeryToken()
+
+            <!-- ===== Cột trái: thông tin ===== -->
+            <section class="dh-main">
+                <div class="dh-card">
+                    <h2 class="dh-card__title"><i class="fa-solid fa-truck-fast"></i> Thông tin giao hàng</h2>
+
+                    <div class="dh-grid">
+                        <div class="dh-field" data-field="tenKhachHang">
+                            <label for="tenKhachHang">Họ và tên <span class="dh-req">*</span></label>
+                            <div class="dh-input">
+                                <i class="fa-regular fa-user"></i>
+                                <input id="tenKhachHang" name="tenKhachHang" type="text" maxlength="100"
+                                       autocomplete="name" placeholder="Nguyễn Văn A" />
+                            </div>
+                            <p class="dh-error" id="err-tenKhachHang"></p>
+                        </div>
+
+                        <div class="dh-field" data-field="sdt">
+                            <label for="sdt">Số điện thoại <span class="dh-req">*</span></label>
+                            <div class="dh-input">
+                                <i class="fa-solid fa-phone"></i>
+                                <input id="sdt" name="sdt" type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="11"
+                                       autocomplete="tel" placeholder="0912345678" />
+                            </div>
+                            <p class="dh-error" id="err-sdt"></p>
+                        </div>
+
+                        <div class="dh-field dh-field--full" data-field="diaChi">
+                            <label for="diaChi">Địa chỉ nhận hàng <span class="dh-req">*</span></label>
+                            <div class="dh-input">
+                                <i class="fa-solid fa-location-dot"></i>
+                                <input id="diaChi" name="diaChi" type="text" maxlength="200"
+                                       autocomplete="street-address"
+                                       placeholder="Số nhà, đường, phường/xã, tỉnh/thành phố" />
+                            </div>
+                            <p class="dh-error" id="err-diaChi"></p>
+                        </div>
+
+                        <div class="dh-field dh-field--full" data-field="ghiChu">
+                            <label for="ghiChu">Ghi chú <span class="dh-optional">(không bắt buộc)</span></label>
+                            <div class="dh-input dh-input--area">
+                                <textarea id="ghiChu" name="ghiChu" rows="3" maxlength="300"
+                                          placeholder="Ví dụ: giao giờ hành chính, gọi trước khi giao..."></textarea>
+                            </div>
+                            <div class="dh-field__foot">
+                                <p class="dh-error" id="err-ghiChu"></p>
+                                <span class="dh-counter"><span id="dh-ghichu-count">0</span>/300</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dh-card">
+                    <h2 class="dh-card__title"><i class="fa-solid fa-wallet"></i> Hình thức thanh toán</h2>
+
+                    <div class="dh-pays">
+                        <label class="dh-pay">
+                            <input type="radio" name="maHinhThucThanhToan" value="COD" checked />
+                            <span class="dh-pay__box">
+                                <i class="fa-solid fa-money-bill-wave dh-pay__icon"></i>
+                                <span class="dh-pay__text">
+                                    <strong>Thanh toán khi nhận hàng (COD)</strong>
+                                    <small>Kiểm tra hàng rồi trả tiền cho người giao.</small>
+                                </span>
+                                <i class="fa-solid fa-circle-check dh-pay__tick"></i>
+                            </span>
+                        </label>
+
+                        <label class="dh-pay">
+                            <input type="radio" name="maHinhThucThanhToan" value="CHUYEN_KHOAN" />
+                            <span class="dh-pay__box">
+                                <i class="fa-solid fa-building-columns dh-pay__icon"></i>
+                                <span class="dh-pay__text">
+                                    <strong>Chuyển khoản ngân hàng</strong>
+                                    <small>Quét mã QR ngay sau khi đặt hàng.</small>
+                                </span>
+                                <i class="fa-solid fa-circle-check dh-pay__tick"></i>
+                            </span>
+                        </label>
+                    </div>
+
+                    <p class="dh-hint" id="dh-transfer-hint" hidden>
+                        <i class="fa-solid fa-circle-info"></i>
+                        Sau khi bấm Đặt hàng, bạn sẽ nhận mã QR và nội dung chuyển khoản. Đơn được xử lý khi shop nhận được tiền.
+                    </p>
+                </div>
+            </section>
+
+            <!-- ===== Cột phải: tóm tắt đơn hàng ===== -->
+            <aside class="dh-side">
+                <div class="dh-card dh-summary">
+                    <h2 class="dh-card__title">
+                        <i class="fa-solid fa-bag-shopping"></i> Đơn hàng của bạn
+                        <span class="dh-badge" id="dh-count">0</span>
+                    </h2>
+
+                    <ul class="dh-items" id="dh-items"></ul>
+
+                    <div class="dh-empty" id="dh-empty" hidden>
+                        <i class="fa-solid fa-cart-shopping"></i>
+                        <p>Giỏ hàng đang trống.</p>
+                        <a href="~/" class="dh-link">Tiếp tục mua sắm</a>
+                        <button type="button" class="dh-link dh-demo-only" id="dh-reload-demo">
+                            Nạp lại giỏ hàng mẫu (chỉ để xem thử)
+                        </button>
+                    </div>
+
+                    <div class="dh-ship" id="dh-ship">
+                        <p class="dh-ship__text" id="dh-ship-text"></p>
+                        <div class="dh-progress"><div class="dh-progress__bar" id="dh-ship-bar"></div></div>
+                    </div>
+
+                    <dl class="dh-totals">
+                        <div><dt>Tạm tính</dt><dd id="dh-subtotal">0 đ</dd></div>
+                        <div><dt>Phí giao hàng</dt><dd id="dh-fee">0 đ</dd></div>
+                        <div class="dh-totals__grand"><dt>Tổng thanh toán</dt><dd id="dh-total">0 đ</dd></div>
+                    </dl>
+
+                    <button type="submit" class="dh-btn dh-btn--primary dh-btn--block dh-submit-desktop" data-submit>
+                        <span class="dh-btn__label"><i class="fa-solid fa-lock"></i> Đặt hàng</span>
+                        <span class="dh-spinner" role="status" aria-label="Đang gửi đơn hàng" hidden></span>
+                    </button>
+                    <p class="dh-note">Bằng việc đặt hàng, bạn đồng ý với điều khoản mua hàng của cửa hàng.</p>
+                </div>
+            </aside>
+        </form>
+    </main>
+
+    <!-- Thanh tổng tiền + nút đặt hàng cố định ở đáy (chỉ hiện trên điện thoại) -->
+    <div class="dh-mobilebar">
+        <div class="dh-mobilebar__sum">
+            <small>Tổng thanh toán</small>
+            <strong id="dh-mobile-total">0 đ</strong>
+        </div>
+        <button type="submit" form="dh-form" class="dh-btn dh-btn--primary" data-submit>
+            <span class="dh-btn__label">Đặt hàng</span>
+            <span class="dh-spinner" role="status" aria-label="Đang gửi đơn hàng" hidden></span>
+        </button>
+    </div>
+
+    <!-- ===== Hộp thoại đặt hàng thành công ===== -->
+    <div class="dh-modal" id="dh-modal" hidden>
+        <div class="dh-modal__panel" role="dialog" aria-modal="true" aria-labelledby="dh-modal-title">
+            <div class="dh-success-icon"><i class="fa-solid fa-check"></i></div>
+            <h2 id="dh-modal-title">Đặt hàng thành công!</h2>
+            <p class="dh-modal__message" id="dh-modal-message"></p>
+
+            <dl class="dh-info" id="dh-modal-info"></dl>
+
+            <div class="dh-transfer" id="dh-transfer" hidden>
+                <h3>Chuyển khoản để hoàn tất</h3>
+                <div class="dh-transfer__body">
+                    <div class="dh-qr">
+                        <canvas id="dh-qr" aria-label="Mã QR chuyển khoản minh họa"></canvas>
+                        <small>Mã QR minh họa. Khi ghép vào dự án, mã thật do server tạo.</small>
+                    </div>
+                    <dl class="dh-bank" id="dh-bank"></dl>
+                </div>
+            </div>
+
+            <a href="#" class="dh-btn dh-btn--ghost dh-btn--block" id="dh-modal-close">Tiếp tục mua sắm</a>
+        </div>
+    </div>
+
+    <!-- Thông báo nhỏ góc phải trên, tự ẩn sau 5 giây -->
+    <div class="dh-toast" id="dh-toast" role="status" aria-live="polite" hidden></div>
+
+    <script>window.DAT_HANG = @Json.Serialize(cfg);</script>
+    <script src="~/js/dat-hang.js" asp-append-version="true"></script>
+</body>
+</html>

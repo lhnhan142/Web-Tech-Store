@@ -1,6 +1,8 @@
 using WebLinhKien.Data;
 using WebLinhKien.Helpers;
 using WebLinhKien.WebSockets;
+using FluentValidation;
+using WebLinhKien.Validators;
 
 namespace WebLinhKien
 {
@@ -17,6 +19,15 @@ namespace WebLinhKien
             builder.Services.AddDataLayer();
             builder.Services.AddAdminAuthentication();
             builder.Services.AddAdminWebSockets();
+            builder.Services.AddValidatorsFromAssemblyContaining<DatHangRequestValidator>();
+            builder.Services.AddDistributedMemoryCache();
+            builder.Services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+            });
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -31,6 +42,7 @@ namespace WebLinhKien
             app.UseRouting();
 
             app.UseRouting();
+            app.UseSession();
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseAdminWebSockets();

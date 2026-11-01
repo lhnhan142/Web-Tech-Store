@@ -1,0 +1,26 @@
+@model WebLinhKien.Models.ViewModels.DonHangListViewModel
+@{
+    ViewData["Title"] = "Quản lý đơn hàng";
+}
+
+<div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+    <h1 class="text-xl font-semibold">Quản lý đơn hàng</h1>
+
+    <form asp-action="Index" method="get" class="flex gap-2">
+        <input type="hidden" name="tinhTrang" value="@Model.MaTinhTrang" />
+        <input type="search" name="q" value="@Model.Q" placeholder="Mã đơn, tên, số điện thoại..."
+               class="w-64 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none" />
+        <button type="submit" class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700">
+            <i class="fa-solid fa-magnifying-glass"></i> Tìm
+        </button>
+    </form>
+</div>
+
+@* Phần danh sách được tải lại bằng JavaScript khi có đơn mới nên tách thành partial *@
+<div id="danhsach-don">
+    @await Html.PartialAsync("_DanhSachDon", Model)
+</div>
+
+@section Scripts {
+    <script src="~/js/admin-don-hang.js" asp-append-version="true"></script>
+}

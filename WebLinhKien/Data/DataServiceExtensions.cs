@@ -14,6 +14,7 @@ public static class DataServiceExtensions
     {
         services.AddSingleton<DapperContext>();
 
+        services.AddScoped<IDonDatHangRepository, DonDatHangRepository>();
         services.AddScoped<IDanhMucRepository, DanhMucRepository>();
         services.AddScoped<IThuongHieuRepository, ThuongHieuRepository>();
         services.AddScoped<ISanPhamRepository, SanPhamRepository>();

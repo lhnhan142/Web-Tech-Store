@@ -1,0 +1,125 @@
+@model WebLinhKien.Models.ViewModels.DonHangChiTietViewModel
+@using WebLinhKien.Helpers
+@{
+    ViewData["Title"] = "Đơn " + Model.Don.MaDon;
+    var don = Model.Don;
+}
+
+<div class="mb-4">
+    <a asp-action="Index" class="text-sm text-blue-600 hover:underline"><i class="fa-solid fa-arrow-left"></i> Danh sách đơn hàng</a>
+</div>
+
+@if (TempData["ThanhCong"] is string ok)
+{
+    <div class="mb-4 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800">@ok</div>
+}
+@if (TempData["Loi"] is string loi)
+{
+    <div class="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">@loi</div>
+}
+
+<div class="mb-4 flex flex-wrap items-center gap-3">
+    <h1 class="text-xl font-semibold">Đơn @don.MaDon</h1>
+    <span class="@TinhTrangDonHangFlow.BadgeClass(don.MaTinhTrang)">@(Model.TinhTrangHienTai?.TenTinhTrang ?? don.MaTinhTrang)</span>
+</div>
+
+<div class="grid gap-4 lg:grid-cols-3">
+    <div class="space-y-4 lg:col-span-2">
+        <div class="rounded-xl bg-white p-5 shadow-sm">
+            <h2 class="mb-3 font-semibold">Sản phẩm</h2>
+            <div class="overflow-x-auto">
+                <table class="min-w-full text-sm">
+                    <thead class="text-left text-slate-500">
+                        <tr>
+                            <th class="py-2 pr-4 font-medium">Sản phẩm</th>
+                            <th class="py-2 pr-4 text-right font-medium">Đơn giá</th>
+                            <th class="py-2 pr-4 text-right font-medium">SL</th>
+                            <th class="py-2 text-right font-medium">Thành tiền</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                        @foreach (var ct in Model.ChiTiet)
+                        {
+                            <tr>
+                                <td class="py-2 pr-4">@ct.TenSanPham</td>
+                                <td class="py-2 pr-4 text-right">@ct.DonGia.ToVnd()</td>
+                                <td class="py-2 pr-4 text-right">@ct.SoLuong</td>
+                                <td class="py-2 text-right font-medium">@ct.ThanhTien.ToVnd()</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <dl class="mt-4 ml-auto max-w-xs space-y-1 text-sm">
+                <div class="flex justify-between"><dt class="text-slate-500">Tiền hàng</dt><dd>@don.TongTienHang.ToVnd()</dd></div>
+                <div class="flex justify-between"><dt class="text-slate-500">Phí giao hàng</dt><dd>@(don.PhiGiaoHang == 0 ? "Miễn phí" : don.PhiGiaoHang.ToVnd())</dd></div>
+                <div class="flex justify-between border-t border-slate-200 pt-2 text-base font-semibold">
+                    <dt>Tổng thanh toán</dt><dd class="text-blue-600">@don.TongThanhToan.ToVnd()</dd>
+                </div>
+            </dl>
+        </div>
+
+        <div class="rounded-xl bg-white p-5 shadow-sm">
+            <h2 class="mb-3 font-semibold">Thông tin giao hàng</h2>
+            <dl class="grid gap-x-6 gap-y-2 text-sm sm:grid-cols-2">
+                <div><dt class="text-slate-500">Họ tên</dt><dd class="font-medium">@don.TenKhachHang</dd></div>
+                <div><dt class="text-slate-500">Số điện thoại</dt><dd class="font-medium">@don.Sdt</dd></div>
+                <div class="sm:col-span-2"><dt class="text-slate-500">Địa chỉ</dt><dd class="font-medium">@don.DiaChi</dd></div>
+                <div class="sm:col-span-2">
+                    <dt class="text-slate-500">Ghi chú</dt>
+                    <dd class="font-medium">@(string.IsNullOrWhiteSpace(don.GhiChu) ? "(không có)" : don.GhiChu)</dd>
+                </div>
+            </dl>
+        </div>
+    </div>
+
+    <div class="space-y-4">
+        <div class="rounded-xl bg-white p-5 shadow-sm">
+            <h2 class="mb-3 font-semibold">Thông tin đơn</h2>
+            <dl class="space-y-2 text-sm">
+                <div class="flex justify-between gap-3"><dt class="text-slate-500">Ngày đặt</dt><dd>@don.NgayDat.ToNgayGio()</dd></div>
+                <div class="flex justify-between gap-3"><dt class="text-slate-500">Thanh toán</dt><dd>@(don.MaHinhThucThanhToan == "COD" ? "COD (khi nhận hàng)" : "Chuyển khoản")</dd></div>
+                @if (don.NgayCapNhat.HasValue)
+                {
+                    <div class="flex justify-between gap-3"><dt class="text-slate-500">Cập nhật</dt><dd>@don.NgayCapNhat.Value.ToNgayGio()</dd></div>
+                }
+            </dl>
+        </div>
+
+        <div class="rounded-xl bg-white p-5 shadow-sm">
+            <h2 class="mb-3 font-semibold">Đổi tình trạng</h2>
+            @if (Model.TinhTrangTiepTheo.Count == 0)
+            {
+                <p class="text-sm text-slate-500">Đơn này đã ở tình trạng cuối, không thể đổi tiếp.</p>
+            }
+            else
+            {
+                <div class="flex flex-col gap-2">
+                    @foreach (var t in Model.TinhTrangTiepTheo)
+                    {
+                        var nguyHiem = t.MaTinhTrang == TinhTrangDonHangFlow.HoanTra;
+                        <form asp-action="DoiTinhTrang" asp-route-id="@don.Uid" method="post">
+                            <input type="hidden" name="maTinhTrang" value="@t.MaTinhTrang" />
+                            <button type="submit"
+                                    data-confirm="@(nguyHiem ? "Chuyển đơn sang Hoàn trả?" : null)"
+                                    class="w-full rounded-lg px-3 py-2 text-sm font-medium @(nguyHiem ? "border border-red-300 text-red-700 hover:bg-red-50" : "bg-blue-600 text-white hover:bg-blue-700")">
+                                Chuyển sang: @t.TenTinhTrang
+                            </button>
+                        </form>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Nút có data-confirm sẽ hỏi lại trước khi gửi
+        document.addEventListener('submit', function (e) {
+            var btn = e.submitter;
+            if (btn && btn.dataset.confirm && !confirm(btn.dataset.confirm)) e.preventDefault();
+        });
+    </script>
+}

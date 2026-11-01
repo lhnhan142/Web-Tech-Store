@@ -1,0 +1,10 @@
+@{
+    ViewData["Title"] = "Tổng quan";
+}
+
+<div class="rounded-xl bg-white p-6 shadow-sm">
+    <h1 class="text-xl font-semibold">Xin chào, @(User.FindFirst("HoTen")?.Value ?? User.Identity?.Name)</h1>
+    <p class="mt-2 text-sm text-slate-500">
+        Đăng nhập thành công. Các chức năng quản lý sản phẩm, đơn hàng sẽ được thêm vào đây.
+    </p>
+</div>

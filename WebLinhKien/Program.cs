@@ -1,4 +1,5 @@
 using WebLinhKien.Data;
+using WebLinhKien.Helpers;
 namespace WebLinhKien
 {
     public class Program
@@ -11,6 +12,8 @@ namespace WebLinhKien
             builder.Services.AddControllersWithViews();
 
             builder.Services.AddDataLayer();
+            builder.Services.AddDataLayer();
+            builder.Services.AddAdminAuthentication();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -24,9 +27,15 @@ namespace WebLinhKien
             app.UseHttpsRedirection();
             app.UseRouting();
 
+            app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
             app.UseAuthorization();
 
             app.MapStaticAssets();
+            app.MapControllerRoute(
+                name: "areas",
+                pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}")

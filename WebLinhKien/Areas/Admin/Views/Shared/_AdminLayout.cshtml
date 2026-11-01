@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewData["Title"] - Quản trị WebLinhKien</title>
+    <script src="https://cdn.jsdelivr.net/npm/@@tailwindcss/browser@@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+</head>
+<body class="min-h-screen bg-slate-100 text-slate-800">
+    <header class="bg-white shadow-sm">
+        <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
+            <a asp-area="Admin" asp-controller="Home" asp-action="Index" class="flex items-center gap-2 font-semibold text-blue-700">
+                <i class="fa-solid fa-microchip"></i> Quản trị WebLinhKien
+            </a>
+            <div class="flex items-center gap-3 text-sm">
+                <span><i class="fa-regular fa-user"></i> @(User.FindFirst("HoTen")?.Value ?? User.Identity?.Name)</span>
+                <form asp-area="Admin" asp-controller="Account" asp-action="Logout" method="post">
+                    <button type="submit" class="rounded-lg border border-slate-300 px-3 py-1 hover:bg-slate-50">
+                        <i class="fa-solid fa-right-from-bracket"></i> Đăng xuất
+                    </button>
+                </form>
+            </div>
+        </div>
+    </header>
+
+    <main class="mx-auto max-w-6xl px-4 py-6">
+        @RenderBody()
+    </main>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

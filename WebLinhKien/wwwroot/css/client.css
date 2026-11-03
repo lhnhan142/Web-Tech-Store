@@ -1,0 +1,2119 @@
+/* =====================================================================
+   TECHZONE – PC COMPONENTS STORE
+   Design System & Client Stylesheet (client.css)
+   Phong cách: Premium E-commerce, Modern Technology, Gaming Hardware.
+   ===================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap');
+
+:root {
+    /* ----- 1. BẢNG MÀU CHÍNH THỨC ----- */
+    --tz-primary: #101828;
+    --tz-primary-hover: #0b101b;
+    --tz-secondary: #172554;
+    --tz-secondary-hover: #1e3a8a;
+    --tz-accent: #F97316;
+    --tz-accent-hover: #EA580C;
+    --tz-accent-soft: rgba(249, 115, 22, 0.12);
+    --tz-bg: #F8FAFC;
+    --tz-white: #FFFFFF;
+    --tz-text: #1E293B;
+    --tz-text-light: #475569;
+    --tz-muted: #64748B;
+    --tz-border: #E2E8F0;
+    --tz-border-dark: #CBD5E1;
+
+    /* Trạng thái hệ thống */
+    --tz-success: #16A34A;
+    --tz-success-soft: #DCFCE7;
+    --tz-danger: #DC2626;
+    --tz-danger-soft: #FEE2E2;
+    --tz-warning: #EAB308;
+
+    /* ----- 2. TYPOGRAPHY ----- */
+    --tz-font: 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+
+    /* ----- 3. BO GÓC (BORDER RADIUS) ----- */
+    --tz-radius-xs: 4px;
+    --tz-radius-sm: 8px;
+    --tz-radius-md: 12px;
+    --tz-radius-lg: 16px;
+    --tz-radius-xl: 24px;
+    --tz-radius-full: 9999px;
+
+    /* ----- 4. ĐỔ BÓNG (SHADOWS) ----- */
+    --tz-shadow-xs: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
+    --tz-shadow-sm: 0 1px 3px 0 rgba(16, 24, 40, 0.1), 0 1px 2px -1px rgba(16, 24, 40, 0.06);
+    --tz-shadow-md: 0 4px 6px -1px rgba(16, 24, 40, 0.1), 0 2px 4px -2px rgba(16, 24, 40, 0.06);
+    --tz-shadow-lg: 0 10px 15px -3px rgba(16, 24, 40, 0.08), 0 4px 6px -4px rgba(16, 24, 40, 0.04);
+    --tz-shadow-xl: 0 20px 25px -5px rgba(16, 24, 40, 0.1), 0 8px 10px -6px rgba(16, 24, 40, 0.04);
+    --tz-shadow-glow: 0 0 18px rgba(249, 115, 22, 0.35);
+
+    /* ----- 5. TRANSITIONS ----- */
+    --tz-transition-fast: all 0.15s ease-in-out;
+    --tz-transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    --tz-transition-slow: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* Kích thước Header */
+    --tz-topbar-height: 38px;
+    --tz-mainheader-height: 76px;
+    --tz-nav-height: 50px;
+}
+
+/* =====================================================================
+   RESET & BASE STYLES
+   ===================================================================== */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--tz-font);
+    background-color: var(--tz-bg);
+    color: var(--tz-text);
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+    transition: var(--tz-transition-fast);
+}
+
+a:hover {
+    color: var(--tz-accent);
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Container chuẩn */
+.tz-container {
+    width: 100%;
+    max-width: 1320px;
+    margin-right: auto;
+    margin-left: auto;
+    padding-right: 1.25rem;
+    padding-left: 1.25rem;
+}
+
+/* =====================================================================
+   BUTTONS (NÚT BẤM)
+   ===================================================================== */
+.tz-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-family: var(--tz-font);
+    font-weight: 600;
+    font-size: 0.9375rem;
+    padding: 0.625rem 1.25rem;
+    border-radius: var(--tz-radius-sm);
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: var(--tz-transition-fast);
+    line-height: 1.4;
+    white-space: nowrap;
+    text-align: center;
+}
+
+.tz-btn-primary {
+    background-color: var(--tz-primary);
+    color: var(--tz-white) !important;
+}
+.tz-btn-primary:hover {
+    background-color: var(--tz-primary-hover);
+    box-shadow: var(--tz-shadow-md);
+}
+
+.tz-btn-secondary {
+    background-color: var(--tz-secondary);
+    color: var(--tz-white) !important;
+}
+.tz-btn-secondary:hover {
+    background-color: var(--tz-secondary-hover);
+    box-shadow: var(--tz-shadow-md);
+}
+
+.tz-btn-accent {
+    background-color: var(--tz-accent);
+    color: var(--tz-white) !important;
+    box-shadow: 0 2px 8px rgba(249, 115, 22, 0.3);
+}
+.tz-btn-accent:hover {
+    background-color: var(--tz-accent-hover);
+    box-shadow: var(--tz-shadow-glow);
+    transform: translateY(-1px);
+}
+
+.tz-btn-outline {
+    background-color: transparent;
+    border-color: var(--tz-border);
+    color: var(--tz-text);
+}
+.tz-btn-outline:hover {
+    border-color: var(--tz-accent);
+    color: var(--tz-accent);
+    background-color: var(--tz-accent-soft);
+}
+
+.tz-btn-ghost {
+    background-color: transparent;
+    color: var(--tz-text);
+}
+.tz-btn-ghost:hover {
+    background-color: rgba(16, 24, 40, 0.05);
+    color: var(--tz-accent);
+}
+
+.tz-btn-sm {
+    padding: 0.4rem 0.85rem;
+    font-size: 0.8125rem;
+    border-radius: var(--tz-radius-xs);
+}
+
+.tz-btn-lg {
+    padding: 0.85rem 1.75rem;
+    font-size: 1.05rem;
+    border-radius: var(--tz-radius-md);
+}
+
+.tz-btn-icon {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border-radius: var(--tz-radius-sm);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* =====================================================================
+   INPUTS & FORMS
+   ===================================================================== */
+.tz-input {
+    width: 100%;
+    font-family: var(--tz-font);
+    font-size: 0.9375rem;
+    padding: 0.65rem 1rem;
+    color: var(--tz-text);
+    background-color: var(--tz-white);
+    border: 1.5px solid var(--tz-border);
+    border-radius: var(--tz-radius-sm);
+    transition: var(--tz-transition-fast);
+    outline: none;
+}
+.tz-input:focus {
+    border-color: var(--tz-accent);
+    box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.15);
+}
+.tz-input::placeholder {
+    color: var(--tz-muted);
+}
+
+/* =====================================================================
+   BADGES (HUY HIỆU)
+   ===================================================================== */
+.tz-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.25rem 0.65rem;
+    border-radius: var(--tz-radius-full);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    line-height: 1;
+}
+
+.tz-badge-accent {
+    background-color: var(--tz-accent);
+    color: var(--tz-white);
+}
+
+.tz-badge-discount {
+    background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+    color: var(--tz-white);
+    font-weight: 800;
+    box-shadow: 0 2px 4px rgba(220, 38, 38, 0.3);
+}
+
+.tz-badge-success {
+    background-color: var(--tz-success-soft);
+    color: var(--tz-success);
+    border: 1px solid rgba(22, 163, 74, 0.2);
+}
+
+.tz-badge-danger {
+    background-color: var(--tz-danger-soft);
+    color: var(--tz-danger);
+    border: 1px solid rgba(220, 38, 38, 0.2);
+}
+
+.tz-badge-dark {
+    background-color: var(--tz-secondary);
+    color: var(--tz-white);
+}
+
+/* =====================================================================
+   CARDS
+   ===================================================================== */
+.tz-card {
+    background-color: var(--tz-white);
+    border-radius: var(--tz-radius-md);
+    border: 1px solid var(--tz-border);
+    box-shadow: var(--tz-shadow-xs);
+    transition: var(--tz-transition);
+    overflow: hidden;
+}
+
+.tz-card-hover:hover {
+    border-color: var(--tz-border-dark);
+    box-shadow: var(--tz-shadow-lg);
+    transform: translateY(-3px);
+}
+
+/* =====================================================================
+   HEADER STYLES
+   ===================================================================== */
+.tz-header-wrapper {
+    width: 100%;
+    position: relative;
+    z-index: 1000;
+}
+
+/* 1. TOP BAR */
+.tz-topbar {
+    background-color: var(--tz-primary);
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 0.8125rem;
+    height: var(--tz-topbar-height);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.tz-topbar-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+}
+.tz-topbar-left, .tz-topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+.tz-topbar-item {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+}
+.tz-topbar-item i {
+    color: var(--tz-accent);
+}
+.tz-topbar a:hover {
+    color: var(--tz-white);
+}
+.tz-hotline-badge {
+    color: var(--tz-accent);
+    font-weight: 700;
+}
+
+/* 2. MAIN HEADER */
+.tz-main-header {
+    background-color: var(--tz-secondary);
+    color: var(--tz-white);
+    padding: 0.85rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+.tz-main-header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+}
+
+/* LOGO */
+.tz-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-decoration: none !important;
+}
+.tz-logo-icon {
+    width: 44px;
+    height: 44px;
+    background: linear-gradient(135deg, var(--tz-accent) 0%, #EA580C 100%);
+    border-radius: var(--tz-radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--tz-white);
+    font-size: 1.35rem;
+    box-shadow: 0 4px 12px rgba(249, 115, 22, 0.4);
+}
+.tz-logo-text {
+    display: flex;
+    flex-direction: column;
+}
+.tz-logo-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--tz-white);
+    letter-spacing: 0.04em;
+    line-height: 1.1;
+}
+.tz-logo-title span {
+    color: var(--tz-accent);
+}
+.tz-logo-sub {
+    font-size: 0.6875rem;
+    color: rgba(255, 255, 255, 0.6);
+    letter-spacing: 0.12em;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+/* SEARCH BAR */
+.tz-search-bar {
+    flex: 1;
+    max-width: 620px;
+    position: relative;
+}
+.tz-search-form {
+    display: flex;
+    align-items: center;
+    background-color: var(--tz-white);
+    border-radius: var(--tz-radius-full);
+    padding: 0.25rem 0.35rem 0.25rem 1.25rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    transition: var(--tz-transition-fast);
+}
+.tz-search-form:focus-within {
+    box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.35);
+}
+.tz-search-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-family: var(--tz-font);
+    font-size: 0.9375rem;
+    color: var(--tz-text);
+    padding: 0.5rem 0;
+}
+.tz-search-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: var(--tz-radius-full);
+    border: none;
+    background: linear-gradient(135deg, var(--tz-accent) 0%, #EA580C 100%);
+    color: var(--tz-white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--tz-transition-fast);
+}
+.tz-search-btn:hover {
+    box-shadow: var(--tz-shadow-glow);
+    transform: scale(1.05);
+}
+
+/* HEADER ACTIONS */
+.tz-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+}
+.tz-action-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--tz-white);
+    text-decoration: none !important;
+    position: relative;
+    padding: 0.4rem 0.6rem;
+    border-radius: var(--tz-radius-sm);
+    transition: var(--tz-transition-fast);
+}
+.tz-action-item:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+    color: var(--tz-accent);
+}
+.tz-action-icon-wrap {
+    position: relative;
+    font-size: 1.35rem;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.tz-badge-count {
+    position: absolute;
+    top: -5px;
+    right: -8px;
+    background-color: var(--tz-accent);
+    color: var(--tz-white);
+    font-size: 0.6875rem;
+    font-weight: 800;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--tz-secondary);
+}
+.tz-action-text {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+.tz-action-label {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.65);
+    line-height: 1.2;
+}
+.tz-action-title {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--tz-white);
+    line-height: 1.2;
+}
+
+/* 3. NAVIGATION (STICKY BAR) */
+.tz-navbar {
+    background-color: var(--tz-white);
+    border-bottom: 1px solid var(--tz-border);
+    height: var(--tz-nav-height);
+    box-shadow: var(--tz-shadow-xs);
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    transition: var(--tz-transition);
+}
+.tz-navbar.tz-scrolled {
+    box-shadow: var(--tz-shadow-md);
+    background-color: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(8px);
+}
+.tz-navbar-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+}
+
+/* MEGA MENU BUTTON */
+.tz-megamenu-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background-color: var(--tz-accent);
+    color: var(--tz-white) !important;
+    font-weight: 700;
+    font-size: 0.9375rem;
+    height: 100%;
+    padding: 0 1.5rem;
+    cursor: pointer;
+    transition: var(--tz-transition-fast);
+    border: none;
+}
+.tz-megamenu-toggle:hover {
+    background-color: var(--tz-accent-hover);
+}
+
+/* NAV LINKS */
+.tz-nav-menu {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 0.25rem;
+}
+.tz-nav-item {
+    position: relative;
+}
+.tz-nav-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--tz-text);
+    padding: 0.8rem 0.95rem;
+    border-radius: var(--tz-radius-sm);
+    transition: var(--tz-transition-fast);
+}
+.tz-nav-link:hover, .tz-nav-link.active {
+    color: var(--tz-accent);
+    background-color: var(--tz-accent-soft);
+}
+.tz-nav-link i {
+    font-size: 0.875rem;
+    color: var(--tz-muted);
+}
+.tz-nav-link:hover i, .tz-nav-link.active i {
+    color: var(--tz-accent);
+}
+
+/* MEGA MENU DROPDOWN */
+.tz-megamenu-wrapper {
+    position: relative;
+    height: 100%;
+}
+.tz-megamenu-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 290px;
+    background-color: var(--tz-white);
+    border: 1px solid var(--tz-border);
+    border-top: none;
+    border-radius: 0 0 var(--tz-radius-md) var(--tz-radius-md);
+    box-shadow: var(--tz-shadow-xl);
+    padding: 0.5rem 0;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: var(--tz-transition);
+    z-index: 1000;
+}
+.tz-megamenu-wrapper:hover .tz-megamenu-dropdown,
+.tz-megamenu-dropdown.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+.tz-megamenu-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1.25rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--tz-text);
+    transition: var(--tz-transition-fast);
+}
+.tz-megamenu-item-content {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+}
+.tz-megamenu-icon {
+    width: 32px;
+    height: 32px;
+    background-color: var(--tz-bg);
+    border-radius: var(--tz-radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--tz-secondary);
+    transition: var(--tz-transition-fast);
+}
+.tz-megamenu-item:hover, .tz-megamenu-item.active {
+    background-color: var(--tz-accent-soft);
+    color: var(--tz-accent);
+}
+.tz-megamenu-item:hover .tz-megamenu-icon, .tz-megamenu-item.active .tz-megamenu-icon {
+    background-color: var(--tz-accent);
+    color: var(--tz-white);
+}
+
+/* DROPDOWN CHUẨN CHO THƯƠNG HIỆU */
+.tz-dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 200px;
+    background-color: var(--tz-white);
+    border: 1px solid var(--tz-border);
+    border-radius: var(--tz-radius-sm);
+    box-shadow: var(--tz-shadow-lg);
+    padding: 0.5rem 0;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(8px);
+    transition: var(--tz-transition);
+    z-index: 1000;
+}
+.tz-nav-item:hover .tz-dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+.tz-dropdown-link {
+    display: block;
+    padding: 0.55rem 1.25rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--tz-text);
+}
+.tz-dropdown-link:hover, .tz-dropdown-link.active {
+    background-color: var(--tz-accent-soft);
+    color: var(--tz-accent);
+    font-weight: 600;
+}
+
+/* MOBILE TOGGLER */
+.tz-mobile-toggle {
+    display: none;
+    font-size: 1.35rem;
+    background: none;
+    border: none;
+    color: var(--tz-white);
+    cursor: pointer;
+    padding: 0.4rem;
+}
+
+/* OFFCANVAS MOBILE DRAWER */
+.tz-mobile-drawer {
+    position: fixed;
+    top: 0;
+    left: -320px;
+    width: 300px;
+    height: 100vh;
+    background-color: var(--tz-white);
+    z-index: 2000;
+    box-shadow: var(--tz-shadow-xl);
+    transition: var(--tz-transition);
+    display: flex;
+    flex-direction: column;
+}
+.tz-mobile-drawer.open {
+    left: 0;
+}
+.tz-drawer-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(16, 24, 40, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: 1999;
+    opacity: 0;
+    visibility: hidden;
+    transition: var(--tz-transition);
+}
+.tz-drawer-overlay.open {
+    opacity: 1;
+    visibility: visible;
+}
+.tz-drawer-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem;
+    background-color: var(--tz-primary);
+    color: var(--tz-white);
+}
+.tz-drawer-close {
+    background: none;
+    border: none;
+    color: var(--tz-white);
+    font-size: 1.25rem;
+    cursor: pointer;
+}
+.tz-drawer-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem 0;
+}
+.tz-drawer-nav {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.tz-drawer-nav a {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1.25rem;
+    font-weight: 600;
+    font-size: 0.9375rem;
+    color: var(--tz-text);
+    border-bottom: 1px solid var(--tz-border);
+}
+.tz-drawer-nav a:hover, .tz-drawer-nav a.active {
+    color: var(--tz-accent);
+    background-color: var(--tz-accent-soft);
+}
+.tz-drawer-nav a:hover i, .tz-drawer-nav a.active i {
+    color: var(--tz-accent);
+}
+
+/* =====================================================================
+   PRODUCT CARD COMPONENT (_ProductCard.cshtml)
+   ===================================================================== */
+.tz-product-card {
+    background-color: var(--tz-white);
+    border-radius: var(--tz-radius-md);
+    border: 1px solid var(--tz-border);
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    transition: var(--tz-transition);
+    height: 100%;
+}
+.tz-product-card:hover {
+    border-color: var(--tz-accent);
+    box-shadow: var(--tz-shadow-lg);
+    transform: translateY(-4px);
+}
+
+/* Card Badges */
+.tz-card-badges {
+    position: absolute;
+    top: 0.85rem;
+    left: 0.85rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    z-index: 2;
+}
+
+/* Image Thumbnail */
+.tz-card-thumb {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    border-radius: var(--tz-radius-sm);
+    background-color: #FAFAFA;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.85rem;
+}
+.tz-card-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: var(--tz-transition);
+}
+.tz-product-card:hover .tz-card-thumb img {
+    transform: scale(1.08);
+}
+.tz-thumb-fallback {
+    font-size: 3.5rem;
+    color: #CBD5E1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Card Content */
+.tz-card-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.45rem;
+    font-size: 0.75rem;
+    color: var(--tz-muted);
+}
+.tz-card-brand {
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--tz-secondary);
+}
+.tz-card-warranty {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    color: var(--tz-muted);
+}
+
+.tz-card-title {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--tz-text);
+    margin: 0 0 0.65rem 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    height: 2.8em;
+}
+.tz-card-title a:hover {
+    color: var(--tz-accent);
+}
+
+/* Card Pricing */
+.tz-card-pricing {
+    margin-top: auto;
+    padding-top: 0.5rem;
+    margin-bottom: 0.85rem;
+}
+.tz-price-current {
+    font-size: 1.125rem;
+    font-weight: 800;
+    color: var(--tz-accent);
+    line-height: 1.2;
+}
+.tz-price-old-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.15rem;
+}
+.tz-price-old {
+    font-size: 0.8125rem;
+    color: var(--tz-muted);
+    text-decoration: line-through;
+}
+
+/* Card Action */
+.tz-card-action {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0.5rem;
+}
+.tz-btn-view-detail {
+    background-color: var(--tz-bg);
+    color: var(--tz-text);
+    font-weight: 600;
+    font-size: 0.8125rem;
+    border: 1px solid var(--tz-border);
+    border-radius: var(--tz-radius-sm);
+    padding: 0.5rem 0.75rem;
+    text-align: center;
+    transition: var(--tz-transition-fast);
+}
+.tz-btn-view-detail:hover {
+    background-color: var(--tz-primary);
+    color: var(--tz-white) !important;
+    border-color: var(--tz-primary);
+}
+.tz-btn-quick-buy {
+    width: 36px;
+    height: 36px;
+    background-color: var(--tz-accent-soft);
+    color: var(--tz-accent);
+    border: none;
+    border-radius: var(--tz-radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--tz-transition-fast);
+}
+.tz-btn-quick-buy:hover {
+    background-color: var(--tz-accent);
+    color: var(--tz-white);
+    transform: scale(1.05);
+}
+
+/* =====================================================================
+   CATEGORY CARD COMPONENT (_CategoryCard.cshtml)
+   ===================================================================== */
+.tz-category-card {
+    background-color: var(--tz-white);
+    border: 1px solid var(--tz-border);
+    border-radius: var(--tz-radius-md);
+    padding: 1.5rem 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.85rem;
+    transition: var(--tz-transition);
+}
+.tz-category-card:hover {
+    border-color: var(--tz-accent);
+    box-shadow: var(--tz-shadow-md);
+    transform: translateY(-4px);
+}
+.tz-cat-icon {
+    width: 58px;
+    height: 58px;
+    border-radius: var(--tz-radius-md);
+    background: linear-gradient(135deg, var(--tz-secondary) 0%, var(--tz-primary) 100%);
+    color: var(--tz-white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    transition: var(--tz-transition);
+}
+.tz-category-card:hover .tz-cat-icon {
+    background: linear-gradient(135deg, var(--tz-accent) 0%, #EA580C 100%);
+    box-shadow: var(--tz-shadow-glow);
+    transform: scale(1.1);
+}
+.tz-cat-name {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: var(--tz-text);
+    margin: 0;
+}
+.tz-category-card:hover .tz-cat-name {
+    color: var(--tz-accent);
+}
+
+/* =====================================================================
+   BRAND CARD COMPONENT (_BrandCard.cshtml)
+   ===================================================================== */
+.tz-brand-card {
+    background-color: var(--tz-white);
+    border: 1px solid var(--tz-border);
+    border-radius: var(--tz-radius-md);
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 80px;
+    transition: var(--tz-transition);
+    filter: grayscale(100%);
+    opacity: 0.75;
+}
+.tz-brand-card:hover {
+    filter: grayscale(0%);
+    opacity: 1;
+    border-color: var(--tz-accent);
+    box-shadow: var(--tz-shadow-sm);
+    transform: translateY(-2px);
+}
+.tz-brand-name {
+    font-weight: 800;
+    font-size: 1.15rem;
+    letter-spacing: 0.05em;
+    color: var(--tz-secondary);
+}
+
+/* =====================================================================
+   BREADCRUMB COMPONENT (_Breadcrumb.cshtml)
+   ===================================================================== */
+.tz-breadcrumb-wrapper {
+    background-color: var(--tz-white);
+    border-bottom: 1px solid var(--tz-border);
+    padding: 0.75rem 0;
+    margin-bottom: 1.5rem;
+}
+.tz-breadcrumb {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-size: 0.875rem;
+}
+.tz-breadcrumb-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--tz-muted);
+}
+.tz-breadcrumb-item a {
+    color: var(--tz-muted);
+}
+.tz-breadcrumb-item a:hover {
+    color: var(--tz-accent);
+}
+.tz-breadcrumb-item.active {
+    color: var(--tz-text);
+    font-weight: 600;
+}
+.tz-breadcrumb-separator {
+    color: #CBD5E1;
+    font-size: 0.75rem;
+}
+
+/* =====================================================================
+   PAGINATION COMPONENT (_Pagination.cshtml)
+   ===================================================================== */
+.tz-pagination-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    margin-top: 2.5rem;
+    margin-bottom: 2rem;
+}
+.tz-page-item {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    height: 40px;
+    padding: 0 0.5rem;
+    border-radius: var(--tz-radius-sm);
+    background-color: var(--tz-white);
+    border: 1px solid var(--tz-border);
+    color: var(--tz-text);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    transition: var(--tz-transition-fast);
+}
+.tz-page-item:hover:not(.disabled):not(.active) {
+    border-color: var(--tz-accent);
+    color: var(--tz-accent);
+    background-color: var(--tz-accent-soft);
+}
+.tz-page-item.active {
+    background-color: var(--tz-accent);
+    border-color: var(--tz-accent);
+    color: var(--tz-white) !important;
+    box-shadow: 0 2px 8px rgba(249, 115, 22, 0.35);
+}
+.tz-page-item.disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    background-color: var(--tz-bg);
+}
+
+/* =====================================================================
+   LOADING & SKELETON COMPONENT (_Loading.cshtml)
+   ===================================================================== */
+.tz-skeleton {
+    background: linear-gradient(90deg, #F1F5F9 25%, #E2E8F0 50%, #F1F5F9 75%);
+    background-size: 200% 100%;
+    animation: tz-shimmer 1.5s infinite;
+    border-radius: var(--tz-radius-sm);
+}
+@keyframes tz-shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+.tz-spinner {
+    width: 38px;
+    height: 38px;
+    border: 3.5px solid var(--tz-border);
+    border-top-color: var(--tz-accent);
+    border-radius: 50%;
+    animation: tz-spin 0.8s linear infinite;
+}
+@keyframes tz-spin {
+    to { transform: rotate(360deg); }
+}
+
+/* =====================================================================
+   EMPTY STATE COMPONENT (_EmptyState.cshtml)
+   ===================================================================== */
+.tz-empty-state {
+    background-color: var(--tz-white);
+    border-radius: var(--tz-radius-lg);
+    border: 1.5px dashed var(--tz-border);
+    padding: 3.5rem 2rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 2rem 0;
+}
+.tz-empty-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: var(--tz-bg);
+    color: var(--tz-muted);
+    font-size: 2.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.25rem;
+}
+.tz-empty-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--tz-text);
+    margin: 0 0 0.5rem 0;
+}
+.tz-empty-desc {
+    color: var(--tz-muted);
+    font-size: 0.9375rem;
+    max-width: 460px;
+    margin: 0 0 1.5rem 0;
+    line-height: 1.6;
+}
+
+/* =====================================================================
+   TOAST NOTIFICATION COMPONENT (_Toast.cshtml)
+   ===================================================================== */
+.tz-toast-container {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    max-width: 380px;
+    pointer-events: none;
+}
+.tz-toast {
+    background-color: var(--tz-white);
+    border-radius: var(--tz-radius-md);
+    box-shadow: var(--tz-shadow-xl);
+    border-left: 5px solid var(--tz-accent);
+    padding: 1rem 1.25rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.85rem;
+    pointer-events: auto;
+    transform: translateX(110%);
+    opacity: 0;
+    transition: var(--tz-transition);
+}
+.tz-toast.show {
+    transform: translateX(0);
+    opacity: 1;
+}
+.tz-toast-success { border-left-color: var(--tz-success); }
+.tz-toast-error { border-left-color: var(--tz-danger); }
+.tz-toast-info { border-left-color: #0284C7; }
+.tz-toast-icon {
+    font-size: 1.25rem;
+    margin-top: 2px;
+}
+.tz-toast-success .tz-toast-icon { color: var(--tz-success); }
+.tz-toast-error .tz-toast-icon { color: var(--tz-danger); }
+.tz-toast-info .tz-toast-icon { color: #0284C7; }
+.tz-toast-body {
+    flex: 1;
+}
+.tz-toast-title {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: var(--tz-text);
+    margin: 0 0 0.2rem 0;
+}
+.tz-toast-message {
+    font-size: 0.8125rem;
+    color: var(--tz-muted);
+    margin: 0;
+    line-height: 1.4;
+}
+.tz-toast-close {
+    background: none;
+    border: none;
+    color: var(--tz-muted);
+    cursor: pointer;
+    padding: 0;
+    font-size: 0.875rem;
+}
+
+/* =====================================================================
+   FOOTER STYLES (_Footer.cshtml)
+   ===================================================================== */
+.tz-footer {
+    background-color: var(--tz-primary);
+    color: rgba(255, 255, 255, 0.75);
+    padding-top: 4rem;
+    border-top: 3px solid var(--tz-accent);
+    margin-top: 4rem;
+}
+.tz-footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1.2fr 1.2fr 1.6fr;
+    gap: 3rem;
+    padding-bottom: 3.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.tz-footer-col-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--tz-white);
+    margin: 0 0 1.25rem 0;
+    position: relative;
+    padding-bottom: 0.65rem;
+}
+.tz-footer-col-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 32px;
+    height: 2.5px;
+    background-color: var(--tz-accent);
+    border-radius: var(--tz-radius-full);
+}
+.tz-footer-about {
+    font-size: 0.875rem;
+    line-height: 1.7;
+    margin: 1.25rem 0 1.5rem 0;
+    color: rgba(255, 255, 255, 0.65);
+}
+.tz-footer-contact-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    font-size: 0.875rem;
+}
+.tz-footer-contact-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    line-height: 1.5;
+}
+.tz-footer-contact-item i {
+    color: var(--tz-accent);
+    margin-top: 3px;
+    width: 16px;
+    text-align: center;
+}
+.tz-footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    font-size: 0.875rem;
+}
+.tz-footer-links a {
+    color: rgba(255, 255, 255, 0.65);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: var(--tz-transition-fast);
+}
+.tz-footer-links a:hover {
+    color: var(--tz-accent);
+    transform: translateX(4px);
+}
+.tz-payment-icons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+    margin-top: 1rem;
+}
+.tz-pay-badge {
+    background-color: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    padding: 0.4rem 0.85rem;
+    border-radius: var(--tz-radius-sm);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--tz-white);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+}
+
+/* FOOTER BOTTOM */
+.tz-footer-bottom {
+    padding: 1.5rem 0;
+    font-size: 0.8125rem;
+    color: rgba(255, 255, 255, 0.5);
+}
+.tz-footer-bottom-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* BACK TO TOP BUTTON */
+.tz-back-to-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 44px;
+    height: 44px;
+    background-color: var(--tz-accent);
+    color: var(--tz-white);
+    border-radius: var(--tz-radius-sm);
+    border: none;
+    box-shadow: 0 4px 14px rgba(249, 115, 22, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.15rem;
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(15px);
+    transition: var(--tz-transition);
+    z-index: 990;
+}
+.tz-back-to-top.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+.tz-back-to-top:hover {
+    background-color: var(--tz-accent-hover);
+    box-shadow: var(--tz-shadow-glow);
+    transform: translateY(-2px);
+}
+
+/* =====================================================================
+   RESPONSIVE (MEDIA QUERIES)
+   ===================================================================== */
+@media (max-width: 1199px) {
+    .tz-footer-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 2.5rem;
+    }
+    .tz-nav-menu {
+        gap: 0.1rem;
+    }
+    .tz-nav-link {
+        padding: 0.8rem 0.65rem;
+        font-size: 0.875rem;
+    }
+}
+
+@media (max-width: 991px) {
+    .tz-topbar {
+        display: none;
+    }
+    .tz-navbar {
+        display: none; /* Sử dụng mobile drawer */
+    }
+    .tz-mobile-toggle {
+        display: block;
+    }
+    .tz-main-header-inner {
+        gap: 1rem;
+    }
+    .tz-header-actions .tz-action-text {
+        display: none;
+    }
+    .tz-footer-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+    .tz-footer-bottom-inner {
+        flex-direction: column;
+        gap: 0.75rem;
+        text-align: center;
+    }
+}
+
+@media (max-width: 575px) {
+    .tz-logo-title {
+        font-size: 1.25rem;
+    }
+    .tz-logo-sub {
+        display: none;
+    }
+    .tz-logo-icon {
+        width: 38px;
+        height: 38px;
+        font-size: 1.1rem;
+    }
+    .tz-main-header {
+        padding: 0.65rem 0;
+    }
+}
+
+
+
+/* =====================================================================
+   BỔ SUNG CHO TRANG CHỦ & PRODUCT CARD NÂNG CAO (GIAI ĐOẠN 3)
+   ===================================================================== */
+
+/* Floating actions trên card sản phẩm (Yêu thích & Xem nhanh) */
+.tz-card-floating-actions {
+    position: absolute;
+    top: 0.85rem;
+    right: 0.85rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    z-index: 5;
+    opacity: 0;
+    transform: translateX(10px);
+    transition: var(--tz-transition);
+}
+.tz-product-card:hover .tz-card-floating-actions {
+    opacity: 1;
+    transform: translateX(0);
+}
+.tz-card-float-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: var(--tz-white);
+    border: 1px solid var(--tz-border);
+    color: var(--tz-text);
+    box-shadow: var(--tz-shadow-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: var(--tz-transition-fast);
+}
+.tz-card-float-btn:hover {
+    background-color: var(--tz-accent);
+    color: var(--tz-white) !important;
+    border-color: var(--tz-accent);
+    transform: scale(1.1);
+}
+.tz-card-sku {
+    font-size: 0.6875rem;
+    color: var(--tz-muted);
+    background-color: var(--tz-bg);
+    padding: 0.15rem 0.45rem;
+    border-radius: var(--tz-radius-xs);
+    font-family: monospace;
+    font-weight: 600;
+}
+
+/* SECTION HEADERS */
+.tz-section {
+    padding: 2.75rem 0;
+}
+.tz-section-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 1.75rem;
+    gap: 1rem;
+    flex-wrap: wrap;
+    border-bottom: 2px solid var(--tz-border);
+    padding-bottom: 0.85rem;
+}
+.tz-section-title-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+.tz-section-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--tz-accent);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+.tz-section-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--tz-text);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+}
+.tz-section-subtitle {
+    font-size: 0.875rem;
+    color: var(--tz-muted);
+    margin: 0;
+}
+.tz-section-viewall {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--tz-accent);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: var(--tz-transition-fast);
+}
+.tz-section-viewall:hover {
+    color: var(--tz-accent-hover);
+    transform: translateX(4px);
+}
+
+/* HERO BANNER SECTION */
+.tz-hero-section {
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+}
+.tz-hero-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1.25rem;
+}
+.tz-hero-carousel {
+    border-radius: var(--tz-radius-lg);
+    overflow: hidden;
+    box-shadow: var(--tz-shadow-md);
+    background-color: var(--tz-secondary);
+}
+.tz-hero-slide {
+    min-height: 440px;
+    background: linear-gradient(135deg, #0F172A 0%, #172554 60%, #1E1B4B 100%);
+    color: var(--tz-white);
+    padding: 3.5rem 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+.tz-hero-slide::before {
+    content: '';
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 320px;
+    height: 320px;
+    background: radial-gradient(circle, rgba(249, 115, 22, 0.25) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+.tz-hero-badge {
+    background: rgba(249, 115, 22, 0.2);
+    border: 1px solid var(--tz-accent);
+    color: var(--tz-accent);
+    font-weight: 700;
+    font-size: 0.8125rem;
+    padding: 0.35rem 0.85rem;
+    border-radius: var(--tz-radius-full);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    width: fit-content;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+}
+.tz-hero-title {
+    font-size: 2.35rem;
+    font-weight: 800;
+    line-height: 1.2;
+    margin: 0 0 1rem 0;
+    max-width: 600px;
+}
+.tz-hero-title span {
+    color: var(--tz-accent);
+}
+.tz-hero-desc {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.75);
+    max-width: 540px;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+}
+.tz-hero-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+/* Hero Side Banners */
+.tz-hero-side-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+.tz-hero-side-card {
+    border-radius: var(--tz-radius-lg);
+    padding: 1.75rem;
+    color: var(--tz-white);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    transition: var(--tz-transition);
+}
+.tz-hero-side-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--tz-shadow-lg);
+}
+.tz-side-card-1 {
+    background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.tz-side-card-2 {
+    background: linear-gradient(135deg, #172554 0%, #1E1B4B 100%);
+    border: 1px solid rgba(249, 115, 22, 0.25);
+}
+.tz-side-badge {
+    color: var(--tz-accent);
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+}
+.tz-side-title {
+    font-size: 1.2rem;
+    font-weight: 800;
+    margin: 0 0 0.5rem 0;
+    line-height: 1.3;
+}
+.tz-side-desc {
+    font-size: 0.8125rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 1rem;
+}
+
+/* PROMOTION BANNER GIỮA TRANG */
+.tz-promo-banner-wrap {
+    margin: 3.5rem 0;
+}
+.tz-promo-banner {
+    background: linear-gradient(135deg, #101828 0%, #172554 60%, #0F172A 100%);
+    border-radius: var(--tz-radius-xl);
+    border: 2px solid rgba(249, 115, 22, 0.35);
+    box-shadow: 0 12px 32px rgba(16, 24, 40, 0.15), var(--tz-shadow-glow);
+    padding: 3rem;
+    position: relative;
+    overflow: hidden;
+}
+.tz-promo-banner::before {
+    content: '';
+    position: absolute;
+    right: -80px;
+    bottom: -80px;
+    width: 380px;
+    height: 380px;
+    background: radial-gradient(circle, rgba(249, 115, 22, 0.2) 0%, transparent 70%);
+    border-radius: 50%;
+}
+.tz-promo-content {
+    position: relative;
+    z-index: 2;
+    max-width: 720px;
+}
+.tz-promo-badge {
+    background-color: var(--tz-accent);
+    color: var(--tz-white);
+    padding: 0.35rem 0.85rem;
+    border-radius: var(--tz-radius-full);
+    font-size: 0.8125rem;
+    font-weight: 800;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+}
+.tz-promo-title {
+    font-size: 2.1rem;
+    font-weight: 800;
+    color: var(--tz-white);
+    margin: 0 0 1rem 0;
+    line-height: 1.25;
+}
+.tz-promo-title span {
+    color: var(--tz-accent);
+}
+.tz-promo-desc {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1rem;
+    margin-bottom: 1.75rem;
+    line-height: 1.7;
+}
+
+/* WHY CHOOSE US */
+.tz-why-section {
+    padding: 3rem 0;
+    background-color: var(--tz-white);
+    border-top: 1px solid var(--tz-border);
+    border-bottom: 1px solid var(--tz-border);
+    margin-top: 3rem;
+}
+.tz-why-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.15rem;
+    padding: 1.25rem;
+    border-radius: var(--tz-radius-md);
+    background-color: var(--tz-bg);
+    border: 1px solid var(--tz-border);
+    transition: var(--tz-transition);
+}
+.tz-why-card:hover {
+    border-color: var(--tz-accent);
+    transform: translateY(-3px);
+    box-shadow: var(--tz-shadow-md);
+}
+.tz-why-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: var(--tz-radius-md);
+    background: linear-gradient(135deg, var(--tz-secondary) 0%, var(--tz-primary) 100%);
+    color: var(--tz-accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.35rem;
+    flex-shrink: 0;
+}
+.tz-why-card:hover .tz-why-icon {
+    background: linear-gradient(135deg, var(--tz-accent) 0%, #EA580C 100%);
+    color: var(--tz-white);
+    box-shadow: 0 4px 12px rgba(249, 115, 22, 0.35);
+}
+.tz-why-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--tz-text);
+    margin: 0 0 0.35rem 0;
+}
+.tz-why-desc {
+    font-size: 0.8125rem;
+    color: var(--tz-muted);
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* Responsive bổ sung cho hero và promo */
+@media (max-width: 991px) {
+    .tz-hero-grid {
+        grid-template-columns: 1fr;
+    }
+    .tz-hero-side-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+    .tz-hero-slide {
+        min-height: 380px;
+        padding: 2.5rem 1.75rem;
+    }
+    .tz-hero-title {
+        font-size: 1.75rem;
+    }
+    .tz-promo-title {
+        font-size: 1.6rem;
+    }
+    .tz-promo-banner {
+        padding: 2rem;
+    }
+}
+
+@media (max-width: 575px) {
+    .tz-hero-side-grid {
+        grid-template-columns: 1fr;
+    }
+    .tz-hero-slide {
+        padding: 2rem 1.25rem;
+        min-height: 320px;
+    }
+    .tz-hero-title {
+        font-size: 1.4rem;
+    }
+}
+
+
+/* =====================================================================
+   BỔ SUNG CHO TRANG DANH MỤC, BỘ LỌC & LIVE SEARCH (GIAI ĐOẠN 4)
+   ===================================================================== */
+
+/* LIVE SEARCH SUGGESTIONS DROPDOWN */
+.tz-search-suggestions {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    width: 100%;
+    background-color: var(--tz-white);
+    border: 1px solid var(--tz-border);
+    border-radius: var(--tz-radius-md);
+    box-shadow: var(--tz-shadow-xl);
+    z-index: 1100;
+    max-height: 420px;
+    overflow-y: auto;
+    padding: 0.5rem 0;
+}
+.tz-suggestion-item {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.65rem 1rem;
+    border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+    transition: var(--tz-transition-fast);
+    text-decoration: none !important;
+}
+.tz-suggestion-item:last-child {
+    border-bottom: none;
+}
+.tz-suggestion-item:hover {
+    background-color: var(--tz-accent-soft);
+}
+.tz-suggestion-thumb {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--tz-radius-xs);
+    background-color: #FAFAFA;
+    border: 1px solid var(--tz-border);
+    overflow: hidden;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.tz-suggestion-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+.tz-suggestion-info {
+    flex: 1;
+    min-width: 0;
+}
+.tz-suggestion-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--tz-text);
+    margin: 0 0 0.2rem 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.tz-suggestion-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+.tz-suggestion-price {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: var(--tz-accent);
+}
+.tz-suggestion-sku {
+    font-size: 0.6875rem;
+    color: var(--tz-muted);
+    font-family: monospace;
+}
+.tz-suggestion-footer {
+    padding: 0.65rem 1rem;
+    text-align: center;
+    background-color: var(--tz-bg);
+    border-top: 1px solid var(--tz-border);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: var(--tz-accent);
+    cursor: pointer;
+}
+.tz-suggestion-footer:hover {
+    background-color: var(--tz-accent-soft);
+}
+
+/* FILTER SIDEBAR & OPTIONS */
+.tz-filter-sidebar {
+    position: sticky;
+    top: calc(var(--tz-nav-height) + 20px);
+}
+.tz-filter-title {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: var(--tz-text);
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.35rem;
+    border-bottom: 1.5px solid var(--tz-border);
+}
+.tz-filter-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+.tz-filter-radio, .tz-filter-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.35rem 0.65rem;
+    border-radius: var(--tz-radius-xs);
+    font-size: 0.875rem;
+    color: var(--tz-text);
+    cursor: pointer;
+    margin: 0;
+    transition: var(--tz-transition-fast);
+}
+.tz-filter-radio:hover, .tz-filter-checkbox:hover {
+    background-color: var(--tz-accent-soft);
+    color: var(--tz-accent);
+}
+.tz-filter-radio.active {
+    background-color: var(--tz-accent-soft);
+    color: var(--tz-accent);
+    font-weight: 700;
+}
+.tz-filter-radio input, .tz-filter-checkbox input {
+    cursor: pointer;
+    accent-color: var(--tz-accent);
+}
+
+/* FILTER PILL CHIPS */
+.tz-filter-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    padding: 0.3rem 0.75rem;
+    border-radius: var(--tz-radius-full);
+    background-color: var(--tz-bg);
+    border: 1px solid var(--tz-border);
+    color: var(--tz-text);
+    transition: var(--tz-transition-fast);
+}
+.tz-filter-pill:hover {
+    background-color: var(--tz-danger-soft);
+    border-color: var(--tz-danger);
+    color: var(--tz-danger) !important;
+}
+
+/* TOOLBAR */
+.tz-toolbar {
+    box-shadow: var(--tz-shadow-xs);
+}
+
+
+/* =====================================================================
+   BỔ SUNG CHO TÍNH NĂNG NÂNG CAO (GIAI ĐOẠN 6: WISHLIST, RECENTLY VIEWED, COMPARE)
+   ===================================================================== */
+
+/* FLOATING COMPARE BAR */
+.tz-compare-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgba(16, 24, 40, 0.95);
+    backdrop-filter: blur(10px);
+    color: var(--tz-white);
+    padding: 0.85rem 0;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.25);
+    z-index: 1050;
+    animation: tz-slide-up 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes tz-slide-up {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+}
+.tz-compare-badge {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: var(--tz-white);
+}
+.tz-compare-badge strong {
+    color: var(--tz-accent);
+}
+.tz-compare-item-chip {
+    position: relative;
+    width: 44px;
+    height: 44px;
+    background-color: var(--tz-white);
+    border-radius: var(--tz-radius-xs);
+    border: 1.5px solid var(--tz-accent);
+    padding: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.tz-compare-item-chip img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+.tz-compare-chip-remove {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    width: 18px;
+    height: 18px;
+    background-color: var(--tz-danger);
+    color: #fff;
+    border-radius: 50%;
+    border: none;
+    font-size: 0.65rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* WISHLIST MODAL ITEMS */
+.tz-wishlist-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.85rem;
+    border-radius: var(--tz-radius-sm);
+    border: 1px solid var(--tz-border);
+    margin-bottom: 0.65rem;
+    background-color: var(--tz-white);
+    transition: var(--tz-transition-fast);
+}
+.tz-wishlist-item:hover {
+    border-color: var(--tz-accent);
+    box-shadow: var(--tz-shadow-xs);
+}
+.tz-wishlist-thumb {
+    width: 58px;
+    height: 58px;
+    border-radius: var(--tz-radius-xs);
+    background-color: #FAFAFA;
+    border: 1px solid var(--tz-border);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+.tz-wishlist-thumb img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+/* RECENTLY VIEWED CARDS */
+.tz-recent-card {
+    background-color: var(--tz-white);
+    border: 1px solid var(--tz-border);
+    border-radius: var(--tz-radius-sm);
+    padding: 0.85rem;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    transition: var(--tz-transition-fast);
+}
+.tz-recent-card:hover {
+    border-color: var(--tz-accent);
+    box-shadow: var(--tz-shadow-sm);
+    transform: translateY(-2px);
+}
+.tz-recent-thumb {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #FAFAFA;
+    border-radius: var(--tz-radius-xs);
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+}
+.tz-recent-thumb img {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+}
+.tz-recent-title {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--tz-text);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    line-height: 1.3;
+    margin-bottom: 0.35rem;
+    height: 2.6em;
+}
+.tz-recent-price {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--tz-accent);
+    margin-top: auto;
+}

@@ -1,0 +1,135 @@
+@model WebLinhKien.Models.ViewModels.Client.CompareViewModel
+
+@if (Model.SanPhams != null && Model.SanPhams.Any())
+{
+    <div class="table-responsive">
+        <table class="table table-bordered align-middle text-center mb-0 tz-compare-table">
+            <thead>
+                <tr>
+                    <th style="width: 20%; background-color: var(--tz-bg); text-align: left;">Tiêu chí / Linh kiện</th>
+                    @foreach (var sp in Model.SanPhams)
+                    {
+                        <th style="width: @(80 / Model.SanPhams.Count)%;">
+                            <div class="position-relative p-2">
+                                <button type="button" class="btn btn-sm btn-outline-danger position-absolute top-0 end-0"
+                                        title="Xóa khỏi so sánh" onclick="tzRemoveCompare(@sp.Uid)">
+                                    <i class="fa-solid fa-xmark"></i>
+                                </button>
+                                <a href="~/SanPham/ChiTiet/@sp.Uid" class="d-block mb-2 text-decoration-none">
+                                    <div class="tz-card-thumb mx-auto" style="width: 100px; height: 100px;">
+                                        @if (!string.IsNullOrEmpty(sp.AnhDaiDien))
+                                        {
+                                            <img src="@sp.AnhDaiDien" alt="@sp.TenSanPham" style="max-height: 90px; object-fit: contain;" onerror="tzImgError(this)" />
+                                            <div class="tz-thumb-fallback" style="display: none; height: 100%;">
+                                                <i class="fa-solid @CategoryIconHelper.GetIcon(sp.MaDanhMuc)"></i>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="tz-thumb-fallback" style="height: 100%;">
+                                                <i class="fa-solid @CategoryIconHelper.GetIcon(sp.MaDanhMuc)"></i>
+                                            </div>
+                                        }
+                                    </div>
+                                    <h6 class="fw-bold text-dark mb-1 small" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                                        @sp.TenSanPham
+                                    </h6>
+                                </a>
+                                <div class="text-danger fw-bold fs-6">@sp.GiaBan.ToVnd()</div>
+                                @if (sp.TonKho > 0)
+                                {
+                                    <span class="badge bg-success-subtle text-success border border-success-subtle small mt-1">Còn hàng</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger-subtle text-danger border border-danger-subtle small mt-1">Hết hàng</span>
+                                }
+                            </div>
+                        </th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Hàng: Thương hiệu -->
+                <tr>
+                    <td class="fw-bold text-start bg-light">Thương hiệu</td>
+                    @foreach (var sp in Model.SanPhams)
+                    {
+                        <td class="fw-semibold text-secondary">@(string.IsNullOrEmpty(sp.MaThuongHieu) ? "Chính hãng" : sp.MaThuongHieu)</td>
+                    }
+                </tr>
+
+                <!-- Hàng: Danh mục -->
+                <tr>
+                    <td class="fw-bold text-start bg-light">Danh mục</td>
+                    @foreach (var sp in Model.SanPhams)
+                    {
+                        <td>@CategoryIconHelper.GetCategoryName(sp.MaDanhMuc)</td>
+                    }
+                </tr>
+
+                <!-- Hàng: Bảo hành -->
+                <tr>
+                    <td class="fw-bold text-start bg-light">Thời gian bảo hành</td>
+                    @foreach (var sp in Model.SanPhams)
+                    {
+                        <td>@(sp.BaoHanhThang > 0 ? $"{sp.BaoHanhThang} tháng" : "12 tháng")</td>
+                    }
+                </tr>
+
+                <!-- Các hàng thông số kỹ thuật căn dòng chuẩn xác -->
+                @if (Model.HangThongSo != null && Model.HangThongSo.Any())
+                {
+                    <tr class="table-secondary">
+                        <td colspan="@(Model.SanPhams.Count + 1)" class="fw-bold text-start text-uppercase small py-2">
+                            <i class="fa-solid fa-list-check me-2"></i>Chi tiết thông số kỹ thuật
+                        </td>
+                    </tr>
+                    @foreach (var row in Model.HangThongSo)
+                    {
+                        <tr>
+                            <td class="fw-semibold text-start text-dark">@row.TenThongSo</td>
+                            @foreach (var sp in Model.SanPhams)
+                            {
+                                var val = row.GiaTriTheoSanPham.TryGetValue(sp.Uid, out var v) ? v : "-";
+                                <td class="@(val == "-" ? "text-muted" : "fw-semibold text-dark")">@val</td>
+                            }
+                        </tr>
+                    }
+                }
+
+                <!-- Hàng: Thao tác -->
+                <tr>
+                    <td class="bg-light"></td>
+                    @foreach (var sp in Model.SanPhams)
+                    {
+                        <td>
+                            @if (sp.TonKho > 0)
+                            {
+                                <button type="button" class="tz-btn tz-btn-sm tz-btn-accent w-100 mb-1"
+                                        onclick="tzQuickViewAddToCart(@sp.Uid)">
+                                    <i class="fa-solid fa-cart-plus me-1"></i>Thêm giỏ
+                                </button>
+                            }
+                            <a href="~/SanPham/ChiTiet/@sp.Uid" class="tz-btn tz-btn-sm tz-btn-outline w-100">
+                                Chi tiết
+                            </a>
+                        </td>
+                    }
+                </tr>
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="p-5 text-center text-muted">
+        <i class="fa-solid fa-code-compare fa-3x mb-3 text-warning d-block"></i>
+        <h5 class="fw-bold text-dark">Chưa có sản phẩm nào trong danh sách so sánh</h5>
+        <p class="small text-muted mb-3">Vui lòng chọn tối đa 3 sản phẩm trên website để tiến hành đối chiếu thông số kỹ thuật.</p>
+        <a href="~/SanPham" class="tz-btn tz-btn-accent tz-btn-sm">
+            <i class="fa-solid fa-magnifying-glass me-1"></i>Khám phá linh kiện
+        </a>
+    </div>
+}
+

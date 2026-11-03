@@ -1,0 +1,19 @@
+@model WebLinhKien.Models.ViewModels.Client.CategoryCardViewModel
+
+<a href="~/SanPham?danhMuc=@Model.MaDanhMuc" class="tz-category-card" title="@Model.TenDanhMuc">
+    <div class="tz-cat-icon">
+        <i class="fa-solid @Model.Icon"></i>
+    </div>
+    <div class="tz-cat-content">
+        <h4 class="tz-cat-name">@Model.TenDanhMuc</h4>
+        @if (Model.SoLuongSanPham > 0)
+        {
+            <span class="text-muted" style="font-size: 0.75rem;">@Model.SoLuongSanPham sản phẩm</span>
+        }
+        else
+        {
+            <span class="text-warning fw-semibold" style="font-size: 0.75rem;">Khám phá ngay &rarr;</span>
+        }
+    </div>
+</a>
+

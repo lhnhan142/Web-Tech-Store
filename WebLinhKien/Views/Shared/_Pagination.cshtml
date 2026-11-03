@@ -1,0 +1,90 @@
+@model WebLinhKien.Models.ViewModels.Client.PaginationViewModel
+
+@if (Model != null && Model.TotalPages > 1)
+{
+    Func<int, string> getUrl = (pageNum) =>
+    {
+        var dict = new Dictionary<string, string?>(Model.RouteValues)
+        {
+            ["page"] = pageNum.ToString()
+        };
+        var queryString = string.Join("&", dict
+            .Where(kvp => !string.IsNullOrEmpty(kvp.Value))
+            .Select(kvp => $"{Uri.EscapeDataString(kvp.Key)}={Uri.EscapeDataString(kvp.Value!)}"));
+
+        var baseUri = string.IsNullOrEmpty(Model.BaseUrl) ? "" : Model.BaseUrl;
+        return string.IsNullOrEmpty(queryString) ? baseUri : $"{baseUri}?{queryString}";
+    };
+
+    <nav class="tz-pagination-wrap" aria-label="Phân trang sản phẩm">
+        <!-- 1. Nút Trang đầu -->
+        @if (Model.Page > 1)
+        {
+            <a href="@getUrl(1)" class="tz-page-item" title="Về trang đầu">
+                <i class="fa-solid fa-angles-left"></i>
+            </a>
+            <!-- 2. Nút Trang trước -->
+            <a href="@getUrl(Model.Page - 1)" class="tz-page-item" title="Trang trước">
+                <i class="fa-solid fa-chevron-left"></i>
+            </a>
+        }
+        else
+        {
+            <span class="tz-page-item disabled" title="Đang ở trang đầu"><i class="fa-solid fa-angles-left"></i></span>
+            <span class="tz-page-item disabled" title="Không có trang trước"><i class="fa-solid fa-chevron-left"></i></span>
+        }
+
+        <!-- 3. Các số trang với dấu ... -->
+        @{
+            var startPage = Math.Max(1, Model.Page - 2);
+            var endPage = Math.Min(Model.TotalPages, Model.Page + 2);
+
+            if (startPage > 1)
+            {
+                <a href="@getUrl(1)" class="tz-page-item">1</a>
+                if (startPage > 2)
+                {
+                    <span class="tz-page-item disabled" style="border: none; background: transparent;">...</span>
+                }
+            }
+
+            for (var i = startPage; i <= endPage; i++)
+            {
+                if (i == Model.Page)
+                {
+                    <span class="tz-page-item active" aria-current="page">@i</span>
+                }
+                else
+                {
+                    <a href="@getUrl(i)" class="tz-page-item">@i</a>
+                }
+            }
+
+            if (endPage < Model.TotalPages)
+            {
+                if (endPage < Model.TotalPages - 1)
+                {
+                    <span class="tz-page-item disabled" style="border: none; background: transparent;">...</span>
+                }
+                <a href="@getUrl(Model.TotalPages)" class="tz-page-item">@Model.TotalPages</a>
+            }
+        }
+
+        <!-- 4. Nút Trang sau -->
+        @if (Model.Page < Model.TotalPages)
+        {
+            <a href="@getUrl(Model.Page + 1)" class="tz-page-item" title="Trang sau">
+                <i class="fa-solid fa-chevron-right"></i>
+            </a>
+            <!-- 5. Nút Trang cuối -->
+            <a href="@getUrl(Model.TotalPages)" class="tz-page-item" title="Đến trang cuối">
+                <i class="fa-solid fa-angles-right"></i>
+            </a>
+        }
+        else
+        {
+            <span class="tz-page-item disabled" title="Không có trang sau"><i class="fa-solid fa-chevron-right"></i></span>
+            <span class="tz-page-item disabled" title="Đang ở trang cuối"><i class="fa-solid fa-angles-right"></i></span>
+        }
+    </nav>
+}

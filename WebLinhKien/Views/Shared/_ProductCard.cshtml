@@ -1,0 +1,107 @@
+@model WebLinhKien.Models.ViewModels.Client.ProductCardViewModel
+
+<div class="tz-product-card" data-uid="@Model.Uid" data-category="@Model.MaDanhMuc">
+    <!-- Badges -->
+    <div class="tz-card-badges">
+        @if (Model.CoGiamGia)
+        {
+            <span class="tz-badge tz-badge-discount">-@Model.PhanTramGiam%</span>
+        }
+        @if (Model.NoiBat)
+        {
+            <span class="tz-badge tz-badge-accent"><i class="fa-solid fa-fire"></i> HOT</span>
+        }
+        @if (Model.ConHang)
+        {
+            <span class="tz-badge tz-badge-success"><i class="fa-solid fa-check"></i> Còn hàng</span>
+        }
+        else
+        {
+            <span class="tz-badge tz-badge-danger"><i class="fa-solid fa-ban"></i> Hết hàng</span>
+        }
+    </div>
+
+    <!-- Quick Action Float Buttons (Yêu thích, Xem nhanh & So sánh) -->
+    <div class="tz-card-floating-actions">
+        <button type="button" class="tz-card-float-btn tz-btn-wishlist"
+                data-wishlist-uid="@Model.Uid"
+                title="Thêm vào yêu thích"
+                onclick="tzToggleWishlist(this, { uid: @Model.Uid, ten: '@Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(Model.TenSanPham))', gia: '@Model.GiaBan.ToVnd()', anh: '@Model.AnhDaiDien', url: '/SanPham/ChiTiet/@Model.Uid' })">
+            <i class="fa-regular fa-heart"></i>
+        </button>
+        <button type="button" class="tz-card-float-btn tz-btn-quickview"
+                title="Xem nhanh chi tiết"
+                onclick="tzOpenQuickView(@Model.Uid)">
+            <i class="fa-regular fa-eye"></i>
+        </button>
+        <button type="button" class="tz-card-float-btn tz-btn-compare"
+                data-compare-uid="@Model.Uid"
+                title="So sánh cấu hình"
+                onclick="tzToggleCompare(this, { uid: @Model.Uid, ten: '@Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(Model.TenSanPham))', gia: '@Model.GiaBan.ToVnd()', anh: '@Model.AnhDaiDien', url: '/SanPham/ChiTiet/@Model.Uid' })">
+            <i class="fa-solid fa-code-compare"></i>
+        </button>
+    </div>
+
+    <!-- Ảnh sản phẩm -->
+    <a href="~/SanPham/ChiTiet/@Model.Uid" class="tz-card-thumb" title="@Model.TenSanPham">
+        @if (!string.IsNullOrEmpty(Model.AnhDaiDien))
+        {
+            <img src="@Model.AnhDaiDien" alt="@Model.TenSanPham"
+                 loading="lazy" class="tz-img-fallback"
+                 onerror="tzImgError(this)" />
+            <div class="tz-thumb-fallback" style="display: none;">
+                <i class="fa-solid @Model.IconDanhMuc"></i>
+            </div>
+        }
+        else
+        {
+            <div class="tz-thumb-fallback">
+                <i class="fa-solid @Model.IconDanhMuc"></i>
+            </div>
+        }
+    </a>
+
+    <!-- Thông tin Meta: Thương hiệu & Mã SKU -->
+    <div class="tz-card-meta">
+        <span class="tz-card-brand">@(string.IsNullOrEmpty(Model.MaThuongHieu) ? "Chính hãng" : Model.MaThuongHieu)</span>
+        <span class="tz-card-sku" title="Mã sản phẩm">SKU: @Model.MaSanPham</span>
+    </div>
+
+    <!-- Tên sản phẩm -->
+    <h3 class="tz-card-title">
+        <a href="~/SanPham/ChiTiet/@Model.Uid" title="@Model.TenSanPham">
+            @Model.TenSanPham
+        </a>
+    </h3>
+
+    <!-- Bảo hành -->
+    <div class="d-flex align-items-center gap-1 mb-2 text-muted" style="font-size: 0.75rem;">
+        <i class="fa-solid fa-shield-halved text-success"></i>
+        <span>Bảo hành: @(Model.BaoHanhThang > 0 ? $"{Model.BaoHanhThang} tháng" : "12 tháng")</span>
+    </div>
+
+    <!-- Giá bán & Giá gốc -->
+    <div class="tz-card-pricing">
+        <div class="tz-price-current">@Model.GiaBan.ToVnd()</div>
+        @if (Model.CoGiamGia)
+        {
+            <div class="tz-price-old-wrap">
+                <span class="tz-price-old">@Model.GiaGoc.ToVnd()</span>
+                <span class="text-danger fw-semibold" style="font-size: 0.75rem;">
+                    (-@((Model.GiaGoc - Model.GiaBan).ToVnd()))
+                </span>
+            </div>
+        }
+    </div>
+
+    <!-- Nút tương tác -->
+    <div class="tz-card-action">
+        <a href="~/SanPham/ChiTiet/@Model.Uid" class="tz-btn-view-detail">
+            <i class="fa-solid fa-circle-info"></i>
+            <span>Xem chi tiết</span>
+        </a>
+        <a href="~/SanPham/ChiTiet/@Model.Uid" class="tz-btn-quick-buy" title="Xem chi tiết & Mua ngay">
+            <i class="fa-solid fa-arrow-right"></i>
+        </a>
+    </div>
+</div>

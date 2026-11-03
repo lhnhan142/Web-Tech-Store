@@ -1,0 +1,17 @@
+@model WebLinhKien.Models.ViewModels.Client.EmptyStateViewModel
+
+<div class="tz-empty-state">
+    <div class="tz-empty-icon">
+        <i class="fa-solid @Model.Icon"></i>
+    </div>
+    <h3 class="tz-empty-title">@Model.Title</h3>
+    <p class="tz-empty-desc">@Model.Description</p>
+    @if (!string.IsNullOrEmpty(Model.ActionText) && !string.IsNullOrEmpty(Model.ActionUrl))
+    {
+        <a href="@Url.Content(Model.ActionUrl)" class="tz-btn tz-btn-accent">
+            <i class="fa-solid fa-arrow-left"></i>
+            <span>@Model.ActionText</span>
+        </a>
+    }
+</div>
+

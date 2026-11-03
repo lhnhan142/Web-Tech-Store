@@ -1,0 +1,13 @@
+@model WebLinhKien.Models.ViewModels.Client.BrandCardViewModel
+
+<a href="~/SanPham?thuongHieu=@Model.MaThuongHieu" class="tz-brand-card" title="@Model.TenThuongHieu">
+    @if (!string.IsNullOrEmpty(Model.Logo))
+    {
+        <img src="@Model.Logo" alt="@Model.TenThuongHieu" style="max-height: 42px; width: auto;" />
+    }
+    else
+    {
+        <span class="tz-brand-name">@Model.TenThuongHieu</span>
+    }
+</a>
+

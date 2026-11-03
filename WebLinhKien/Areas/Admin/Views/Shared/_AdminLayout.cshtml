@@ -5,7 +5,7 @@
     var tabHienTai = ctrl switch
     {
         "DonHang" => "don-hang",
-        "DanhMuc" or "ThuongHieu" => "san-pham",
+        "SanPham" or "DanhMuc" or "ThuongHieu" => "san-pham",
         "CaiDat" => "cai-dat",
         _ => "tong-quan"
     };
@@ -15,7 +15,7 @@
     {
         (Khoa: "tong-quan", Ten: "Tổng quan", Icon: "fa-gauge-high", Ctrl: "Home"),
         (Khoa: "don-hang", Ten: "Đơn hàng", Icon: "fa-receipt", Ctrl: "DonHang"),
-        (Khoa: "san-pham", Ten: "Sản phẩm", Icon: "fa-box-open", Ctrl: "DanhMuc"),
+        (Khoa: "san-pham", Ten: "Sản phẩm", Icon: "fa-box-open", Ctrl: "SanPham"),
         (Khoa: "cai-dat", Ten: "Cài đặt", Icon: "fa-gear", Ctrl: "CaiDat")
     };
 
@@ -24,7 +24,7 @@
     {
         ["tong-quan"] = ("Tổng quan", new[] { ("Home", "Bảng điều khiển", "fa-gauge-high") }),
         ["don-hang"] = ("Đơn hàng", new[] { ("DonHang", "Danh sách đơn", "fa-list") }),
-        ["san-pham"] = ("Phân loại", new[] { ("DanhMuc", "Danh mục", "fa-layer-group"), ("ThuongHieu", "Thương hiệu", "fa-tags") }),
+        ["san-pham"] = ("Sản phẩm", new[] { ("SanPham", "Danh sách sản phẩm", "fa-box-open"), ("DanhMuc", "Danh mục", "fa-layer-group"), ("ThuongHieu", "Thương hiệu", "fa-tags") }),
         ["cai-dat"] = ("Cài đặt cửa hàng", new[] { ("CaiDat", "Thông tin cửa hàng", "fa-store") })
     };
 

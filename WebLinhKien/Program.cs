@@ -39,6 +39,8 @@ namespace WebLinhKien
             }
 
             app.UseHttpsRedirection();
+            // MapStaticAssets chỉ phục vụ file có sẵn lúc build; ảnh admin tải lên lúc chạy (wwwroot/uploads) cần UseStaticFiles
+            app.UseStaticFiles();
             app.UseRouting();
 
             app.UseRouting();

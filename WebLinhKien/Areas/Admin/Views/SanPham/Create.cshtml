@@ -1,0 +1,12 @@
+@model WebLinhKien.Models.Requests.SanPhamForm
+@{
+    ViewData["Title"] = "Thêm sản phẩm";
+}
+
+<div class="ad-pagehead"><h1 class="ad-title">Thêm sản phẩm</h1></div>
+<partial name="_Form" model="Model" view-data="ViewData" />
+
+@section Scripts {
+    <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
+    <script src="~/js/admin-san-pham.js" asp-append-version="true"></script>
+}

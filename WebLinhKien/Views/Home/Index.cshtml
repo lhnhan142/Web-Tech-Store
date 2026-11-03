@@ -1,8 +1,396 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+@model WebLinhKien.Models.ViewModels.Client.HomeViewModel
+@{
+    ViewData["Title"] = "Trang chủ - Cửa hàng linh kiện máy tính chuyên nghiệp";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<!-- =====================================================================
+     1. HERO BANNER SECTION (Slider + Side Promo Cards)
+     ===================================================================== -->
+<section class="tz-hero-section">
+    <div class="tz-container">
+        <div class="tz-hero-grid">
+            <!-- Main Hero Carousel -->
+            <div id="tzHeroCarousel" class="carousel slide tz-hero-carousel" data-bs-ride="carousel" data-bs-interval="5000">
+                <div class="carousel-indicators">
+                    <button type="button" data-bs-target="#tzHeroCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                    <button type="button" data-bs-target="#tzHeroCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                </div>
+                <div class="carousel-inner">
+                    <!-- Slide 1 -->
+                    <div class="carousel-item active">
+                        <div class="tz-hero-slide">
+                            <span class="tz-hero-badge">
+                                <i class="fa-solid fa-bolt"></i> SIÊU BÃO CÔNG NGHỆ 2026
+                            </span>
+                            <h1 class="tz-hero-title">
+                                THỐNG TRỊ MỌI TỰA GAME VỚI <span>PC TECHZONE</span>
+                            </h1>
+                            <p class="tz-hero-desc">
+                                Trang bị bộ vi xử lý Intel Core & AMD Ryzen thế hệ mới cùng Card đồ họa RTX Series đỉnh cao.
+                                Sức mạnh bứt phá, khung hình mượt mà, sẵn sàng cho mọi đấu trường eSports.
+                            </p>
+                            <div class="tz-hero-actions">
+                                <a href="~/SanPham" class="tz-btn tz-btn-accent tz-btn-lg">
+                                    <i class="fa-solid fa-gamepad"></i>
+                                    <span>Khám phá sản phẩm</span>
+                                </a>
+                                <a href="#best-deals" class="tz-btn tz-btn-outline tz-btn-lg text-white" style="border-color: rgba(255,255,255,0.3);">
+                                    <i class="fa-solid fa-tags"></i>
+                                    <span>Xem khuyến mãi HOT</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Slide 2 -->
+                    <div class="carousel-item">
+                        <div class="tz-hero-slide" style="background: linear-gradient(135deg, #172554 0%, #0F172A 70%, #1E293B 100%);">
+                            <span class="tz-hero-badge">
+                                <i class="fa-solid fa-screwdriver-wrench"></i> TƯ VẤN BUILD PC THEO YÊU CẦU
+                            </span>
+                            <h2 class="tz-hero-title">
+                                TỰ TAY CHỌN LINH KIỆN <span>TỐI ƯU CHI PHÍ</span>
+                            </h2>
+                            <p class="tz-hero-desc">
+                                Đầy đủ các dòng Mainboard, RAM DDR4/DDR5, Ổ cứng SSD NVMe tốc độ cao và nguồn máy tính chuẩn 80 Plus.
+                                Kỹ thuật viên kiểm tra độ tương thích 100% trước khi lắp ráp.
+                            </p>
+                            <div class="tz-hero-actions">
+                                <a href="~/SanPham" class="tz-btn tz-btn-accent tz-btn-lg">
+                                    <i class="fa-solid fa-layer-group"></i>
+                                    <span>Xem kho linh kiện</span>
+                                </a>
+                                <a href="tel:19008888" class="tz-btn tz-btn-secondary tz-btn-lg">
+                                    <i class="fa-solid fa-phone"></i>
+                                    <span>Hotline: 1900 8888</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#tzHeroCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Trước</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#tzHeroCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Sau</span>
+                </button>
+            </div>
+
+            <!-- Side Promo Cards -->
+            <div class="tz-hero-side-grid">
+                <a href="~/SanPham?danhMuc=VGA" class="tz-hero-side-card tz-side-card-1 text-decoration-none">
+                    <span class="tz-side-badge"><i class="fa-solid fa-fire text-danger"></i> Đồ họa đỉnh cao</span>
+                    <h3 class="tz-side-title">Card Màn Hình VGA Gaming</h3>
+                    <p class="tz-side-desc">RTX 3060, RX 6600 sẵn sàng cân mượt Full HD & 2K.</p>
+                    <span class="tz-btn tz-btn-sm tz-btn-accent w-fit">Xem chi tiết &rarr;</span>
+                </a>
+                <a href="~/SanPham?danhMuc=SSD" class="tz-hero-side-card tz-side-card-2 text-decoration-none">
+                    <span class="tz-side-badge"><i class="fa-solid fa-bolt text-warning"></i> Siêu tốc độ</span>
+                    <h3 class="tz-side-title">SSD NVMe PCIe 4.0 / 3.0</h3>
+                    <p class="tz-side-desc">Khởi động Windows và load game trong chớp mắt.</p>
+                    <span class="tz-btn tz-btn-sm tz-btn-outline text-white w-fit" style="border-color: rgba(255,255,255,0.3);">Khám phá &rarr;</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- =====================================================================
+     2. CATEGORY SECTION (Danh mục linh kiện thực tế từ Database)
+     ===================================================================== -->
+<section class="tz-section" style="background-color: var(--tz-white); border-top: 1px solid var(--tz-border); border-bottom: 1px solid var(--tz-border);">
+    <div class="tz-container">
+        <div class="tz-section-header">
+            <div class="tz-section-title-wrap">
+                <span class="tz-section-badge"><i class="fa-solid fa-cubes"></i> Phân loại phần cứng</span>
+                <h2 class="tz-section-title">Danh Mục Linh Kiện Máy Tính</h2>
+                <p class="tz-section-subtitle">Lựa chọn từng linh kiện cấu thành nên dàn PC theo đúng nhu cầu sử dụng của bạn</p>
+            </div>
+            <a href="~/SanPham" class="tz-section-viewall">
+                <span>Xem tất cả danh mục</span>
+                <i class="fa-solid fa-arrow-right"></i>
+            </a>
+        </div>
+
+        @if (Model.Categories != null && Model.Categories.Any())
+        {
+            <div class="row g-3 row-cols-2 row-cols-md-4 row-cols-lg-4">
+                @foreach (var cat in Model.Categories)
+                {
+                    <div class="col">
+                        @await Html.PartialAsync("_CategoryCard", cat)
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            @await Html.PartialAsync("_EmptyState", new EmptyStateViewModel
+            {
+                Icon = "fa-folder-open",
+                Title = "Chưa có danh mục nào",
+                Description = "Hiện hệ thống đang cập nhật danh mục linh kiện mới.",
+                ActionText = "Làm mới trang",
+                ActionUrl = "/"
+            })
+        }
+    </div>
+</section>
+
+<!-- =====================================================================
+     3. FEATURED PRODUCTS (Sản phẩm nổi bật / Bán chạy)
+     ===================================================================== -->
+<section class="tz-section">
+    <div class="tz-container">
+        <div class="tz-section-header">
+            <div class="tz-section-title-wrap">
+                <span class="tz-section-badge"><i class="fa-solid fa-fire text-danger"></i> Được game thủ yêu thích</span>
+                <h2 class="tz-section-title">Sản Phẩm Nổi Bật Bán Chạy</h2>
+                <p class="tz-section-subtitle">Những linh kiện máy tính có hiệu năng vượt trội và được cộng đồng tin dùng nhiều nhất</p>
+            </div>
+            <a href="~/SanPham" class="tz-section-viewall">
+                <span>Xem thêm linh kiện nổi bật</span>
+                <i class="fa-solid fa-arrow-right"></i>
+            </a>
+        </div>
+
+        @if (Model.FeaturedProducts != null && Model.FeaturedProducts.Any())
+        {
+            <div class="row g-3 row-cols-2 row-cols-md-3 row-cols-lg-4">
+                @foreach (var product in Model.FeaturedProducts)
+                {
+                    <div class="col">
+                        @await Html.PartialAsync("_ProductCard", product)
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            @await Html.PartialAsync("_EmptyState", new EmptyStateViewModel
+            {
+                Icon = "fa-box-open",
+                Title = "Chưa có sản phẩm nổi bật",
+                Description = "Các sản phẩm nổi bật đang được cập nhật thêm vào kho linh kiện.",
+                ActionText = "Xem tất cả sản phẩm",
+                ActionUrl = "/SanPham"
+            })
+        }
+    </div>
+</section>
+
+<!-- =====================================================================
+     4. PROMOTION BANNER (Banner quảng cáo giữa trang)
+     ===================================================================== -->
+<div class="tz-container">
+    <div class="tz-promo-banner-wrap">
+        <div class="tz-promo-banner">
+            <div class="tz-promo-content">
+                <span class="tz-promo-badge">
+                    <i class="fa-solid fa-gift"></i> ĐẶC QUYỀN KHÁCH HÀNG TECHZONE
+                </span>
+                <h2 class="tz-promo-title">
+                    BUILD PC GAMING ĐỈNH CAO <span>TIẾT KIỆM ĐẾN 20%</span>
+                </h2>
+                <p class="tz-promo-desc">
+                    Hỗ trợ kiểm tra độ tương thích linh kiện 100%, bảo hành 1 đổi 1 tận nơi, miễn phí giao hàng toàn quốc
+                    cho đơn hàng từ 500.000đ và tư vấn kỹ thuật chuyên sâu trọn đời máy.
+                </p>
+                <div class="d-flex align-items-center gap-3 flex-wrap">
+                    <a href="~/SanPham" class="tz-btn tz-btn-accent tz-btn-lg">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                        <span>Mua sắm linh kiện ngay</span>
+                    </a>
+                    <a href="tel:19008888" class="tz-btn tz-btn-outline tz-btn-lg text-white" style="border-color: rgba(255,255,255,0.4);">
+                        <i class="fa-solid fa-headset"></i>
+                        <span>Tư vấn: 1900 8888</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<!-- =====================================================================
+     5. BEST DEALS (Sản phẩm khuyến mãi giá sốc)
+     ===================================================================== -->
+<section class="tz-section" id="best-deals">
+    <div class="tz-container">
+        <div class="tz-section-header">
+            <div class="tz-section-title-wrap">
+                <div class="d-flex align-items-center gap-2">
+                    <span class="tz-section-badge"><i class="fa-solid fa-bolt text-warning"></i> Giảm giá chớp nhoáng</span>
+                    <span class="tz-badge tz-badge-discount">HOT DEAL</span>
+                </div>
+                <h2 class="tz-section-title">Giá Tốt Nhất – Khuyến Mãi Đậm</h2>
+                <p class="tz-section-subtitle">Cơ hội nâng cấp phần cứng máy tính với mức giá chiết khấu trực tiếp tốt nhất hôm nay</p>
+            </div>
+            <a href="~/SanPham" class="tz-section-viewall">
+                <span>Xem tất cả ưu đãi</span>
+                <i class="fa-solid fa-arrow-right"></i>
+            </a>
+        </div>
+
+        @if (Model.BestDeals != null && Model.BestDeals.Any())
+        {
+            <div class="row g-3 row-cols-2 row-cols-md-3 row-cols-lg-4">
+                @foreach (var product in Model.BestDeals)
+                {
+                    <div class="col">
+                        @await Html.PartialAsync("_ProductCard", product)
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            @await Html.PartialAsync("_EmptyState", new EmptyStateViewModel
+            {
+                Icon = "fa-tags",
+                Title = "Chưa có sản phẩm khuyến mãi",
+                Description = "Các chương trình ưu đãi mới nhất đang được cập nhật sớm.",
+                ActionText = "Xem sản phẩm khác",
+                ActionUrl = "/SanPham"
+            })
+        }
+    </div>
+</section>
+
+<!-- =====================================================================
+     6. NEW ARRIVALS (Sản phẩm mới về)
+     ===================================================================== -->
+<section class="tz-section" style="background-color: var(--tz-white); border-top: 1px solid var(--tz-border); border-bottom: 1px solid var(--tz-border);">
+    <div class="tz-container">
+        <div class="tz-section-header">
+            <div class="tz-section-title-wrap">
+                <span class="tz-section-badge"><i class="fa-solid fa-sparkles text-warning"></i> Vừa cập bến kho</span>
+                <h2 class="tz-section-title">Linh Kiện Mới Về</h2>
+                <p class="tz-section-subtitle">Đón đầu xu hướng công nghệ phần cứng với những dòng linh kiện mới nhất tại TECHZONE</p>
+            </div>
+            <a href="~/SanPham" class="tz-section-viewall">
+                <span>Xem thêm hàng mới</span>
+                <i class="fa-solid fa-arrow-right"></i>
+            </a>
+        </div>
+
+        @if (Model.NewArrivals != null && Model.NewArrivals.Any())
+        {
+            <div class="row g-3 row-cols-2 row-cols-md-3 row-cols-lg-4">
+                @foreach (var product in Model.NewArrivals)
+                {
+                    <div class="col">
+                        @await Html.PartialAsync("_ProductCard", product)
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            @await Html.PartialAsync("_EmptyState", new EmptyStateViewModel
+            {
+                Icon = "fa-boxes-packing",
+                Title = "Chưa có sản phẩm mới",
+                Description = "Hệ thống sẽ cập nhật sản phẩm mới ngay khi có đợt hàng về.",
+                ActionText = "Về đầu trang",
+                ActionUrl = "/"
+            })
+        }
+    </div>
+</section>
+
+<!-- =====================================================================
+     7. BRAND SECTION (Thương hiệu đối tác từ Database)
+     ===================================================================== -->
+<section class="tz-section">
+    <div class="tz-container">
+        <div class="tz-section-header text-center justify-content-center border-0 pb-0">
+            <div class="tz-section-title-wrap align-items-center">
+                <span class="tz-section-badge"><i class="fa-solid fa-handshake"></i> Đối tác tin cậy</span>
+                <h2 class="tz-section-title">Thương Hiệu Hàng Đầu Thế Giới</h2>
+                <p class="tz-section-subtitle">TECHZONE là đơn vị phân phối chính hãng các thương hiệu linh kiện máy tính uy tín toàn cầu</p>
+            </div>
+        </div>
+
+        @if (Model.Brands != null && Model.Brands.Any())
+        {
+            <div class="row g-3 row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 justify-content-center mt-3">
+                @foreach (var brand in Model.Brands)
+                {
+                    <div class="col">
+                        @await Html.PartialAsync("_BrandCard", brand)
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            @await Html.PartialAsync("_EmptyState", new EmptyStateViewModel
+            {
+                Icon = "fa-copyright",
+                Title = "Chưa có thương hiệu",
+                Description = "Đang cập nhật danh mục đối tác thương hiệu.",
+                ActionText = "Xem linh kiện",
+                ActionUrl = "/SanPham"
+            })
+        }
+    </div>
+</section>
+
+<!-- =====================================================================
+     8. WHY CHOOSE US (Lý do chọn TECHZONE)
+     ===================================================================== -->
+<section class="tz-why-section">
+    <div class="tz-container">
+        <div class="row g-4 row-cols-1 row-cols-md-2 row-cols-lg-4">
+            <!-- 1. Sản phẩm chất lượng -->
+            <div class="col">
+                <div class="tz-why-card">
+                    <div class="tz-why-icon">
+                        <i class="fa-solid fa-certificate"></i>
+                    </div>
+                    <div>
+                        <h4 class="tz-why-title">Sản phẩm chất lượng</h4>
+                        <p class="tz-why-desc">Cam kết 100% linh kiện chính hãng nguyên seal từ các nhà phân phối lớn.</p>
+                    </div>
+                </div>
+            </div>
+            <!-- 2. Bảo hành rõ ràng -->
+            <div class="col">
+                <div class="tz-why-card">
+                    <div class="tz-why-icon">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <div>
+                        <h4 class="tz-why-title">Bảo hành rõ ràng</h4>
+                        <p class="tz-why-desc">Chính sách bảo hành lên tới 36 tháng, hỗ trợ quy trình 1 đổi 1 nhanh gọn.</p>
+                    </div>
+                </div>
+            </div>
+            <!-- 3. Tư vấn chuyên nghiệp -->
+            <div class="col">
+                <div class="tz-why-card">
+                    <div class="tz-why-icon">
+                        <i class="fa-solid fa-user-gear"></i>
+                    </div>
+                    <div>
+                        <h4 class="tz-why-title">Tư vấn chuyên nghiệp</h4>
+                        <p class="tz-why-desc">Kỹ thuật viên am hiểu phần cứng, tư vấn tối ưu hiệu năng theo ngân sách.</p>
+                    </div>
+                </div>
+            </div>
+            <!-- 4. Hỗ trợ khách hàng -->
+            <div class="col">
+                <div class="tz-why-card">
+                    <div class="tz-why-icon">
+                        <i class="fa-solid fa-headset"></i>
+                    </div>
+                    <div>
+                        <h4 class="tz-why-title">Hỗ trợ khách hàng</h4>
+                        <p class="tz-why-desc">Hỗ trợ kỹ thuật và chăm sóc khách hàng tận tâm trước, trong và sau mua hàng.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

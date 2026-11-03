@@ -1,0 +1,340 @@
+@using WebLinhKien.Helpers
+@using WebLinhKien.Models.ViewModels.Client
+@{
+    var soLuongGioHang = 0;
+    try
+    {
+        soLuongGioHang = GioHangSession.Doc(Context.Session).Sum(i => i.SoLuong);
+    }
+    catch { }
+
+    var currentPath = Context.Request.Path.Value ?? "/";
+    var queryDanhMuc = Context.Request.Query["danhMuc"].ToString();
+    var queryThuongHieu = Context.Request.Query["thuongHieu"].ToString();
+    var querySearch = Context.Request.Query["q"].ToString();
+
+    var activeCat = "";
+    var activeBrand = "";
+
+    // 1. Kiểm tra từ Model
+    if (Model is ProductListViewModel listVm)
+    {
+        activeCat = listVm.Filter?.DanhMuc ?? "";
+        activeBrand = listVm.Filter?.ThuongHieu ?? "";
+    }
+    else if (Model is ProductDetailViewModel detailVm && detailVm.SanPham != null)
+    {
+        activeCat = detailVm.SanPham.MaDanhMuc ?? "";
+        activeBrand = detailVm.SanPham.MaThuongHieu ?? "";
+    }
+
+    // 2. Fallback từ Query String và Route Values
+    if (string.IsNullOrEmpty(activeCat))
+    {
+        activeCat = !string.IsNullOrEmpty(queryDanhMuc) ? queryDanhMuc : (ViewContext.RouteData.Values["maDanhMuc"]?.ToString() ?? "");
+    }
+    if (string.IsNullOrEmpty(activeBrand))
+    {
+        activeBrand = !string.IsNullOrEmpty(queryThuongHieu) ? queryThuongHieu : (ViewContext.RouteData.Values["maThuongHieu"]?.ToString() ?? "");
+    }
+
+    // Trang chủ chỉ sáng khi ở root "/" hoặc "/Home/Index" và không có lọc danh mục, hãng hay tìm kiếm
+    var isHome = (currentPath == "/" || currentPath.Equals("/Home", StringComparison.OrdinalIgnoreCase) || currentPath.Equals("/Home/Index", StringComparison.OrdinalIgnoreCase))
+                 && string.IsNullOrEmpty(activeCat)
+                 && string.IsNullOrEmpty(activeBrand)
+                 && string.IsNullOrEmpty(querySearch);
+
+    bool IsCatActive(string catCode) => string.Equals(activeCat, catCode, StringComparison.OrdinalIgnoreCase);
+    bool IsBrandActive(string brandCode) => string.Equals(activeBrand, brandCode, StringComparison.OrdinalIgnoreCase);
+}
+
+<header class="tz-header-wrapper">
+    <!-- 1. TOP BAR -->
+    <div class="tz-topbar">
+        <div class="tz-container tz-topbar-inner">
+            <div class="tz-topbar-left">
+                <div class="tz-topbar-item">
+                    <i class="fa-solid fa-headset"></i>
+                    <span>Hotline bán hàng: <strong class="tz-hotline-badge">1900 8888</strong> (08:00 - 21:30)</span>
+                </div>
+                <div class="tz-topbar-item d-none d-md-flex">
+                    <i class="fa-solid fa-bolt"></i>
+                    <span>🔥 Mùa tựu trường: Giảm sốc linh kiện PC Gaming tới 30%</span>
+                </div>
+            </div>
+            <div class="tz-topbar-right">
+                <div class="tz-topbar-item">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <span>100% Chính Hãng - Bảo hành tới 36T</span>
+                </div>
+                <div class="tz-topbar-item d-none d-lg-flex">
+                    <i class="fa-solid fa-truck-fast"></i>
+                    <span>Miễn phí giao hàng đơn từ 500k</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. MAIN HEADER -->
+    <div class="tz-main-header">
+        <div class="tz-container tz-main-header-inner">
+            <!-- Mobile Toggle -->
+            <button class="tz-mobile-toggle" type="button" aria-label="Mở menu điều hướng">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+
+            <!-- Logo -->
+            <a href="~/" class="tz-logo">
+                <div class="tz-logo-icon">
+                    <i class="fa-solid fa-microchip"></i>
+                </div>
+                <div class="tz-logo-text">
+                    <div class="tz-logo-title">TECH<span>ZONE</span></div>
+                    <div class="tz-logo-sub">PC COMPONENTS STORE</div>
+                </div>
+            </a>
+
+            <!-- Search Bar with Live Suggestions Dropdown -->
+            <div class="tz-search-bar">
+                <form action="~/SanPham" method="get" class="tz-search-form" id="tz-header-search-form">
+                    <input type="text" name="q" id="tz-search-input" class="tz-search-input"
+                           placeholder="Tìm kiếm CPU, VGA, Mainboard, RAM, SSD..."
+                           value="@Context.Request.Query["q"]" autocomplete="off" />
+                    <button type="submit" class="tz-search-btn" aria-label="Tìm kiếm">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
+                </form>
+                <!-- Live Search Suggestions Container -->
+                <div id="tz-search-suggestions" class="tz-search-suggestions" style="display: none;"></div>
+            </div>
+
+            <!-- Header Actions -->
+            <div class="tz-header-actions">
+                <!-- Tài khoản -->
+                <a href="~/Admin/Account/Login" class="tz-action-item" title="Tài khoản / Quản trị">
+                    <div class="tz-action-icon-wrap">
+                        <i class="fa-regular fa-user"></i>
+                    </div>
+                    <div class="tz-action-text">
+                        <span class="tz-action-label">Tài khoản</span>
+                        <span class="tz-action-title">Đăng nhập</span>
+                    </div>
+                </a>
+
+                <!-- Yêu thích (Wishlist modal) -->
+                <a href="javascript:void(0)" class="tz-action-item" onclick="tzOpenWishlistModal()" title="Danh sách yêu thích">
+                    <div class="tz-action-icon-wrap">
+                        <i class="fa-regular fa-heart"></i>
+                        <span class="tz-badge-count" id="tz-header-wishlist-count">0</span>
+                    </div>
+                    <div class="tz-action-text">
+                        <span class="tz-action-label">Yêu thích</span>
+                        <span class="tz-action-title">Sản phẩm</span>
+                    </div>
+                </a>
+
+                <!-- Giỏ hàng (chuyển sang /DatHang của Thành viên C) -->
+                <a href="~/DatHang" class="tz-action-item" title="Giỏ hàng & Đặt hàng">
+                    <div class="tz-action-icon-wrap">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                        <span class="tz-badge-count" id="tz-header-cart-count">@soLuongGioHang</span>
+                    </div>
+                    <div class="tz-action-text">
+                        <span class="tz-action-label">Giỏ hàng</span>
+                        <span class="tz-action-title">Đặt hàng</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. NAVIGATION & STICKY HEADER -->
+    <nav class="tz-navbar">
+        <div class="tz-container tz-navbar-inner">
+            <!-- Mega Menu Danh mục -->
+            <div class="tz-megamenu-wrapper">
+                <button type="button" class="tz-megamenu-toggle">
+                    <i class="fa-solid fa-bars-staggered"></i>
+                    <span>DANH MỤC LINH KIỆN</span>
+                    <i class="fa-solid fa-chevron-down ms-auto" style="font-size: 0.75rem;"></i>
+                </button>
+                <div class="tz-megamenu-dropdown">
+                    <a href="~/SanPham?danhMuc=CPU" class="tz-megamenu-item @(IsCatActive("CPU") ? "active" : "")">
+                        <div class="tz-megamenu-item-content">
+                            <span class="tz-megamenu-icon"><i class="fa-solid fa-microchip"></i></span>
+                            <span>CPU - Bộ vi xử lý</span>
+                        </div>
+                        <i class="fa-solid fa-chevron-right" style="font-size: 0.7rem; color: #94A3B8;"></i>
+                    </a>
+                    <a href="~/SanPham?danhMuc=MAINBOARD" class="tz-megamenu-item @(IsCatActive("MAINBOARD") ? "active" : "")">
+                        <div class="tz-megamenu-item-content">
+                            <span class="tz-megamenu-icon"><i class="fa-solid fa-server"></i></span>
+                            <span>Mainboard - Bo mạch chủ</span>
+                        </div>
+                        <i class="fa-solid fa-chevron-right" style="font-size: 0.7rem; color: #94A3B8;"></i>
+                    </a>
+                    <a href="~/SanPham?danhMuc=RAM" class="tz-megamenu-item @(IsCatActive("RAM") ? "active" : "")">
+                        <div class="tz-megamenu-item-content">
+                            <span class="tz-megamenu-icon"><i class="fa-solid fa-memory"></i></span>
+                            <span>RAM - Bộ nhớ trong</span>
+                        </div>
+                        <i class="fa-solid fa-chevron-right" style="font-size: 0.7rem; color: #94A3B8;"></i>
+                    </a>
+                    <a href="~/SanPham?danhMuc=VGA" class="tz-megamenu-item @(IsCatActive("VGA") ? "active" : "")">
+                        <div class="tz-megamenu-item-content">
+                            <span class="tz-megamenu-icon"><i class="fa-solid fa-display"></i></span>
+                            <span>VGA - Card màn hình</span>
+                        </div>
+                        <i class="fa-solid fa-chevron-right" style="font-size: 0.7rem; color: #94A3B8;"></i>
+                    </a>
+                    <a href="~/SanPham?danhMuc=SSD" class="tz-megamenu-item @(IsCatActive("SSD") ? "active" : "")">
+                        <div class="tz-megamenu-item-content">
+                            <span class="tz-megamenu-icon"><i class="fa-solid fa-hard-drive"></i></span>
+                            <span>SSD - Ổ cứng thể rắn</span>
+                        </div>
+                        <i class="fa-solid fa-chevron-right" style="font-size: 0.7rem; color: #94A3B8;"></i>
+                    </a>
+                    <a href="~/SanPham?danhMuc=PSU" class="tz-megamenu-item @(IsCatActive("PSU") ? "active" : "")">
+                        <div class="tz-megamenu-item-content">
+                            <span class="tz-megamenu-icon"><i class="fa-solid fa-bolt"></i></span>
+                            <span>Nguồn máy tính (PSU)</span>
+                        </div>
+                        <i class="fa-solid fa-chevron-right" style="font-size: 0.7rem; color: #94A3B8;"></i>
+                    </a>
+                    <a href="~/SanPham?danhMuc=CASE" class="tz-megamenu-item @(IsCatActive("CASE") ? "active" : "")">
+                        <div class="tz-megamenu-item-content">
+                            <span class="tz-megamenu-icon"><i class="fa-solid fa-desktop"></i></span>
+                            <span>Vỏ Case Gaming</span>
+                        </div>
+                        <i class="fa-solid fa-chevron-right" style="font-size: 0.7rem; color: #94A3B8;"></i>
+                    </a>
+                    <a href="~/SanPham?danhMuc=PHUKIEN" class="tz-megamenu-item @(IsCatActive("PHUKIEN") ? "active" : "")">
+                        <div class="tz-megamenu-item-content">
+                            <span class="tz-megamenu-icon"><i class="fa-solid fa-computer-mouse"></i></span>
+                            <span>Phụ kiện & Gaming Gear</span>
+                        </div>
+                        <i class="fa-solid fa-chevron-right" style="font-size: 0.7rem; color: #94A3B8;"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Links điều hướng ngang -->
+            <ul class="tz-nav-menu">
+                <li class="tz-nav-item">
+                    <a href="~/" class="tz-nav-link @(isHome ? "active" : "")">
+                        <i class="fa-solid fa-house"></i>
+                        <span>Trang chủ</span>
+                    </a>
+                </li>
+                <li class="tz-nav-item">
+                    <a href="~/SanPham?danhMuc=CPU" class="tz-nav-link @(IsCatActive("CPU") ? "active" : "")">
+                        <i class="fa-solid fa-microchip"></i>
+                        <span>CPU</span>
+                    </a>
+                </li>
+                <li class="tz-nav-item">
+                    <a href="~/SanPham?danhMuc=MAINBOARD" class="tz-nav-link @(IsCatActive("MAINBOARD") ? "active" : "")">
+                        <i class="fa-solid fa-server"></i>
+                        <span>Mainboard</span>
+                    </a>
+                </li>
+                <li class="tz-nav-item">
+                    <a href="~/SanPham?danhMuc=RAM" class="tz-nav-link @(IsCatActive("RAM") ? "active" : "")">
+                        <i class="fa-solid fa-memory"></i>
+                        <span>RAM</span>
+                    </a>
+                </li>
+                <li class="tz-nav-item">
+                    <a href="~/SanPham?danhMuc=VGA" class="tz-nav-link @(IsCatActive("VGA") ? "active" : "")">
+                        <i class="fa-solid fa-display"></i>
+                        <span>VGA</span>
+                    </a>
+                </li>
+                <li class="tz-nav-item">
+                    <a href="~/SanPham?danhMuc=SSD" class="tz-nav-link @(IsCatActive("SSD") ? "active" : "")">
+                        <i class="fa-solid fa-hard-drive"></i>
+                        <span>SSD</span>
+                    </a>
+                </li>
+                <li class="tz-nav-item">
+                    <a href="~/SanPham?danhMuc=PHUKIEN" class="tz-nav-link @(IsCatActive("PHUKIEN") ? "active" : "")">
+                        <i class="fa-solid fa-computer-mouse"></i>
+                        <span>Phụ kiện</span>
+                    </a>
+                </li>
+
+                <!-- Dropdown Thương hiệu -->
+                <li class="tz-nav-item">
+                    <a href="javascript:void(0)" class="tz-nav-link @(!string.IsNullOrEmpty(activeBrand) ? "active" : "")">
+                        <i class="fa-solid fa-layer-group"></i>
+                        <span>Thương hiệu</span>
+                        <i class="fa-solid fa-chevron-down ms-1" style="font-size: 0.65rem;"></i>
+                    </a>
+                    <div class="tz-dropdown-menu">
+                        <a href="~/SanPham?thuongHieu=INTEL" class="tz-dropdown-link @(IsBrandActive("INTEL") ? "active" : "")">Intel</a>
+                        <a href="~/SanPham?thuongHieu=AMD" class="tz-dropdown-link @(IsBrandActive("AMD") ? "active" : "")">AMD</a>
+                        <a href="~/SanPham?thuongHieu=ASUS" class="tz-dropdown-link @(IsBrandActive("ASUS") ? "active" : "")">ASUS</a>
+                        <a href="~/SanPham?thuongHieu=MSI" class="tz-dropdown-link @(IsBrandActive("MSI") ? "active" : "")">MSI</a>
+                        <a href="~/SanPham?thuongHieu=GIGABYTE" class="tz-dropdown-link @(IsBrandActive("GIGABYTE") ? "active" : "")">Gigabyte</a>
+                        <a href="~/SanPham?thuongHieu=KINGSTON" class="tz-dropdown-link @(IsBrandActive("KINGSTON") ? "active" : "")">Kingston</a>
+                        <a href="~/SanPham?thuongHieu=CORSAIR" class="tz-dropdown-link @(IsBrandActive("CORSAIR") ? "active" : "")">Corsair</a>
+                        <a href="~/SanPham?thuongHieu=SAMSUNG" class="tz-dropdown-link @(IsBrandActive("SAMSUNG") ? "active" : "")">Samsung</a>
+                        <a href="~/SanPham?thuongHieu=COOLERMASTER" class="tz-dropdown-link @(IsBrandActive("COOLERMASTER") ? "active" : "")">Cooler Master</a>
+                        <a href="~/SanPham?thuongHieu=LOGITECH" class="tz-dropdown-link @(IsBrandActive("LOGITECH") ? "active" : "")">Logitech</a>
+                    </div>
+                </li>
+            </ul>
+
+            <!-- Hotline nhanh bên phải navbar -->
+            <div class="d-none d-xl-flex align-items-center gap-2 text-muted" style="font-size: 0.875rem;">
+                <i class="fa-solid fa-phone-volume text-warning"></i>
+                <span>Tư vấn Build PC: <strong class="text-dark">0987.654.321</strong></span>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<!-- 4. MOBILE OFFCANVAS DRAWER -->
+<div class="tz-drawer-overlay"></div>
+<aside class="tz-mobile-drawer">
+    <div class="tz-drawer-header">
+        <div class="tz-logo">
+            <div class="tz-logo-icon" style="width: 32px; height: 32px; font-size: 1rem;">
+                <i class="fa-solid fa-microchip"></i>
+            </div>
+            <div class="tz-logo-title" style="font-size: 1.2rem;">TECH<span>ZONE</span></div>
+        </div>
+        <button type="button" class="tz-drawer-close" aria-label="Đóng menu">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
+    <div class="tz-drawer-body">
+        <div class="px-3 mb-3">
+            <form action="~/SanPham" method="get" class="tz-search-form" style="box-shadow: none; border: 1.5px solid var(--tz-border);">
+                <input type="text" name="q" class="tz-search-input" placeholder="Tìm linh kiện..." />
+                <button type="submit" class="tz-search-btn" aria-label="Tìm kiếm">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+            </form>
+        </div>
+        <ul class="tz-drawer-nav">
+            <li><a href="~/" class="@(isHome ? "active" : "")"><i class="fa-solid fa-house"></i> Trang chủ</a></li>
+            <li><a href="~/SanPham?danhMuc=CPU" class="@(IsCatActive("CPU") ? "active" : "")"><i class="fa-solid fa-microchip"></i> CPU - Bộ vi xử lý</a></li>
+            <li><a href="~/SanPham?danhMuc=MAINBOARD" class="@(IsCatActive("MAINBOARD") ? "active" : "")"><i class="fa-solid fa-server"></i> Mainboard - Bo mạch chủ</a></li>
+            <li><a href="~/SanPham?danhMuc=RAM" class="@(IsCatActive("RAM") ? "active" : "")"><i class="fa-solid fa-memory"></i> RAM - Bộ nhớ trong</a></li>
+            <li><a href="~/SanPham?danhMuc=VGA" class="@(IsCatActive("VGA") ? "active" : "")"><i class="fa-solid fa-display"></i> VGA - Card màn hình</a></li>
+            <li><a href="~/SanPham?danhMuc=SSD" class="@(IsCatActive("SSD") ? "active" : "")"><i class="fa-solid fa-hard-drive"></i> SSD - Ổ cứng thể rắn</a></li>
+            <li><a href="~/SanPham?danhMuc=PSU" class="@(IsCatActive("PSU") ? "active" : "")"><i class="fa-solid fa-bolt"></i> Nguồn máy tính (PSU)</a></li>
+            <li><a href="~/SanPham?danhMuc=CASE" class="@(IsCatActive("CASE") ? "active" : "")"><i class="fa-solid fa-desktop"></i> Vỏ Case Gaming</a></li>
+            <li><a href="~/SanPham?danhMuc=PHUKIEN" class="@(IsCatActive("PHUKIEN") ? "active" : "")"><i class="fa-solid fa-computer-mouse"></i> Phụ kiện & Gear</a></li>
+            <li><a href="javascript:void(0)" onclick="tzOpenWishlistModal()"><i class="fa-regular fa-heart"></i> Yêu thích (<span id="tz-mobile-wishlist-count">0</span>)</a></li>
+            <li><a href="~/DatHang"><i class="fa-solid fa-cart-shopping"></i> Giỏ hàng (@soLuongGioHang)</a></li>
+            <li><a href="~/Admin/Account/Login"><i class="fa-regular fa-user"></i> Đăng nhập Quản trị</a></li>
+        </ul>
+        <div class="p-3 text-muted" style="font-size: 0.8125rem;">
+            <p class="mb-1"><i class="fa-solid fa-phone text-warning me-1"></i> Hotline: 1900 8888</p>
+            <p class="mb-0"><i class="fa-solid fa-envelope text-warning me-1"></i> support@techzone.vn</p>
+        </div>
+    </div>
+</aside>
+

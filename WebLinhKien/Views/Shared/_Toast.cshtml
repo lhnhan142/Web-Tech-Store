@@ -1,0 +1,34 @@
+<!-- Toast Notification Container -->
+<div id="tz-toast-container" class="tz-toast-container" aria-live="polite">
+    @if (TempData["ThanhCong"] != null)
+    {
+        <div class="tz-toast tz-toast-success show">
+            <div class="tz-toast-icon">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+            <div class="tz-toast-body">
+                <div class="tz-toast-title">Thành công</div>
+                <p class="tz-toast-message">@TempData["ThanhCong"]</p>
+            </div>
+            <button type="button" class="tz-toast-close" onclick="this.parentElement.remove()" aria-label="Close">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+    }
+    @if (TempData["Loi"] != null)
+    {
+        <div class="tz-toast tz-toast-error show">
+            <div class="tz-toast-icon">
+                <i class="fa-solid fa-circle-xmark"></i>
+            </div>
+            <div class="tz-toast-body">
+                <div class="tz-toast-title">Thông báo lỗi</div>
+                <p class="tz-toast-message">@TempData["Loi"]</p>
+            </div>
+            <button type="button" class="tz-toast-close" onclick="this.parentElement.remove()" aria-label="Close">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+    }
+</div>
+

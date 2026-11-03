@@ -1,0 +1,25 @@
+@{
+    var count = ViewData["SkeletonCount"] as int? ?? 4;
+}
+
+<div class="row g-3 tz-loading-skeleton-wrap">
+    @for (int i = 0; i < count; i++)
+    {
+        <div class="col-6 col-md-4 col-lg-3">
+            <div class="tz-card p-3 d-flex flex-column gap-2" style="height: 380px;">
+                <!-- Thumbnail skeleton -->
+                <div class="tz-skeleton w-100" style="aspect-ratio: 1/1; border-radius: var(--tz-radius-sm);"></div>
+                <!-- Brand skeleton -->
+                <div class="tz-skeleton mt-2" style="height: 14px; width: 40%;"></div>
+                <!-- Title skeleton -->
+                <div class="tz-skeleton" style="height: 18px; width: 90%;"></div>
+                <div class="tz-skeleton" style="height: 18px; width: 70%;"></div>
+                <!-- Price skeleton -->
+                <div class="tz-skeleton mt-auto" style="height: 24px; width: 50%;"></div>
+                <!-- Button skeleton -->
+                <div class="tz-skeleton mt-2" style="height: 36px; width: 100%; border-radius: var(--tz-radius-sm);"></div>
+            </div>
+        </div>
+    }
+</div>
+

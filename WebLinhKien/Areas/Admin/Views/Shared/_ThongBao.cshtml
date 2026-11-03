@@ -1,0 +1,9 @@
+@* Hiện thông báo thành công / lỗi lấy từ TempData (đặt trong controller sau khi lưu hoặc xóa) *@
+@if (TempData["ThanhCong"] is string thanhCong)
+{
+    <div class="ad-alert ad-alert--ok" role="status"><i class="fa-solid fa-circle-check"></i><span>@thanhCong</span></div>
+}
+@if (TempData["Loi"] is string loi)
+{
+    <div class="ad-alert ad-alert--err" role="alert"><i class="fa-solid fa-circle-exclamation"></i><span>@loi</span></div>
+}

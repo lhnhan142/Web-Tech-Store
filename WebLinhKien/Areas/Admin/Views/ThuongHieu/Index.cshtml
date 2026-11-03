@@ -1,0 +1,87 @@
+@model WebLinhKien.Models.ViewModels.ThuongHieuListViewModel
+@{
+    ViewData["Title"] = "Thương hiệu";
+}
+
+<div class="ad-pagehead">
+    <div>
+        <h1 class="ad-title">Thương hiệu</h1>
+        <p class="ad-subtitle">Thương hiệu còn sản phẩm thì không xóa được.</p>
+    </div>
+    <div class="ad-actions">
+        <a asp-action="Create" class="ad-btn ad-btn--primary"><i class="fa-solid fa-plus"></i> Thêm thương hiệu</a>
+    </div>
+</div>
+
+<partial name="_ThongBao" />
+
+<section class="ad-card">
+    <div class="ad-tablebar">
+        <span class="ad-tablebar__info">Tổng: <b>@Model.Items.Count</b> thương hiệu</span>
+    </div>
+    <div class="ad-tablewrap">
+        <table class="ad-table">
+            <thead>
+                <tr>
+                    <th>Logo</th>
+                    <th>Mã</th>
+                    <th>Tên thương hiệu</th>
+                    <th>Hiển thị</th>
+                    <th class="is-num">Số sản phẩm</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var th in Model.Items)
+                {
+                    var dem = Model.DemSanPham.GetValueOrDefault(th.MaThuongHieu);
+                    <tr>
+                        <td>
+                            @if (!string.IsNullOrWhiteSpace(th.Logo))
+                            {
+                                <img src="@th.Logo" alt="" style="height:30px;max-width:64px;object-fit:contain" />
+                            }
+                            else
+                            {
+                                <span class="ad-thumb" style="width:40px;height:30px;border-radius:6px;font-size:13px"><i class="fa-regular fa-image"></i></span>
+                            }
+                        </td>
+                        <td class="ad-mono">@th.MaThuongHieu</td>
+                        <td><b>@th.TenThuongHieu</b></td>
+                        <td>
+                            @if (th.HienThi)
+                            {
+                                <span class="ad-badge ad-badge--ok">Hiển thị</span>
+                            }
+                            else
+                            {
+                                <span class="ad-badge ad-badge--off">Đang ẩn</span>
+                            }
+                        </td>
+                        <td class="is-num">@dem</td>
+                        <td class="is-actions">
+                            <a asp-action="Edit" asp-route-id="@th.MaThuongHieu" class="ad-iconlink" title="Sửa" aria-label="Sửa thương hiệu @th.TenThuongHieu"><i class="fa-solid fa-pen"></i></a>
+                            @if (dem > 0)
+                            {
+                                <span class="ad-iconlink is-disabled" title="Còn sản phẩm nên không xóa được"><i class="fa-regular fa-trash-can"></i></span>
+                            }
+                            else
+                            {
+                                <form asp-action="Xoa" asp-route-id="@th.MaThuongHieu" method="post" style="display:inline">
+                                    <button type="submit" class="ad-iconlink is-danger" title="Xóa" aria-label="Xóa thương hiệu @th.TenThuongHieu"
+                                            data-confirm="Hành động này không hoàn tác được."
+                                            data-confirm-title="Xóa thương hiệu @th.TenThuongHieu?"
+                                            data-confirm-ok="Xóa thương hiệu"><i class="fa-regular fa-trash-can"></i></button>
+                                </form>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    @if (!Model.Items.Any())
+    {
+        <div class="ad-empty"><i class="fa-solid fa-tags"></i><strong>Chưa có thương hiệu nào</strong>Bấm "Thêm thương hiệu" để bắt đầu.</div>
+    }
+</section>

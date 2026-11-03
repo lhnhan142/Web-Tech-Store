@@ -1,38 +1,159 @@
+@{
+    // Tab và mục sidebar đang chọn được suy ra từ tên controller của trang hiện tại.
+    // Thêm chức năng mới (ví dụ SanPham, BaoCao): thêm một dòng vào "tabs" và/hoặc "mucBen" bên dưới.
+    var ctrl = ViewContext.RouteData.Values["controller"] as string ?? "";
+    var tabHienTai = ctrl switch
+    {
+        "DonHang" => "don-hang",
+        "DanhMuc" or "ThuongHieu" => "san-pham",
+        "CaiDat" => "cai-dat",
+        _ => "tong-quan"
+    };
+
+    // Khóa tab, tên hiển thị, biểu tượng, controller đích khi bấm vào tab
+    var tabs = new[]
+    {
+        (Khoa: "tong-quan", Ten: "Tổng quan", Icon: "fa-gauge-high", Ctrl: "Home"),
+        (Khoa: "don-hang", Ten: "Đơn hàng", Icon: "fa-receipt", Ctrl: "DonHang"),
+        (Khoa: "san-pham", Ten: "Sản phẩm", Icon: "fa-box-open", Ctrl: "DanhMuc"),
+        (Khoa: "cai-dat", Ten: "Cài đặt", Icon: "fa-gear", Ctrl: "CaiDat")
+    };
+
+    // Menu bên trái của từng tab: (controller, tên, biểu tượng)
+    var mucBen = new Dictionary<string, (string Nhom, (string Ctrl, string Ten, string Icon)[] Muc)>
+    {
+        ["tong-quan"] = ("Tổng quan", new[] { ("Home", "Bảng điều khiển", "fa-gauge-high") }),
+        ["don-hang"] = ("Đơn hàng", new[] { ("DonHang", "Danh sách đơn", "fa-list") }),
+        ["san-pham"] = ("Phân loại", new[] { ("DanhMuc", "Danh mục", "fa-layer-group"), ("ThuongHieu", "Thương hiệu", "fa-tags") }),
+        ["cai-dat"] = ("Cài đặt cửa hàng", new[] { ("CaiDat", "Thông tin cửa hàng", "fa-store") })
+    };
+
+    var tab = tabs.First(t => t.Khoa == tabHienTai);
+    var side = mucBen[tabHienTai];
+    var tieuDe = ViewData["Title"] as string ?? tab.Ten;
+
+    var hoTen = User.FindFirst("HoTen")?.Value ?? User.Identity?.Name ?? "Quản trị";
+    var tu = hoTen.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+    var chuCai = tu.Length == 0 ? "Q" : (tu.Length == 1 ? tu[0].Substring(0, 1) : tu[0].Substring(0, 1) + tu[^1].Substring(0, 1)).ToUpperInvariant();
+}
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>@ViewData["Title"] - Quản trị WebLinhKien</title>
-    <a asp-area="Admin" asp-controller="DonHang" asp-action="Index"
-       class="text-sm font-medium text-slate-700 hover:text-blue-700">
-        <i class="fa-solid fa-receipt"></i> Đơn hàng
-    </a>
-    <script src="https://cdn.jsdelivr.net/npm/@@tailwindcss/browser@@4"></script>
+    <title>@tieuDe - Quản trị WebLinhKien</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+    <link rel="stylesheet" href="~/css/admin.css" asp-append-version="true" />
 </head>
-<body class="min-h-screen bg-slate-100 text-slate-800">
-    <header class="bg-white shadow-sm">
-        <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
-            <a asp-area="Admin" asp-controller="Home" asp-action="Index" class="flex items-center gap-2 font-semibold text-blue-700">
-                <i class="fa-solid fa-microchip"></i> Quản trị WebLinhKien
+<body class="ad-body">
+    <header class="ad-top">
+        <button type="button" class="ad-burger" data-side-open aria-label="Mở menu"><i class="fa-solid fa-bars"></i></button>
+        <a class="ad-brand" asp-area="Admin" asp-controller="Home" asp-action="Index">
+            <span class="ad-brand__mark"><i class="fa-solid fa-microchip"></i></span>WebLinhKien <small>Admin</small>
+        </a>
+
+        <nav class="ad-tabs" aria-label="Chức năng chính">
+            @foreach (var t in tabs)
+            {
+                <a class="@("ad-tab" + (t.Khoa == tabHienTai ? " is-active" : ""))" asp-area="Admin" asp-controller="@t.Ctrl" asp-action="Index"
+                   aria-current="@(t.Khoa == tabHienTai ? "page" : null)"><i class="fa-solid @t.Icon"></i> @t.Ten</a>
+            }
+        </nav>
+
+        <div class="ad-top__right">
+            <div class="ad-dd">
+                <button type="button" class="ad-iconbtn" data-dd-toggle data-search-toggle aria-expanded="false" aria-label="Tìm đơn hàng (phím /)"><i class="fa-solid fa-magnifying-glass"></i></button>
+                <div class="ad-menu ad-searchbox">
+                    <form asp-area="Admin" asp-controller="DonHang" asp-action="Index" method="get">
+                        <input class="ad-input" type="search" name="q" placeholder="Mã đơn, tên khách, số điện thoại..." aria-label="Tìm đơn hàng" />
+                        <button type="submit" class="ad-btn ad-btn--primary">Tìm</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="ad-dd">
+                <button type="button" class="ad-iconbtn" data-dd-toggle aria-expanded="false" aria-label="Thông báo">
+                    <i class="fa-regular fa-bell"></i><span class="ad-iconbtn__dot" data-bell-count hidden>0</span>
+                </button>
+                <div class="ad-menu ad-notify">
+                    <div class="ad-notify__head"><strong>Thông báo</strong><button type="button" class="ad-linkbtn" data-read-all>Đánh dấu đã đọc</button></div>
+                    @* admin-notifications.js thêm thông báo vào đây khi WebSocket báo có đơn mới / sắp hết hàng *@
+                    <ul class="ad-notify__list" data-notify-list></ul>
+                    <p class="ad-notify__empty" data-notify-empty>Chưa có thông báo mới.</p>
+                    <div class="ad-notify__foot"><a asp-area="Admin" asp-controller="DonHang" asp-action="Index">Xem tất cả đơn hàng</a></div>
+                </div>
+            </div>
+
+            <a class="ad-viewsite" asp-area="" asp-controller="Home" asp-action="Index" target="_blank" rel="noopener">
+                <i class="fa-solid fa-arrow-up-right-from-square"></i><span>Xem website</span>
             </a>
-            <div class="flex items-center gap-3 text-sm">
-                <span><i class="fa-regular fa-user"></i> @(User.FindFirst("HoTen")?.Value ?? User.Identity?.Name)</span>
-                <form asp-area="Admin" asp-controller="Account" asp-action="Logout" method="post">
-                    <button type="submit" class="rounded-lg border border-slate-300 px-3 py-1 hover:bg-slate-50">
-                        <i class="fa-solid fa-right-from-bracket"></i> Đăng xuất
-                    </button>
-                </form>
+
+            <div class="ad-dd">
+                <button type="button" class="ad-avatar" data-dd-toggle aria-expanded="false" aria-label="Tài khoản">@chuCai</button>
+                <div class="ad-menu">
+                    <div class="ad-menu__head"><strong>@hoTen</strong><span>@User.Identity?.Name</span></div>
+                    <div class="ad-menu__sep"></div>
+                    <a class="ad-menu__item" asp-area="Admin" asp-controller="CaiDat" asp-action="Index"><i class="fa-solid fa-gear"></i> Cài đặt cửa hàng</a>
+                    <form asp-area="Admin" asp-controller="Account" asp-action="Logout" method="post">
+                        <button type="submit" class="ad-menu__item"><i class="fa-solid fa-right-from-bracket"></i> Đăng xuất</button>
+                    </form>
+                </div>
             </div>
         </div>
     </header>
 
-    <main class="mx-auto max-w-6xl px-4 py-6">
-        @RenderBody()
-    </main>
+    <div class="ad-shell">
+        <aside class="ad-side" aria-label="Menu bên trái">
+            @* Chỉ hiện trên điện thoại: các tab chính (vì thanh tab ngang bị ẩn) *@
+            <div class="ad-side__mobile">
+                @foreach (var t in tabs)
+                {
+                    <a class="@("ad-side__link" + (t.Khoa == tabHienTai ? " is-active" : ""))" asp-area="Admin" asp-controller="@t.Ctrl" asp-action="Index">
+                        <i class="fa-solid @t.Icon"></i><span>@t.Ten</span>
+                    </a>
+                }
+            </div>
 
+            <div class="ad-side__group" data-group="@tabHienTai">
+                <button type="button" class="ad-side__head"><i class="fa-solid fa-chevron-down ad-chev"></i>@side.Nhom</button>
+                <ul class="ad-side__list">
+                    @foreach (var m in side.Muc)
+                    {
+                        <li>
+                            <a class="@("ad-side__link" + (m.Ctrl == ctrl ? " is-active" : ""))" asp-area="Admin" asp-controller="@m.Ctrl" asp-action="Index" title="@m.Ten">
+                                <i class="fa-solid @m.Icon"></i><span>@m.Ten</span>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </div>
+
+            <div class="ad-side__foot">
+                <button type="button" class="ad-side__collapse" data-side-collapse><i class="fa-solid fa-angles-left"></i><span>Thu gọn menu</span></button>
+            </div>
+        </aside>
+        <div class="ad-backdrop"></div>
+
+        <main class="ad-main">
+            <nav class="ad-crumbs" aria-label="Đường dẫn">
+                <a asp-area="Admin" asp-controller="@tab.Ctrl" asp-action="Index">@tab.Ten</a>
+                @if (tieuDe != tab.Ten)
+                {
+                    <i class="fa-solid fa-chevron-right"></i>
+                    <strong>@tieuDe</strong>
+                }
+            </nav>
+            @RenderBody()
+        </main>
+    </div>
+
+    <script src="~/js/admin.js" asp-append-version="true"></script>
+    <script src="~/js/admin-charts.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+    @* Phải nằm sau admin.js vì dùng Admin.notify() *@
     <script src="~/js/admin-notifications.js" asp-append-version="true"></script>
 </body>
 </html>

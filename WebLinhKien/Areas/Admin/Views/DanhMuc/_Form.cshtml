@@ -1,0 +1,38 @@
+@model WebLinhKien.Models.Requests.DanhMucForm
+@{
+    var dangSua = ViewData["DangSua"] is true;
+}
+
+<form asp-action="@(dangSua ? "Edit" : "Create")" asp-route-id="@(dangSua ? Model.MaDanhMuc : null)" method="post"
+      class="ad-card ad-form ad-form--narrow">
+    <div class="ad-card__body">
+        <div class="ad-field">
+            <label asp-for="MaDanhMuc">Mã danh mục</label>
+            <input asp-for="MaDanhMuc" readonly="@dangSua" placeholder="Ví dụ: CPU, MAINBOARD" class="ad-input ad-mono" />
+            <p class="ad-hint">@(dangSua ? "Mã là khóa của danh mục nên không đổi được." : "Chữ không dấu, số, _ hoặc -. Sẽ được viết hoa và không đổi được sau khi tạo.")</p>
+            <span asp-validation-for="MaDanhMuc" class="ad-error"></span>
+        </div>
+
+        <div class="ad-field">
+            <label asp-for="TenDanhMuc">Tên danh mục</label>
+            <input asp-for="TenDanhMuc" placeholder="Ví dụ: CPU - Bộ vi xử lý" class="ad-input" />
+            <span asp-validation-for="TenDanhMuc" class="ad-error"></span>
+        </div>
+
+        <div class="ad-field">
+            <label asp-for="Ordering">Thứ tự hiển thị</label>
+            <input asp-for="Ordering" type="number" min="0" max="9999" class="ad-input" style="max-width:140px" />
+            <p class="ad-hint">Số nhỏ hiện trước.</p>
+            <span asp-validation-for="Ordering" class="ad-error"></span>
+        </div>
+
+        <label class="ad-check">
+            <span class="ad-switch"><input asp-for="HienThi" type="checkbox" /><span></span></span>
+            Hiển thị trên website
+        </label>
+    </div>
+    <div class="ad-card__head" style="border-top:1px solid var(--ad-line-soft);border-bottom:0;border-radius:0 0 8px 8px;justify-content:flex-start;gap:10px">
+        <button type="submit" class="ad-btn ad-btn--primary">Lưu danh mục</button>
+        <a asp-action="Index" class="ad-btn">Hủy</a>
+    </div>
+</form>

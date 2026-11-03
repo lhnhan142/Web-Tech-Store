@@ -14,8 +14,8 @@
         for (var i = 0; i < rows.length; i++) {
             if (rows[i].getAttribute('data-ma-don') === maDon) {
                 var row = rows[i];
-                row.classList.add('bg-yellow-100');
-                setTimeout(function () { row.classList.remove('bg-yellow-100'); }, 4000);
+                row.classList.add('is-flash');
+                setTimeout(function () { row.classList.remove('is-flash'); }, 4000);
                 return;
             }
         }

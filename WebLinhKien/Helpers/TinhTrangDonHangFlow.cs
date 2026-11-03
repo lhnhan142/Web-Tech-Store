@@ -28,19 +28,7 @@ public static class TinhTrangDonHangFlow
 
     public static bool HopLe(string tu, string den) => CacTinhTrangTiepTheo(tu).Contains(den);
 
-    /// <summary>Class Tailwind cho nhãn màu của từng tình trạng.</summary>
-    public static string BadgeClass(string ma)
-    {
-        const string co = "inline-block rounded-full px-2.5 py-0.5 text-xs font-semibold ";
-        return co + ma switch
-        {
-            Moi          => "bg-amber-100 text-amber-800",
-            DangXuLy     => "bg-blue-100 text-blue-800",
-            DangGiaoHang => "bg-indigo-100 text-indigo-800",
-            DaNhan       => "bg-green-100 text-green-800",
-            HoanTra      => "bg-red-100 text-red-800",
-            DoiHang      => "bg-purple-100 text-purple-800",
-            _            => "bg-slate-100 text-slate-700"
-        };
-    }
+    /// <summary>Class CSS (trong admin.css) cho nhãn màu của từng tình trạng, ví dụ "ad-badge ad-badge--moi".</summary>
+    public static string BadgeClass(string ma) =>
+        "ad-badge ad-badge--" + (string.IsNullOrEmpty(ma) ? "none" : ma.ToLowerInvariant());
 }

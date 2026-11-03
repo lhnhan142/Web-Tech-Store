@@ -1,0 +1,37 @@
+@model WebLinhKien.Models.Requests.ThuongHieuForm
+@{
+    var dangSua = ViewData["DangSua"] is true;
+}
+
+<form asp-action="@(dangSua ? "Edit" : "Create")" asp-route-id="@(dangSua ? Model.MaThuongHieu : null)" method="post"
+      class="ad-card ad-form ad-form--narrow">
+    <div class="ad-card__body">
+        <div class="ad-field">
+            <label asp-for="MaThuongHieu">Mã thương hiệu</label>
+            <input asp-for="MaThuongHieu" readonly="@dangSua" placeholder="Ví dụ: INTEL, ASUS" class="ad-input ad-mono" />
+            <p class="ad-hint">@(dangSua ? "Mã là khóa của thương hiệu nên không đổi được." : "Chữ không dấu, số, _ hoặc -. Sẽ được viết hoa và không đổi được sau khi tạo.")</p>
+            <span asp-validation-for="MaThuongHieu" class="ad-error"></span>
+        </div>
+
+        <div class="ad-field">
+            <label asp-for="TenThuongHieu">Tên thương hiệu</label>
+            <input asp-for="TenThuongHieu" placeholder="Ví dụ: Intel" class="ad-input" />
+            <span asp-validation-for="TenThuongHieu" class="ad-error"></span>
+        </div>
+
+        <div class="ad-field">
+            <label asp-for="Logo">Đường dẫn logo <span class="ad-opt">(không bắt buộc)</span></label>
+            <input asp-for="Logo" placeholder="/images/brands/intel.png hoặc https://..." class="ad-input" />
+            <span asp-validation-for="Logo" class="ad-error"></span>
+        </div>
+
+        <label class="ad-check">
+            <span class="ad-switch"><input asp-for="HienThi" type="checkbox" /><span></span></span>
+            Hiển thị trên website
+        </label>
+    </div>
+    <div class="ad-card__head" style="border-top:1px solid var(--ad-line-soft);border-bottom:0;border-radius:0 0 8px 8px;justify-content:flex-start;gap:10px">
+        <button type="submit" class="ad-btn ad-btn--primary">Lưu thương hiệu</button>
+        <a asp-action="Index" class="ad-btn">Hủy</a>
+    </div>
+</form>

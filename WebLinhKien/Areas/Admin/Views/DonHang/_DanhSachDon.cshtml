@@ -1,86 +1,82 @@
 @model WebLinhKien.Models.ViewModels.DonHangListViewModel
 @using WebLinhKien.Helpers
 
-@functions {
-    static string TabClass(bool active) =>
-        "inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm " +
-        (active ? "border-blue-600 bg-blue-600 text-white" : "border-slate-300 bg-white text-slate-700 hover:bg-slate-50");
-}
-
-<div class="mb-4 flex flex-wrap gap-2">
-    <a asp-action="Index" asp-route-q="@Model.Q" class="@TabClass(string.IsNullOrEmpty(Model.MaTinhTrang))">
-        Tất cả <span class="font-semibold">@Model.TongTatCa</span>
+<div class="ad-chips">
+    <a asp-action="Index" asp-route-q="@Model.Q" class="@("ad-chip" + (string.IsNullOrEmpty(Model.MaTinhTrang) ? " is-active" : ""))">
+        Tất cả <b>@Model.TongTatCa</b>
     </a>
     @foreach (var t in Model.TinhTrangs)
     {
         var dem = Model.DemTheoTinhTrang.GetValueOrDefault(t.MaTinhTrang);
         <a asp-action="Index" asp-route-tinhTrang="@t.MaTinhTrang" asp-route-q="@Model.Q"
-           class="@TabClass(Model.MaTinhTrang == t.MaTinhTrang)">
-            @t.TenTinhTrang <span class="font-semibold">@dem</span>
+           class="@("ad-chip" + (Model.MaTinhTrang == t.MaTinhTrang ? " is-active" : ""))">
+            @t.TenTinhTrang <b>@dem</b>
         </a>
     }
 </div>
 
-<div class="overflow-x-auto rounded-xl bg-white shadow-sm">
-    <table class="min-w-full text-sm">
-        <thead class="bg-slate-50 text-left text-slate-500">
-            <tr>
-                <th class="px-4 py-3 font-medium">Mã đơn</th>
-                <th class="px-4 py-3 font-medium">Khách hàng</th>
-                <th class="px-4 py-3 font-medium">Tổng thanh toán</th>
-                <th class="px-4 py-3 font-medium">Thanh toán</th>
-                <th class="px-4 py-3 font-medium">Tình trạng</th>
-                <th class="px-4 py-3 font-medium">Ngày đặt</th>
-                <th class="px-4 py-3"></th>
-            </tr>
-        </thead>
-        <tbody class="divide-y divide-slate-100">
-            @foreach (var don in Model.Items)
-            {
-                <tr data-ma-don="@don.MaDon" class="transition-colors duration-700 hover:bg-slate-50">
-                    <td class="px-4 py-3 font-medium">
-                        <a asp-action="ChiTiet" asp-route-id="@don.Uid" class="text-blue-600 hover:underline">@don.MaDon</a>
-                    </td>
-                    <td class="px-4 py-3">
-                        @don.TenKhachHang
-                        <div class="text-xs text-slate-500">@don.Sdt</div>
-                    </td>
-                    <td class="px-4 py-3 font-semibold">@don.TongThanhToan.ToVnd()</td>
-                    <td class="px-4 py-3">@(don.MaHinhThucThanhToan == "COD" ? "COD" : "Chuyển khoản")</td>
-                    <td class="px-4 py-3">
-                        <span class="@TinhTrangDonHangFlow.BadgeClass(don.MaTinhTrang)">@Model.TenTinhTrang(don.MaTinhTrang)</span>
-                    </td>
-                    <td class="px-4 py-3 text-slate-600">@don.NgayDat.ToNgayGio()</td>
-                    <td class="px-4 py-3 text-right">
-                        <a asp-action="ChiTiet" asp-route-id="@don.Uid" class="text-blue-600 hover:underline">Xem</a>
-                    </td>
-                </tr>
-            }
-            @if (!Model.Items.Any())
-            {
-                <tr>
-                    <td colspan="7" class="px-4 py-10 text-center text-slate-500">Không có đơn hàng nào.</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</div>
-
-@if (Model.TotalPages > 1)
-{
-    <div class="mt-4 flex items-center justify-between text-sm text-slate-600">
-        <span>Trang @Model.Page / @Model.TotalPages (@Model.TotalItems đơn)</span>
-        <div class="flex gap-2">
-            @if (Model.Page > 1)
-            {
-                <a asp-action="Index" asp-route-tinhTrang="@Model.MaTinhTrang" asp-route-q="@Model.Q" asp-route-page="@(Model.Page - 1)"
-                   class="rounded-lg border border-slate-300 bg-white px-3 py-1.5 hover:bg-slate-50">Trước</a>
-            }
-            @if (Model.Page < Model.TotalPages)
-            {
-                <a asp-action="Index" asp-route-tinhTrang="@Model.MaTinhTrang" asp-route-q="@Model.Q" asp-route-page="@(Model.Page + 1)"
-                   class="rounded-lg border border-slate-300 bg-white px-3 py-1.5 hover:bg-slate-50">Sau</a>
-            }
-        </div>
+<section class="ad-card">
+    <div class="ad-tablebar">
+        <span class="ad-tablebar__info">Tổng: <b>@Model.TotalItems</b> đơn</span>
     </div>
-}
+
+    <div class="ad-tablewrap">
+        <table class="ad-table">
+            <thead>
+                <tr>
+                    <th>Mã đơn</th>
+                    <th>Khách hàng</th>
+                    <th class="is-num">Tổng thanh toán</th>
+                    <th>Thanh toán</th>
+                    <th>Tình trạng</th>
+                    <th>Ngày đặt</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var don in Model.Items)
+                {
+                    <tr data-ma-don="@don.MaDon">
+                        <td><a asp-action="ChiTiet" asp-route-id="@don.Uid" class="ad-rowlink">@don.MaDon</a></td>
+                        <td class="is-nowrap">@don.TenKhachHang<span class="ad-sub">@don.Sdt</span></td>
+                        <td class="is-num"><b>@don.TongThanhToan.ToVnd()</b></td>
+                        <td class="is-nowrap">@(don.MaHinhThucThanhToan == "COD" ? "COD" : "Chuyển khoản")</td>
+                        <td><span class="@TinhTrangDonHangFlow.BadgeClass(don.MaTinhTrang)">@Model.TenTinhTrang(don.MaTinhTrang)</span></td>
+                        <td class="is-nowrap">@don.NgayDat.ToNgayGio()</td>
+                        <td class="is-actions">
+                            <a asp-action="ChiTiet" asp-route-id="@don.Uid" class="ad-iconlink" title="Xem chi tiết" aria-label="Xem chi tiết đơn @don.MaDon"><i class="fa-regular fa-eye"></i></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @if (!Model.Items.Any())
+    {
+        <div class="ad-empty">
+            <i class="fa-regular fa-folder-open"></i>
+            <strong>Không có đơn hàng nào</strong>
+            Thử đổi tình trạng hoặc từ khóa khác.
+        </div>
+    }
+
+    @if (Model.TotalPages > 1)
+    {
+        <div class="ad-pager">
+            <span>Trang @Model.Page / @Model.TotalPages (@Model.TotalItems đơn)</span>
+            <div class="ad-pager__btns">
+                @if (Model.Page > 1)
+                {
+                    <a asp-action="Index" asp-route-tinhTrang="@Model.MaTinhTrang" asp-route-q="@Model.Q" asp-route-page="@(Model.Page - 1)"
+                       class="ad-pager__btn" aria-label="Trang trước"><i class="fa-solid fa-chevron-left"></i></a>
+                }
+                @if (Model.Page < Model.TotalPages)
+                {
+                    <a asp-action="Index" asp-route-tinhTrang="@Model.MaTinhTrang" asp-route-q="@Model.Q" asp-route-page="@(Model.Page + 1)"
+                       class="ad-pager__btn" aria-label="Trang sau"><i class="fa-solid fa-chevron-right"></i></a>
+                }
+            </div>
+        </div>
+    }
+</section>

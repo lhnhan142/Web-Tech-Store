@@ -1,10 +1,93 @@
+@model WebLinhKien.Models.ViewModels.DashboardViewModel
+@using System.Text.Json
+@using WebLinhKien.Helpers
 @{
     ViewData["Title"] = "Tổng quan";
+    var hoTen = User.FindFirst("HoTen")?.Value ?? User.Identity?.Name;
+
+    Func<string, int> dem = ma => Model.DemTheoTinhTrang.GetValueOrDefault(ma);
+    var tongDon = Model.DemTheoTinhTrang.Values.Sum();
+
+    var mau = new Dictionary<string, string>
+    {
+        ["MOI"] = "#f59e0b", ["DANG_XU_LY"] = "#3b82f6", ["DANG_GIAO_HANG"] = "#6366f1",
+        ["DA_NHAN"] = "#22c55e", ["HOAN_TRA"] = "#ef4444", ["DOI_HANG"] = "#a855f7"
+    };
+    var nhan = Model.TinhTrangs.Select(t => t.TenTinhTrang).ToList();
+    var giaTri = Model.TinhTrangs.Select(t => dem(t.MaTinhTrang)).ToList();
+    var mauChart = Model.TinhTrangs.Select(t => mau.GetValueOrDefault(t.MaTinhTrang, "#64748b")).ToList();
+    var tenTinhTrang = Model.TinhTrangs.ToDictionary(t => t.MaTinhTrang, t => t.TenTinhTrang);
 }
 
-<div class="rounded-xl bg-white p-6 shadow-sm">
-    <h1 class="text-xl font-semibold">Xin chào, @(User.FindFirst("HoTen")?.Value ?? User.Identity?.Name)</h1>
-    <p class="mt-2 text-sm text-slate-500">
-        Đăng nhập thành công. Các chức năng quản lý sản phẩm, đơn hàng sẽ được thêm vào đây.
-    </p>
+<div class="ad-pagehead">
+    <div>
+        <h1 class="ad-title">Xin chào, @hoTen</h1>
+        <p class="ad-subtitle">Tình hình đơn hàng của cửa hàng.</p>
+    </div>
+</div>
+
+<div class="ad-grid ad-grid--4" style="margin-bottom:16px">
+    <a class="ad-card ad-stat" asp-controller="DonHang" asp-action="Index" asp-route-tinhTrang="MOI">
+        <span class="ad-stat__icon is-amber"><i class="fa-solid fa-inbox"></i></span>
+        <span><span class="ad-stat__label">Đơn mới chờ xử lý</span><span class="ad-stat__value" style="display:block">@dem("MOI")</span><span class="ad-stat__note">Cần xác nhận với khách</span></span>
+    </a>
+    <a class="ad-card ad-stat" asp-controller="DonHang" asp-action="Index" asp-route-tinhTrang="DANG_XU_LY">
+        <span class="ad-stat__icon is-blue"><i class="fa-solid fa-gears"></i></span>
+        <span><span class="ad-stat__label">Đang xử lý</span><span class="ad-stat__value" style="display:block">@dem("DANG_XU_LY")</span><span class="ad-stat__note">Đang chuẩn bị hàng</span></span>
+    </a>
+    <a class="ad-card ad-stat" asp-controller="DonHang" asp-action="Index" asp-route-tinhTrang="DANG_GIAO_HANG">
+        <span class="ad-stat__icon is-indigo"><i class="fa-solid fa-truck-fast"></i></span>
+        <span><span class="ad-stat__label">Đang giao hàng</span><span class="ad-stat__value" style="display:block">@dem("DANG_GIAO_HANG")</span><span class="ad-stat__note">Theo dõi để chuyển "Đã nhận"</span></span>
+    </a>
+    <a class="ad-card ad-stat" asp-controller="DonHang" asp-action="Index">
+        <span class="ad-stat__icon is-green"><i class="fa-solid fa-receipt"></i></span>
+        <span><span class="ad-stat__label">Tổng số đơn</span><span class="ad-stat__value" style="display:block">@tongDon</span><span class="ad-stat__note">Tất cả tình trạng</span></span>
+    </a>
+</div>
+
+<div class="ad-grid ad-grid--2-1">
+    <section class="ad-card">
+        <div class="ad-card__head">
+            <h2 class="ad-card__title"><i class="fa-solid fa-receipt"></i> Đơn hàng mới nhất</h2>
+            <a class="ad-linkbtn" asp-controller="DonHang" asp-action="Index">Xem tất cả</a>
+        </div>
+        <div class="ad-tablewrap">
+            <table class="ad-table">
+                <thead>
+                    <tr><th>Mã đơn</th><th>Khách hàng</th><th class="is-num">Tổng thanh toán</th><th>Tình trạng</th></tr>
+                </thead>
+                <tbody>
+                    @foreach (var don in Model.DonMoiNhat)
+                    {
+                        <tr>
+                            <td>
+                                <a class="ad-rowlink" asp-controller="DonHang" asp-action="ChiTiet" asp-route-id="@don.Uid">@don.MaDon</a>
+                                <span class="ad-sub">@don.NgayDat.ToNgayGio()</span>
+                            </td>
+                            <td>@don.TenKhachHang<span class="ad-sub">@don.Sdt</span></td>
+                            <td class="is-num"><b>@don.TongThanhToan.ToVnd()</b></td>
+                            <td><span class="@TinhTrangDonHangFlow.BadgeClass(don.MaTinhTrang)">@tenTinhTrang.GetValueOrDefault(don.MaTinhTrang, don.MaTinhTrang)</span></td>
+                        </tr>
+                    }
+                    @if (!Model.DonMoiNhat.Any())
+                    {
+                        <tr><td colspan="4"><div class="ad-empty"><i class="fa-regular fa-folder-open"></i><strong>Chưa có đơn hàng nào</strong>Đơn khách đặt trên website sẽ hiện ở đây.</div></td></tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="ad-card">
+        <div class="ad-card__head"><h2 class="ad-card__title"><i class="fa-solid fa-chart-pie"></i> Đơn theo tình trạng</h2></div>
+        <div class="ad-card__body">
+            <div class="ad-donut">
+                <div class="ad-chart" data-chart="donut" data-center="đơn"
+                     data-labels='@Html.Raw(JsonSerializer.Serialize(nhan))'
+                     data-values='@Html.Raw(JsonSerializer.Serialize(giaTri))'
+                     data-colors='@Html.Raw(JsonSerializer.Serialize(mauChart))'></div>
+                <ul class="ad-legend"></ul>
+            </div>
+        </div>
+    </section>
 </div>

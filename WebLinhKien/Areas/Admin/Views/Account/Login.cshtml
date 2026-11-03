@@ -9,46 +9,59 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>@ViewData["Title"] - WebLinhKien</title>
-    <script src="https://cdn.jsdelivr.net/npm/@@tailwindcss/browser@@4"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+    <link rel="stylesheet" href="~/css/admin.css" asp-append-version="true" />
 </head>
-<body class="flex min-h-screen items-center justify-center bg-slate-100 p-4">
-    <div class="w-full max-w-sm rounded-xl bg-white p-6 shadow">
-        <div class="mb-6 text-center">
-            <i class="fa-solid fa-microchip text-3xl text-blue-600"></i>
-            <h1 class="mt-2 text-xl font-semibold text-slate-800">Đăng nhập quản trị</h1>
-            <p class="text-sm text-slate-500">WebLinhKien</p>
-        </div>
-
-        <form asp-area="Admin" asp-controller="Account" asp-action="Login" method="post" novalidate>
-            <input type="hidden" asp-for="ReturnUrl" />
-
-            <div asp-validation-summary="ModelOnly" class="mb-3 text-sm text-red-600"></div>
-
-            <div class="mb-4">
-                <label asp-for="TenDangNhap" class="mb-1 block text-sm font-medium text-slate-700">Tên đăng nhập</label>
-                <input asp-for="TenDangNhap" autocomplete="username" autofocus
-                       class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-blue-500 focus:outline-none" />
-                <span asp-validation-for="TenDangNhap" class="text-xs text-red-600"></span>
+<body class="ad-body">
+    <div class="ad-login">
+        <section class="ad-login__brand">
+            <a class="ad-brand" href="~/"><span class="ad-brand__mark"><i class="fa-solid fa-microchip"></i></span>WebLinhKien</a>
+            <div class="ad-login__chip"><i class="fa-solid fa-microchip"></i></div>
+            <div>
+                <h2>Quản lý đơn hàng và kho linh kiện ở một nơi.</h2>
+                <p>Nhận đơn mới ngay khi khách đặt, theo dõi tồn kho và cập nhật giá chỉ trong vài bước.</p>
             </div>
+        </section>
 
-            <div class="mb-4">
-                <label asp-for="MatKhau" class="mb-1 block text-sm font-medium text-slate-700">Mật khẩu</label>
-                <input asp-for="MatKhau" autocomplete="current-password"
-                       class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-blue-500 focus:outline-none" />
-                <span asp-validation-for="MatKhau" class="text-xs text-red-600"></span>
+        <section class="ad-login__form">
+            <div class="ad-login__box">
+                <h1>Đăng nhập quản trị</h1>
+                <p>Dùng tài khoản quản trị của cửa hàng.</p>
+
+                <form asp-area="Admin" asp-controller="Account" asp-action="Login" method="post" novalidate>
+                    <input type="hidden" asp-for="ReturnUrl" />
+
+                    <div asp-validation-summary="ModelOnly" class="ad-alert ad-alert--err"></div>
+
+                    <div class="ad-field">
+                        <label asp-for="TenDangNhap">Tên đăng nhập</label>
+                        <input asp-for="TenDangNhap" autocomplete="username" autofocus class="ad-input" />
+                        <span asp-validation-for="TenDangNhap" class="ad-error"></span>
+                    </div>
+
+                    <div class="ad-field">
+                        <label asp-for="MatKhau">Mật khẩu</label>
+                        <div class="ad-pass">
+                            <input asp-for="MatKhau" autocomplete="current-password" class="ad-input" />
+                            <button type="button" data-toggle-pass aria-label="Hiện mật khẩu"><i class="fa-regular fa-eye"></i></button>
+                        </div>
+                        <span asp-validation-for="MatKhau" class="ad-error"></span>
+                    </div>
+
+                    <label class="ad-check" style="margin:4px 0 20px">
+                        <input asp-for="GhiNho" type="checkbox" /> Ghi nhớ đăng nhập
+                    </label>
+
+                    <button type="submit" class="ad-btn ad-btn--primary ad-btn--block" style="padding:10px">
+                        <i class="fa-solid fa-right-to-bracket"></i> Đăng nhập
+                    </button>
+                </form>
             </div>
-
-            <label class="mb-5 flex items-center gap-2 text-sm text-slate-600">
-                <input asp-for="GhiNho" type="checkbox" class="h-4 w-4" />
-                Ghi nhớ đăng nhập
-            </label>
-
-            <button type="submit"
-                    class="w-full rounded-lg bg-blue-600 py-2 font-medium text-white hover:bg-blue-700">
-                <i class="fa-solid fa-right-to-bracket"></i> Đăng nhập
-            </button>
-        </form>
+        </section>
     </div>
+    <script src="~/js/admin.js" asp-append-version="true"></script>
 </body>
 </html>

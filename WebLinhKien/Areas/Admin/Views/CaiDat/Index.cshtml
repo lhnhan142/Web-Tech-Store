@@ -1,0 +1,49 @@
+@model WebLinhKien.Models.Requests.CaiDatForm
+@using WebLinhKien.Helpers
+@{
+    ViewData["Title"] = "Cài đặt";
+}
+
+<div class="ad-pagehead">
+    <div>
+        <h1 class="ad-title">Cài đặt cửa hàng</h1>
+        <p class="ad-subtitle">Các con số này được website dùng khi tính tiền và cảnh báo.</p>
+    </div>
+</div>
+
+<partial name="_ThongBao" />
+
+<form asp-action="Luu" method="post">
+    <section class="ad-card">
+        @for (var i = 0; i < Model.Items.Count; i++)
+        {
+            var so = Model.Items[i].Loai != CaiDatLoai.Text;
+            <div class="ad-setting">
+                <div>
+                    <input type="hidden" asp-for="Items[i].Khoa" />
+                    <label asp-for="Items[i].GiaTri" class="ad-setting__name" style="display:block">@Model.Items[i].Nhan</label>
+                    @if (!string.IsNullOrWhiteSpace(Model.Items[i].MoTa))
+                    {
+                        <p class="ad-setting__desc">@Model.Items[i].MoTa</p>
+                    }
+                </div>
+                <div class="ad-field" style="margin:0">
+                    <input asp-for="Items[i].GiaTri" inputmode="@(so ? "numeric" : "text")" data-digits="@(so ? "1" : null)" class="ad-input" />
+                    <span asp-validation-for="Items[i].GiaTri" class="ad-error"></span>
+                </div>
+            </div>
+        }
+
+        @if (Model.Items.Count == 0)
+        {
+            <div class="ad-empty"><i class="fa-solid fa-gear"></i><strong>Chưa có cài đặt nào</strong>Hãy chạy seed.sql.</div>
+        }
+    </section>
+
+    @if (Model.Items.Count > 0)
+    {
+        <div class="ad-formfoot">
+            <button type="submit" class="ad-btn ad-btn--primary"><i class="fa-solid fa-floppy-disk"></i> Lưu cài đặt</button>
+        </div>
+    }
+</form>

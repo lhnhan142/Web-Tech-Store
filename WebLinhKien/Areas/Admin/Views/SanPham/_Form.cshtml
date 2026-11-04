@@ -1,0 +1,218 @@
+@model WebLinhKien.Models.Requests.SanPhamForm
+@using WebLinhKien.Models.ViewModels
+@{
+    var dangSua = ViewData["DangSua"] is true;
+    var lk = (SanPhamFormLookups)ViewData["Lookups"]!;
+}
+
+<form asp-action="@(dangSua ? "Edit" : "Create")" asp-route-id="@(dangSua ? Model.Uid.ToString() : null)" method="post" enctype="multipart/form-data"
+      class="ad-form" data-san-pham-form>
+    <div class="ad-stack">
+
+        <div asp-validation-summary="ModelOnly" class="ad-alert ad-alert--err"></div>
+
+        @* ---------- Thông tin chung ---------- *@
+        <section class="ad-card">
+            <div class="ad-card__head"><h2 class="ad-card__title">Thông tin chung</h2></div>
+            <div class="ad-card__body">
+                <div class="ad-row">
+                    <div class="ad-field">
+                        <label asp-for="MaSanPham">Mã sản phẩm</label>
+                        <input asp-for="MaSanPham" placeholder="Ví dụ: RAM-KING-16G" class="ad-input ad-mono" />
+                        <p class="ad-hint">Chữ không dấu, số, _ hoặc -. Sẽ được viết hoa.</p>
+                        <span asp-validation-for="MaSanPham" class="ad-error"></span>
+                    </div>
+                    <div class="ad-field">
+                        <label asp-for="TenSanPham">Tên sản phẩm</label>
+                        <input asp-for="TenSanPham" class="ad-input" />
+                        <span asp-validation-for="TenSanPham" class="ad-error"></span>
+                    </div>
+                </div>
+
+                <div class="ad-row">
+                    <div class="ad-field">
+                        <label asp-for="MaDanhMuc">Danh mục</label>
+                        <select asp-for="MaDanhMuc" class="ad-select">
+                            <option value="">-- Chọn danh mục --</option>
+                            @foreach (var dm in lk.DanhMucs)
+                            {
+                                <option value="@dm.MaDanhMuc" selected="@(dm.MaDanhMuc == Model.MaDanhMuc)">@dm.TenDanhMuc@(dm.HienThi ? "" : " (đang ẩn)")</option>
+                            }
+                        </select>
+                        <span asp-validation-for="MaDanhMuc" class="ad-error"></span>
+                    </div>
+                    <div class="ad-field">
+                        <label asp-for="MaThuongHieu">Thương hiệu</label>
+                        <select asp-for="MaThuongHieu" class="ad-select">
+                            <option value="">-- Không có --</option>
+                            @foreach (var th in lk.ThuongHieus)
+                            {
+                                <option value="@th.MaThuongHieu" selected="@(th.MaThuongHieu == Model.MaThuongHieu)">@th.TenThuongHieu@(th.HienThi ? "" : " (đang ẩn)")</option>
+                            }
+                        </select>
+                        <span asp-validation-for="MaThuongHieu" class="ad-error"></span>
+                    </div>
+                </div>
+
+                <div class="ad-row ad-row--3">
+                    <div class="ad-field">
+                        <label asp-for="GiaBan">Giá bán</label>
+                        <div class="ad-inputgroup"><input asp-for="GiaBan" type="number" min="0" step="1000" class="ad-input" /><em>đ</em></div>
+                        <span asp-validation-for="GiaBan" class="ad-error"></span>
+                    </div>
+                    <div class="ad-field">
+                        <label asp-for="GiaGoc">Giá gốc</label>
+                        <div class="ad-inputgroup"><input asp-for="GiaGoc" type="number" min="0" step="1000" class="ad-input" /><em>đ</em></div>
+                        <p class="ad-hint">Để 0 nếu không giảm giá.</p>
+                        <span asp-validation-for="GiaGoc" class="ad-error"></span>
+                    </div>
+                    <div class="ad-field">
+                        <label asp-for="TonKho">Tồn kho</label>
+                        <input asp-for="TonKho" type="number" min="0" class="ad-input" />
+                        <p class="ad-hint">Cảnh báo sắp hết khi từ @lk.NguongSapHet trở xuống.</p>
+                        <span asp-validation-for="TonKho" class="ad-error"></span>
+                    </div>
+                </div>
+
+                <div class="ad-row">
+                    <div class="ad-field">
+                        <label asp-for="BaoHanhThang">Bảo hành (tháng)</label>
+                        <input asp-for="BaoHanhThang" type="number" min="0" max="120" class="ad-input" style="max-width:140px" />
+                        <span asp-validation-for="BaoHanhThang" class="ad-error"></span>
+                    </div>
+                    <div class="ad-field">
+                        <label class="ad-check">
+                            <span class="ad-switch"><input asp-for="HienThi" type="checkbox" /><span></span></span>
+                            Hiển thị trên website
+                        </label>
+                        <label class="ad-check">
+                            <span class="ad-switch"><input asp-for="NoiBat" type="checkbox" /><span></span></span>
+                            Sản phẩm nổi bật (hiện ở trang chủ)
+                        </label>
+                    </div>
+                </div>
+
+                <div class="ad-field">
+                    <label asp-for="MoTaNgan">Mô tả ngắn</label>
+                    <textarea asp-for="MoTaNgan" rows="2" class="ad-textarea"></textarea>
+                    <span asp-validation-for="MoTaNgan" class="ad-error"></span>
+                </div>
+            </div>
+        </section>
+
+        @* ---------- Mô tả chi tiết (CKEditor) ---------- *@
+        <section class="ad-card">
+            <div class="ad-card__head"><h2 class="ad-card__title">Mô tả chi tiết</h2></div>
+            <div class="ad-card__body">
+                <div class="ad-field">
+                    <textarea asp-for="MoTa" rows="10" class="ad-textarea" data-ckeditor
+                              data-upload-url="@Url.Action("TaiAnhMoTa", "SanPham", new { area = "Admin" })"></textarea>
+                    <p class="ad-hint">Có thể chèn ảnh trực tiếp (jpg, png, gif, webp, tối đa 5 MB mỗi ảnh).</p>
+                    <span asp-validation-for="MoTa" class="ad-error"></span>
+                </div>
+            </div>
+        </section>
+
+        @* ---------- Thông số kỹ thuật ---------- *@
+        <section class="ad-card">
+            <div class="ad-card__head"><h2 class="ad-card__title">Thông số kỹ thuật</h2></div>
+            <div class="ad-card__body">
+                <p class="ad-hint">Ví dụ: Socket = LGA1700, Dung lượng = 16GB. Dòng để trống cả hai ô sẽ bị bỏ qua.</p>
+                <div class="ad-specs" data-specs>
+                    @for (var i = 0; i < Model.ThongSos.Count; i++)
+                    {
+                        <div class="ad-spec" data-spec-row>
+                            <input name="ThongSos[@i].TenThongSo" value="@Model.ThongSos[i].TenThongSo" class="ad-input" placeholder="Tên thông số" maxlength="100" aria-label="Tên thông số" />
+                            <input name="ThongSos[@i].GiaTri" value="@Model.ThongSos[i].GiaTri" class="ad-input" placeholder="Giá trị" maxlength="300" aria-label="Giá trị thông số" />
+                            <button type="button" class="ad-iconlink is-danger" data-spec-remove title="Xóa dòng" aria-label="Xóa dòng thông số"><i class="fa-regular fa-trash-can"></i></button>
+                        </div>
+                    }
+                </div>
+                <span asp-validation-for="ThongSos" class="ad-error"></span>
+                <p style="margin-top:10px"><button type="button" class="ad-btn ad-btn--sm" data-spec-add><i class="fa-solid fa-plus"></i> Thêm thông số</button></p>
+
+                <template data-spec-template>
+                    <div class="ad-spec" data-spec-row>
+                        <input name="ThongSos[__i__].TenThongSo" class="ad-input" placeholder="Tên thông số" maxlength="100" aria-label="Tên thông số" />
+                        <input name="ThongSos[__i__].GiaTri" class="ad-input" placeholder="Giá trị" maxlength="300" aria-label="Giá trị thông số" />
+                        <button type="button" class="ad-iconlink is-danger" data-spec-remove title="Xóa dòng" aria-label="Xóa dòng thông số"><i class="fa-regular fa-trash-can"></i></button>
+                    </div>
+                </template>
+            </div>
+        </section>
+
+        @* ---------- Hình ảnh ---------- *@
+        <section class="ad-card">
+            <div class="ad-card__head"><h2 class="ad-card__title">Hình ảnh</h2></div>
+            <div class="ad-card__body">
+                <div class="ad-field">
+                    <label asp-for="AnhDaiDienFile">Ảnh đại diện</label>
+                    <div class="ad-upload">
+                        @if (!string.IsNullOrEmpty(lk.AnhDaiDien))
+                        {
+                            <img src="@lk.AnhDaiDien" alt="Ảnh đại diện hiện tại" data-preview="AnhDaiDienFile" />
+                        }
+                        else
+                        {
+                            <img src="" alt="" hidden data-preview="AnhDaiDienFile" />
+                        }
+                        <div class="ad-upload__text">
+                            <strong>@(dangSua && !string.IsNullOrEmpty(lk.AnhDaiDien) ? "Chọn file để thay ảnh đại diện" : "Chọn ảnh đại diện")</strong>
+                            <input asp-for="AnhDaiDienFile" type="file" accept="image/jpeg,image/png,image/gif,image/webp" />
+                            <p class="ad-hint">jpg, png, gif, webp; tối đa 5 MB.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ad-field">
+                    <label asp-for="AnhFiles">Thêm ảnh vào bộ ảnh</label>
+                    <input asp-for="AnhFiles" type="file" multiple accept="image/jpeg,image/png,image/gif,image/webp" />
+                    <p class="ad-hint">Chọn được nhiều ảnh, tối đa 10 ảnh mỗi lần lưu.@(dangSua ? "" : " Nếu chưa chọn ảnh đại diện, ảnh đầu tiên sẽ được dùng.")</p>
+                    <span asp-validation-for="AnhFiles" class="ad-error"></span>
+                </div>
+
+                @if (dangSua && lk.HinhAnhs.Count > 0)
+                {
+                    <div class="ad-gallery">
+                        @foreach (var a in lk.HinhAnhs)
+                        {
+                            var laDaiDien = a.DuongDan == lk.AnhDaiDien;
+                            <figure class="ad-gallery__item">
+                                <img src="@a.DuongDan" alt="Ảnh sản phẩm" loading="lazy" />
+                                <figcaption>
+                                    @if (laDaiDien)
+                                    {
+                                        <span class="ad-badge ad-badge--ok">Ảnh đại diện</span>
+                                    }
+                                    else
+                                    {
+                                        <button type="submit" form="frm-dai-dien-@a.Uid" class="ad-btn ad-btn--sm">Đặt làm đại diện</button>
+                                    }
+                                    <button type="submit" form="frm-xoa-anh-@a.Uid" class="ad-btn ad-btn--sm ad-btn--danger"
+                                            data-confirm="Ảnh bị xóa khỏi sản phẩm và khỏi máy chủ."
+                                            data-confirm-title="Xóa ảnh này?" data-confirm-ok="Xóa ảnh">Xóa</button>
+                                </figcaption>
+                            </figure>
+                        }
+                    </div>
+                    <p class="ad-hint">Đặt ảnh đại diện hoặc xóa ảnh sẽ lưu ngay và tải lại trang, các thay đổi khác chưa lưu trong form sẽ mất.</p>
+                }
+            </div>
+        </section>
+
+        <div class="ad-formfoot">
+            <button type="submit" class="ad-btn ad-btn--primary">Lưu sản phẩm</button>
+            <a asp-action="Index" class="ad-btn">Hủy</a>
+        </div>
+    </div>
+</form>
+
+@if (dangSua)
+{
+    @* Form riêng (nằm ngoài form chính vì HTML không cho lồng form); nút ở trên gắn vào bằng thuộc tính form="..." *@
+    foreach (var a in lk.HinhAnhs)
+    {
+        <form id="frm-xoa-anh-@a.Uid" asp-action="XoaAnh" asp-route-id="@Model.Uid" asp-route-anhId="@a.Uid" method="post"></form>
+        <form id="frm-dai-dien-@a.Uid" asp-action="DatAnhDaiDien" asp-route-id="@Model.Uid" asp-route-anhId="@a.Uid" method="post"></form>
+    }
+}

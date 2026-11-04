@@ -1,0 +1,166 @@
+@model WebLinhKien.Models.ViewModels.SanPhamListViewModel
+@using WebLinhKien.Helpers
+@{
+    ViewData["Title"] = "Sản phẩm";
+    var quayLai = Context.Request.Path + Context.Request.QueryString;
+}
+
+<div class="ad-pagehead">
+    <div>
+        <h1 class="ad-title">Sản phẩm</h1>
+        <p class="ad-subtitle">Sản phẩm đã có trong đơn hàng thì không xóa được, chỉ ẩn khỏi website.</p>
+    </div>
+    <div class="ad-actions">
+        <a asp-action="Create" class="ad-btn ad-btn--primary"><i class="fa-solid fa-plus"></i> Thêm sản phẩm</a>
+    </div>
+</div>
+
+<partial name="_ThongBao" />
+
+@if (Model.SoSapHet > 0)
+{
+    <div class="ad-alert ad-alert--warn" role="status">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+        <span>
+            Có <b>@Model.SoSapHet</b> sản phẩm sắp hết hoặc đã hết hàng (tồn kho từ @Model.NguongSapHet trở xuống).
+            @if (!Model.ChiSapHet)
+            {
+                <a asp-action="Index" asp-route-sapHet="true">Chỉ xem các sản phẩm này</a>
+            }
+        </span>
+    </div>
+}
+
+<form asp-action="Index" method="get" class="ad-filter">
+    <div class="ad-search">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="search" name="q" value="@Model.Q" class="ad-input" placeholder="Tên hoặc mã sản phẩm..." aria-label="Tìm sản phẩm" />
+    </div>
+    <select name="danhMuc" class="ad-select" aria-label="Lọc theo danh mục">
+        <option value="">Tất cả danh mục</option>
+        @foreach (var dm in Model.DanhMucs)
+        {
+            <option value="@dm.MaDanhMuc" selected="@(dm.MaDanhMuc == Model.MaDanhMuc)">@dm.TenDanhMuc</option>
+        }
+    </select>
+    <label class="ad-check">
+        <span class="ad-switch"><input type="checkbox" name="sapHet" value="true" checked="@Model.ChiSapHet" /><span></span></span>
+        Chỉ sắp hết hàng
+    </label>
+    <button type="submit" class="ad-btn ad-btn--primary">Lọc</button>
+</form>
+
+<section class="ad-card">
+    <div class="ad-tablebar">
+        <span class="ad-tablebar__info">Tổng: <b>@Model.TotalItems</b> sản phẩm</span>
+    </div>
+    <div class="ad-tablewrap">
+        <table class="ad-table">
+            <thead>
+                <tr>
+                    <th>Sản phẩm</th>
+                    <th>Danh mục</th>
+                    <th>Thương hiệu</th>
+                    <th class="is-num">Giá bán</th>
+                    <th class="is-num">Tồn kho</th>
+                    <th>Hiển thị</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var sp in Model.Items)
+                {
+                    <tr>
+                        <td>
+                            <div class="ad-prod">
+                                @if (!string.IsNullOrEmpty(sp.AnhDaiDien))
+                                {
+                                    <img class="ad-prodimg" src="@sp.AnhDaiDien" alt="" loading="lazy" />
+                                }
+                                else
+                                {
+                                    <span class="ad-thumb t-acc"><i class="fa-solid fa-box"></i></span>
+                                }
+                                <div>
+                                    <a asp-action="Edit" asp-route-id="@sp.Uid" class="ad-prod__name">@sp.TenSanPham</a>
+                                    <span class="ad-sub ad-mono">@sp.MaSanPham</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td>@Model.TenDanhMuc(sp.MaDanhMuc)</td>
+                        <td>@Model.TenThuongHieu(sp.MaThuongHieu)</td>
+                        <td class="is-num">
+                            <b>@sp.GiaBan.ToVnd()</b>
+                            @if (sp.GiaGoc > sp.GiaBan)
+                            {
+                                <span class="ad-sub ad-strike">@sp.GiaGoc.ToVnd()</span>
+                            }
+                        </td>
+                        <td class="is-num">
+                            @if (sp.TonKho == 0)
+                            {
+                                <span class="ad-badge ad-badge--danger" title="Đã hết hàng">Hết hàng</span>
+                            }
+                            else if (sp.TonKho <= Model.NguongSapHet)
+                            {
+                                <span class="ad-badge ad-badge--warn" title="Tồn kho từ @Model.NguongSapHet trở xuống"><i class="fa-solid fa-triangle-exclamation"></i> Sắp hết · @sp.TonKho</span>
+                            }
+                            else
+                            {
+                                @sp.TonKho
+                            }
+                        </td>
+                        <td>
+                            @if (sp.HienThi)
+                            {
+                                <span class="ad-badge ad-badge--ok">Hiển thị</span>
+                            }
+                            else
+                            {
+                                <span class="ad-badge ad-badge--off">Đang ẩn</span>
+                            }
+                        </td>
+                        <td class="is-actions">
+                            <a asp-action="Edit" asp-route-id="@sp.Uid" class="ad-iconlink" title="Sửa" aria-label="Sửa sản phẩm @sp.TenSanPham"><i class="fa-solid fa-pen"></i></a>
+                            <form asp-action="BatTatHienThi" asp-route-id="@sp.Uid" method="post" style="display:inline">
+                                <input type="hidden" name="quayLai" value="@quayLai" />
+                                <button type="submit" class="ad-iconlink" title="@(sp.HienThi ? "Ẩn khỏi website" : "Hiển thị lại")"
+                                        aria-label="@(sp.HienThi ? "Ẩn" : "Hiển thị") sản phẩm @sp.TenSanPham"><i class="fa-regular @(sp.HienThi ? "fa-eye-slash" : "fa-eye")"></i></button>
+                            </form>
+                            <form asp-action="Xoa" asp-route-id="@sp.Uid" method="post" style="display:inline">
+                                <button type="submit" class="ad-iconlink is-danger" title="Xóa" aria-label="Xóa sản phẩm @sp.TenSanPham"
+                                        data-confirm="Ảnh và thông số kỹ thuật của sản phẩm cũng bị xóa, không hoàn tác được."
+                                        data-confirm-title="Xóa sản phẩm @sp.MaSanPham?"
+                                        data-confirm-ok="Xóa sản phẩm"><i class="fa-regular fa-trash-can"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @if (!Model.Items.Any())
+    {
+        <div class="ad-empty"><i class="fa-solid fa-box-open"></i><strong>Không có sản phẩm nào</strong>Thử đổi từ khóa hoặc bộ lọc, hoặc bấm "Thêm sản phẩm".</div>
+    }
+
+    @if (Model.TotalPages > 1)
+    {
+        <div class="ad-pager">
+            <span>Trang @Model.Page / @Model.TotalPages (@Model.TotalItems sản phẩm)</span>
+            <div class="ad-pager__btns">
+                @if (Model.Page > 1)
+                {
+                    <a asp-action="Index" asp-route-q="@Model.Q" asp-route-danhMuc="@Model.MaDanhMuc" asp-route-sapHet="@Model.ChiSapHet" asp-route-page="@(Model.Page - 1)"
+                       class="ad-pager__btn" aria-label="Trang trước"><i class="fa-solid fa-chevron-left"></i></a>
+                }
+                @if (Model.Page < Model.TotalPages)
+                {
+                    <a asp-action="Index" asp-route-q="@Model.Q" asp-route-danhMuc="@Model.MaDanhMuc" asp-route-sapHet="@Model.ChiSapHet" asp-route-page="@(Model.Page + 1)"
+                       class="ad-pager__btn" aria-label="Trang sau"><i class="fa-solid fa-chevron-right"></i></a>
+                }
+            </div>
+        </div>
+    }
+</section>

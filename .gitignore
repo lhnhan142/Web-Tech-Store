@@ -480,3 +480,7 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+# Ảnh admin tải lên lúc chạy
+WebLinhKien/wwwroot/uploads/*
+!WebLinhKien/wwwroot/uploads/.gitkeep

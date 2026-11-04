@@ -882,3 +882,10 @@ a.ad-pager__btn.is-active { color: #fff !important; }
 
 /* Nút trong form logout nằm trong menu tài khoản */
 .ad-menu form { margin: 0; }
+
+/* ---- Quản lý sản phẩm: ảnh nhỏ trong danh sách và bộ ảnh ---- */
+.ad-prodimg { width: 44px; height: 44px; object-fit: cover; border-radius: 8px; border: 1px solid var(--ad-line-soft); flex: none; background: #fff; }
+.ad-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; margin-top: 8px; }
+.ad-gallery__item { margin: 0; border: 1px solid var(--ad-line-soft); border-radius: 10px; overflow: hidden; background: #fff; }
+.ad-gallery__item img { display: block; width: 100%; aspect-ratio: 1 / 1; object-fit: cover; }
+.ad-gallery__item figcaption { display: flex; flex-wrap: wrap; gap: 6px; padding: 8px; }

@@ -3,6 +3,9 @@ using WebLinhKien.Helpers;
 using WebLinhKien.WebSockets;
 using FluentValidation;
 using WebLinhKien.Validators;
+using WebLinhKien.Services;
+using System.Threading.RateLimiting;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace WebLinhKien
 {
@@ -20,6 +23,17 @@ namespace WebLinhKien
             builder.Services.AddAdminAuthentication();
             builder.Services.AddAdminWebSockets();
             builder.Services.AddValidatorsFromAssemblyContaining<DatHangRequestValidator>();
+            builder.Services.AddScoped<IDatHangService, DatHangService>();
+
+            // Giới hạn tần suất theo IP cho đặt hàng và lấy mã QR (chống spam đơn hàng): 10 lần mỗi phút
+            builder.Services.AddRateLimiter(options =>
+            {
+                options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+                options.AddPolicy("dat-hang", httpContext =>
+                    RateLimitPartition.GetFixedWindowLimiter(
+                        httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+                        _ => new FixedWindowRateLimiterOptions { PermitLimit = 10, Window = TimeSpan.FromMinutes(1) }));
+            });
             builder.Services.AddDistributedMemoryCache();
             builder.Services.AddSession(options =>
             {
@@ -42,6 +56,7 @@ namespace WebLinhKien
             app.UseRouting();
 
             app.UseRouting();
+            app.UseRateLimiter();
             app.UseSession();
             app.UseAuthentication();
             app.UseAuthorization();

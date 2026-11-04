@@ -12,6 +12,7 @@
         phiGiaoHang = Model.PhiGiaoHang,
         nguongMienPhi = Model.NguongMienPhi,
         soLuongToiDa = WebLinhKien.Helpers.WebConstants.SoLuongToiDa,
+        gioHang = new { capNhat = Url.Action("CapNhat", "GioHang"), xoa = Url.Action("Xoa", "GioHang") },
         cart = Model.Items.Select(i => new
         {
             uid = i.Uid, ten = i.Ten, gia = i.Gia, soLuong = i.SoLuong, tonKho = i.TonKho, icon = i.Icon
@@ -205,8 +206,9 @@
                 <h3>Chuyển khoản để hoàn tất</h3>
                 <div class="dh-transfer__body">
                     <div class="dh-qr">
-                        <canvas id="dh-qr" aria-label="Mã QR chuyển khoản minh họa"></canvas>
-                        <small>Mã QR minh họa. Khi ghép vào dự án, mã thật do server tạo.</small>
+                        <img id="dh-qr-img" alt="Mã QR chuyển khoản" width="150" height="150" style="display:none" />
+                        <canvas id="dh-qr" aria-label="Mã QR chuyển khoản minh họa" style="display:none"></canvas>
+                        <small>Quét mã bằng ứng dụng ngân hàng để chuyển đúng số tiền và nội dung.</small>
                     </div>
                     <dl class="dh-bank" id="dh-bank"></dl>
                 </div>

@@ -148,6 +148,19 @@
         $$('[data-submit]').forEach((btn) => { btn.disabled = cart.length === 0 || submitting; });
     }
 
+    // Đồng bộ giỏ hàng trong session khi khách đổi số lượng / xóa (chỉ chế độ thật), để tải lại trang không bị "sống lại"
+    function syncGio(uid, soLuong) {
+        if (CONFIG.demo) return;
+        const url = soLuong > 0 ? SERVER.gioHang?.capNhat : SERVER.gioHang?.xoa;
+        if (!url) return;
+        const token = $('input[name="__RequestVerificationToken"]')?.value ?? '';
+        fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'RequestVerificationToken': token },
+            body: JSON.stringify({ uidSanPham: uid, soLuong })
+        }).catch(() => { /* lỗi mạng: bỏ qua, giỏ trong session sẽ được làm mới khi đặt hàng */ });
+    }
+
     $('#dh-items').addEventListener('click', (e) => {
         const btn = e.target.closest('[data-action]');
         if (!btn) return;
@@ -161,6 +174,7 @@
             case 'dec': item.soLuong = Math.max(1, item.soLuong - 1); break;
             case 'remove': cart = cart.filter((i) => i.uid !== uid); break;
         }
+        syncGio(uid, cart.find((i) => i.uid === uid)?.soLuong ?? 0);
         renderCart();
     });
 
@@ -380,18 +394,31 @@
             infoRow('Hình thức', isTransfer ? 'Chuyển khoản ngân hàng' : 'Thanh toán khi nhận hàng (COD)')
         );
 
+        // Chế độ thật: thông tin ngân hàng và ảnh QR do server trả về (lấy từ CaiDats). Không bao giờ hiện tài khoản mẫu.
+        const nganHang = CONFIG.demo ? CONFIG.nganHang : result.data?.nganHang;
         const transfer = $('#dh-transfer');
-        transfer.hidden = !isTransfer;
-        if (isTransfer) {
+        transfer.hidden = !isTransfer || !nganHang;
+        if (isTransfer && nganHang) {
             const bank = $('#dh-bank');
             bank.replaceChildren(
-                bankRow('Ngân hàng', CONFIG.nganHang.ten, false),
-                bankRow('Số tài khoản', CONFIG.nganHang.soTaiKhoan, true),
-                bankRow('Chủ tài khoản', CONFIG.nganHang.chuTaiKhoan, false),
+                bankRow('Ngân hàng', nganHang.ten, false),
+                bankRow('Số tài khoản', nganHang.soTaiKhoan, true),
+                bankRow('Chủ tài khoản', nganHang.chuTaiKhoan, false),
                 bankRow('Số tiền', String(tong), true),
                 bankRow('Nội dung', maDon, true)
             );
-            drawFakeQr($('#dh-qr'), maDon + tong);
+            const qrImg = $('#dh-qr-img');
+            const qrCanvas = $('#dh-qr');
+            qrImg.style.display = 'none';
+            qrCanvas.style.display = 'none';
+            if (result.data?.qrUrl) {
+                qrImg.onerror = () => { qrImg.style.display = 'none'; };
+                qrImg.src = result.data.qrUrl;
+                qrImg.style.display = '';
+            } else if (CONFIG.demo) {
+                qrCanvas.style.display = '';
+                drawFakeQr(qrCanvas, maDon + tong);
+            }
         }
 
         cart = [];

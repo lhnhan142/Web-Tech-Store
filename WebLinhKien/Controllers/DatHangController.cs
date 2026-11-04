@@ -1,11 +1,13 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using WebLinhKien.Helpers;
 using WebLinhKien.Models;
 using WebLinhKien.Models.Requests;
 using WebLinhKien.Models.Responses;
 using WebLinhKien.Models.ViewModels;
 using WebLinhKien.Repositories.Interfaces;
+using WebLinhKien.Services;
 
 namespace WebLinhKien.Controllers;
 
@@ -15,15 +17,18 @@ public class DatHangController : Controller
     private readonly ISanPhamRepository _sanPhamRepo;
     private readonly ICaiDatRepository _caiDatRepo;
     private readonly IValidator<DatHangRequest> _validator;
+    private readonly IDatHangService _datHangService;
 
     public DatHangController(
         ISanPhamRepository sanPhamRepo,
         ICaiDatRepository caiDatRepo,
-        IValidator<DatHangRequest> validator)
+        IValidator<DatHangRequest> validator,
+        IDatHangService datHangService)
     {
         _sanPhamRepo = sanPhamRepo;
         _caiDatRepo = caiDatRepo;
         _validator = validator;
+        _datHangService = datHangService;
     }
 
     // GET /DatHang - trang đặt hàng, hiển thị giỏ hàng trong session (tên, giá lấy từ database)
@@ -62,6 +67,7 @@ public class DatHangController : Controller
     // POST /DatHang - nhận JSON từ dat-hang.js (kèm header RequestVerificationToken)
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [EnableRateLimiting("dat-hang")]
     public async Task<IActionResult> Gui([FromBody] DatHangRequest? request)
     {
         if (request is null)
@@ -85,34 +91,49 @@ public class DatHangController : Controller
             });
         }
 
-        // TODO (bước tiếp theo, phần của thành viên C): gọi dịch vụ đặt hàng để
-        //   1. tải sản phẩm từ database, kiểm tra tồn kho, TÍNH LẠI giá và tổng tiền ở server;
-        //   2. lưu DonDatHangs + ChiTietDonHangs và trừ TonKho trong MỘT transaction;
-        //   3. GioHangSession.Xoa(HttpContext.Session);
-        //   4. gọi IAdminNotifier.NotifyNewOrderAsync(...) sau khi commit;
-        //   5. trả Status = 200 kèm Data = { maDon, tongThanhToan }.
-        return StatusCode(StatusCodes.Status501NotImplemented, new Responses
+        // Tải sản phẩm, kiểm tra tồn kho, tính lại tiền, lưu đơn + trừ kho (một transaction), báo cho admin
+        var kq = await _datHangService.DatHangAsync(request);
+        if (kq.Status != StatusCodes.Status200OK)
+            return StatusCode(kq.Status, new Responses { Status = kq.Status, Message = kq.Message });
+
+        GioHangSession.Xoa(HttpContext.Session);
+
+        // Khách chuyển khoản: trả kèm thông tin ngân hàng và đường dẫn ảnh QR do server tạo
+        string? qrUrl = null;
+        if (kq.NganHang is not null)
+            qrUrl = Url.Action(nameof(QR), "DatHang", new { maDon = kq.MaDon, sdt = request.Sdt });
+
+        return Ok(new Responses
         {
-            Status = 501,
-            Message = "Máy chủ chưa cài đặt chức năng lưu đơn hàng."
+            Status = 200,
+            Message = kq.Message,
+            Data = new
+            {
+                maDon = kq.MaDon,
+                tongThanhToan = kq.TongThanhToan,
+                qrUrl,
+                nganHang = kq.NganHang is null ? null : new
+                {
+                    ten = kq.NganHang.Ten,
+                    soTaiKhoan = kq.NganHang.SoTaiKhoan,
+                    chuTaiKhoan = kq.NganHang.ChuTaiKhoan
+                }
+            }
         });
     }
 
-    // GET /DatHang/ThemMau - CHỈ ĐỂ THỬ khi phát triển: cho 2 sản phẩm seed vào giỏ rồi mở trang đặt hàng.
-    // Xóa action này khi đã có chức năng giỏ hàng thật.
-    [HttpGet("ThemMau")]
-    public async Task<IActionResult> ThemMau([FromServices] IWebHostEnvironment env)
+    // GET /DatHang/QR?maDon=...&sdt=... → ảnh PNG mã QR chuyển khoản (phải khớp cả mã đơn và số điện thoại)
+    [HttpGet("QR")]
+    [EnableRateLimiting("dat-hang")]
+    public async Task<IActionResult> QR(string? maDon, string? sdt)
     {
-        if (!env.IsDevelopment()) return NotFound();
+        if (string.IsNullOrWhiteSpace(maDon) || string.IsNullOrWhiteSpace(sdt)) return NotFound();
 
-        var gio = new List<GioHangItem>();
-        foreach (var ma in new[] { "MOUSE-LOGI-G102", "RAM-KING-16G" })
-        {
-            var sp = await _sanPhamRepo.GetByMaAsync(ma);
-            if (sp is not null) gio.Add(new GioHangItem { UidSanPham = sp.Uid, SoLuong = 1 });
-        }
-        GioHangSession.Ghi(HttpContext.Session, gio);
-        return RedirectToAction(nameof(Index));
+        var png = await _datHangService.TaoQrPngAsync(maDon.Trim(), sdt.Trim());
+        if (png is null) return NotFound();
+
+        Response.Headers.CacheControl = "no-store";
+        return File(png, "image/png");
     }
 
     private static void Chuanhoa(DatHangRequest r)

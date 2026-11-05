@@ -6,7 +6,7 @@
     {
         "DonHang" => "don-hang",
         "SanPham" or "DanhMuc" or "ThuongHieu" => "san-pham",
-        "CaiDat" => "cai-dat",
+        "CaiDat" or "TaiKhoan" => "cai-dat",
         _ => "tong-quan"
     };
 
@@ -25,10 +25,19 @@
         ["tong-quan"] = ("Tổng quan", new[] { ("Home", "Bảng điều khiển", "fa-gauge-high") }),
         ["don-hang"] = ("Đơn hàng", new[] { ("DonHang", "Danh sách đơn", "fa-list") }),
         ["san-pham"] = ("Sản phẩm", new[] { ("SanPham", "Danh sách sản phẩm", "fa-box-open"), ("DanhMuc", "Danh mục", "fa-layer-group"), ("ThuongHieu", "Thương hiệu", "fa-tags") }),
-        ["cai-dat"] = ("Cài đặt cửa hàng", new[] { ("CaiDat", "Thông tin cửa hàng", "fa-store") })
+        ["cai-dat"] = ("Cài đặt cửa hàng", new[] { ("CaiDat", "Thông tin cửa hàng", "fa-store"), ("TaiKhoan", "Tài khoản", "fa-users-gear") })
     };
 
-    var tab = tabs.First(t => t.Khoa == tabHienTai);
+    // Nhân viên không thấy Cài đặt, Danh mục, Thương hiệu (các trang đó cũng bị chặn ở server).
+    var laAdmin = User.IsInRole(WebLinhKien.Helpers.AuthServiceExtensions.AdminRole);
+    if (!laAdmin)
+    {
+        tabs = tabs.Where(t => t.Khoa != "cai-dat").ToArray();
+        mucBen["san-pham"] = ("Sản phẩm", new[] { ("SanPham", "Danh sách sản phẩm", "fa-box-open") });
+    }
+
+    var tab = tabs.FirstOrDefault(t => t.Khoa == tabHienTai);
+    if (tab.Khoa is null) tab = tabs[0];
     var side = mucBen[tabHienTai];
     var tieuDe = ViewData["Title"] as string ?? tab.Ten;
 
@@ -94,9 +103,13 @@
             <div class="ad-dd">
                 <button type="button" class="ad-avatar" data-dd-toggle aria-expanded="false" aria-label="Tài khoản">@chuCai</button>
                 <div class="ad-menu">
-                    <div class="ad-menu__head"><strong>@hoTen</strong><span>@User.Identity?.Name</span></div>
+                    <div class="ad-menu__head"><strong>@hoTen</strong><span>@User.Identity?.Name · @(laAdmin ? "Quản trị" : "Nhân viên")</span></div>
                     <div class="ad-menu__sep"></div>
-                    <a class="ad-menu__item" asp-area="Admin" asp-controller="CaiDat" asp-action="Index"><i class="fa-solid fa-gear"></i> Cài đặt cửa hàng</a>
+                    @if (laAdmin)
+                    {
+                        <a class="ad-menu__item" asp-area="Admin" asp-controller="CaiDat" asp-action="Index"><i class="fa-solid fa-gear"></i> Cài đặt cửa hàng</a>
+                    }
+                    <a class="ad-menu__item" asp-area="Admin" asp-controller="HoSo" asp-action="DoiMatKhau"><i class="fa-solid fa-key"></i> Đổi mật khẩu</a>
                     <form asp-area="Admin" asp-controller="Account" asp-action="Logout" method="post">
                         <button type="submit" class="ad-menu__item"><i class="fa-solid fa-right-from-bracket"></i> Đăng xuất</button>
                     </form>

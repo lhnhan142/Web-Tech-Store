@@ -39,7 +39,8 @@ public class AdminWebSocketMiddleware
             return;
         }
 
-        if (context.User.Identity?.IsAuthenticated != true || !context.User.IsInRole(AuthServiceExtensions.AdminRole))
+        if (context.User.Identity?.IsAuthenticated != true ||
+            !(context.User.IsInRole(AuthServiceExtensions.AdminRole) || context.User.IsInRole(AuthServiceExtensions.NhanVienRole)))
         {
             context.Response.StatusCode = StatusCodes.Status401Unauthorized;
             return;

@@ -1,0 +1,57 @@
+@model WebLinhKien.Models.Requests.TaiKhoanForm
+@{
+    var dangSua = ViewData["DangSua"] is true;
+    var laChinhMinh = ViewData["LaChinhMinh"] is true;
+}
+
+<form asp-action="@(dangSua ? "Edit" : "Create")" asp-route-id="@(dangSua ? ViewContext.RouteData.Values["id"] : null)" method="post"
+      class="ad-card ad-form ad-form--narrow" autocomplete="off">
+    <div class="ad-card__body">
+        <div class="ad-field">
+            <label asp-for="TenDangNhap">Tên đăng nhập</label>
+            <input asp-for="TenDangNhap" readonly="@dangSua" class="ad-input ad-mono" placeholder="Ví dụ: nhanvien01" />
+            <p class="ad-hint">@(dangSua ? "Tên đăng nhập không đổi được." : "Chữ không dấu, số, ., _ hoặc -. Không đổi được sau khi tạo.")</p>
+            <span asp-validation-for="TenDangNhap" class="ad-error"></span>
+        </div>
+
+        <div class="ad-field">
+            <label asp-for="HoTen">Họ tên <span class="ad-opt">(không bắt buộc)</span></label>
+            <input asp-for="HoTen" class="ad-input" placeholder="Ví dụ: Nguyễn Văn A" />
+            <span asp-validation-for="HoTen" class="ad-error"></span>
+        </div>
+
+        <div class="ad-field">
+            <label asp-for="VaiTro">Vai trò</label>
+            @if (laChinhMinh)
+            {
+                <input type="hidden" asp-for="VaiTro" />
+                <select class="ad-select" disabled>
+                    <option>@(Model.VaiTro == "Admin" ? "Admin (quản trị)" : "Nhân viên")</option>
+                </select>
+                <p class="ad-hint">Bạn không thể tự đổi vai trò của chính mình.</p>
+            }
+            else
+            {
+                <select asp-for="VaiTro" class="ad-select">
+                    <option value="NhanVien">Nhân viên: xử lý đơn hàng và sản phẩm</option>
+                    <option value="Admin">Admin (quản trị): toàn quyền</option>
+                </select>
+            }
+            <span asp-validation-for="VaiTro" class="ad-error"></span>
+        </div>
+
+        @if (!dangSua)
+        {
+            <div class="ad-field">
+                <label asp-for="MatKhau">Mật khẩu tạm</label>
+                <input asp-for="MatKhau" type="password" class="ad-input" autocomplete="new-password" />
+                <p class="ad-hint">Ít nhất 8 ký tự. Hãy báo mật khẩu này cho người dùng; họ sẽ phải đổi ngay khi đăng nhập lần đầu.</p>
+                <span asp-validation-for="MatKhau" class="ad-error"></span>
+            </div>
+        }
+    </div>
+    <div class="ad-card__head" style="border-top:1px solid var(--ad-line-soft);border-bottom:0;border-radius:0 0 8px 8px;justify-content:flex-start;gap:10px">
+        <button type="submit" class="ad-btn ad-btn--primary">@(dangSua ? "Lưu tài khoản" : "Tạo tài khoản")</button>
+        <a asp-action="Index" class="ad-btn">Hủy</a>
+    </div>
+</form>

@@ -162,6 +162,9 @@ CREATE TABLE dbo.TaiKhoans (
     MatKhauHash  NVARCHAR(300) NOT NULL,
     HoTen        NVARCHAR(100) NULL,
     HoatDong     BIT           NOT NULL CONSTRAINT DF_TaiKhoans_HoatDong DEFAULT 1,
+    VaiTro       NVARCHAR(20)  NOT NULL CONSTRAINT DF_TaiKhoans_VaiTro DEFAULT N'NhanVien'
+                               CONSTRAINT CK_TaiKhoans_VaiTro CHECK (VaiTro IN (N'Admin', N'NhanVien')),
+    CanDoiMatKhau BIT          NOT NULL CONSTRAINT DF_TaiKhoans_CanDoiMatKhau DEFAULT 0,
     NgayTao      DATETIME2(0)  NOT NULL CONSTRAINT DF_TaiKhoans_NgayTao DEFAULT SYSDATETIME(),
     CONSTRAINT PK_TaiKhoans PRIMARY KEY (Uid),
     CONSTRAINT UQ_TaiKhoans_TenDangNhap UNIQUE (TenDangNhap)

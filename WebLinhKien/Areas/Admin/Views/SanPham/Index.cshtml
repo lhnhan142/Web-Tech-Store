@@ -127,12 +127,15 @@
                                 <button type="submit" class="ad-iconlink" title="@(sp.HienThi ? "Ẩn khỏi website" : "Hiển thị lại")"
                                         aria-label="@(sp.HienThi ? "Ẩn" : "Hiển thị") sản phẩm @sp.TenSanPham"><i class="fa-regular @(sp.HienThi ? "fa-eye-slash" : "fa-eye")"></i></button>
                             </form>
-                            <form asp-action="Xoa" asp-route-id="@sp.Uid" method="post" style="display:inline">
-                                <button type="submit" class="ad-iconlink is-danger" title="Xóa" aria-label="Xóa sản phẩm @sp.TenSanPham"
-                                        data-confirm="Ảnh và thông số kỹ thuật của sản phẩm cũng bị xóa, không hoàn tác được."
-                                        data-confirm-title="Xóa sản phẩm @sp.MaSanPham?"
-                                        data-confirm-ok="Xóa sản phẩm"><i class="fa-regular fa-trash-can"></i></button>
-                            </form>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <form asp-action="Xoa" asp-route-id="@sp.Uid" method="post" style="display:inline">
+                                    <button type="submit" class="ad-iconlink is-danger" title="Xóa" aria-label="Xóa sản phẩm @sp.TenSanPham"
+                                            data-confirm="Ảnh và thông số kỹ thuật của sản phẩm cũng bị xóa, không hoàn tác được."
+                                            data-confirm-title="Xóa sản phẩm @sp.MaSanPham?"
+                                            data-confirm-ok="Xóa sản phẩm"><i class="fa-regular fa-trash-can"></i></button>
+                                </form>
+                            }
                         </td>
                     </tr>
                 }

@@ -19,7 +19,6 @@ namespace WebLinhKien
             builder.Services.AddControllersWithViews();
 
             builder.Services.AddDataLayer();
-            builder.Services.AddDataLayer();
             builder.Services.AddAdminAuthentication();
             builder.Services.AddAdminWebSockets();
             builder.Services.AddValidatorsFromAssemblyContaining<DatHangRequestValidator>();
@@ -57,10 +56,10 @@ namespace WebLinhKien
             app.UseStaticFiles();
             app.UseRouting();
 
-            app.UseRouting();
             app.UseRateLimiter();
             app.UseSession();
             app.UseAuthentication();
+            app.UseBatDoiMatKhau();   // tài khoản mới / vừa đặt lại mật khẩu phải đổi mật khẩu trước
             app.UseAuthorization();
             app.UseAdminWebSockets();
 

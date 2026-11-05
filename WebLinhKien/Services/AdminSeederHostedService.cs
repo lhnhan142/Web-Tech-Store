@@ -56,7 +56,8 @@ public class AdminSeederHostedService : IHostedService
                 TenDangNhap = tenDangNhap.Trim(),
                 MatKhauHash = passwordService.Hash(matKhau),
                 HoTen = _config["AdminSeed:HoTen"] ?? "Quản trị viên",
-                HoatDong = true
+                HoatDong = true,
+                VaiTro = WebLinhKien.Helpers.AuthServiceExtensions.AdminRole
             });
 
             _logger.LogInformation("Đã tạo tài khoản admin đầu tiên: {TenDangNhap}", tenDangNhap.Trim());

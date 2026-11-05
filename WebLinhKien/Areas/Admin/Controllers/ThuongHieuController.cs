@@ -1,5 +1,7 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
+using WebLinhKien.Helpers;
 using WebLinhKien.Models.Entities;
 using WebLinhKien.Models.Requests;
 using WebLinhKien.Models.ViewModels;
@@ -7,6 +9,7 @@ using WebLinhKien.Repositories.Interfaces;
 
 namespace WebLinhKien.Areas.Admin.Controllers;
 
+[Authorize(Roles = AuthServiceExtensions.AdminRole)]
 public class ThuongHieuController : AdminController
 {
     private readonly IThuongHieuRepository _repo;

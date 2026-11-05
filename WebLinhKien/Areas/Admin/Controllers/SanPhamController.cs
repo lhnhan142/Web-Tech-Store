@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using WebLinhKien.Helpers;
@@ -220,8 +221,10 @@ public class SanPhamController : AdminController
         return RedirectToAction(nameof(Index));
     }
 
+    // Xóa sản phẩm là thao tác không hoàn tác: chỉ Admin, nhân viên chỉ được ẩn sản phẩm (sửa HienThi).
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Roles = AuthServiceExtensions.AdminRole)]
     public async Task<IActionResult> Xoa(int id)
     {
         var sp = await _repo.GetByUidAsync(id);

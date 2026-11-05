@@ -1,0 +1,86 @@
+@model WebLinhKien.Models.ViewModels.TaiKhoanListViewModel
+@{
+    ViewData["Title"] = "Tài khoản";
+}
+
+<div class="ad-pagehead">
+    <div>
+        <h1 class="ad-title">Tài khoản quản trị và nhân viên</h1>
+        <p class="ad-subtitle">Admin làm được mọi việc. Nhân viên xử lý đơn hàng và sản phẩm, không vào được Cài đặt, danh mục, thương hiệu và trang này.</p>
+    </div>
+    <div class="ad-actions">
+        <a asp-action="Create" class="ad-btn ad-btn--primary"><i class="fa-solid fa-user-plus"></i> Thêm tài khoản</a>
+    </div>
+</div>
+
+<partial name="_ThongBao" />
+
+<section class="ad-card">
+    <div class="ad-tablebar">
+        <span class="ad-tablebar__info">Tổng: <b>@Model.Items.Count</b> tài khoản</span>
+    </div>
+    <div class="ad-tablewrap">
+        <table class="ad-table">
+            <thead>
+                <tr>
+                    <th>Tên đăng nhập</th>
+                    <th>Họ tên</th>
+                    <th>Vai trò</th>
+                    <th>Trạng thái</th>
+                    <th>Ngày tạo</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var tk in Model.Items)
+                {
+                    var laMinh = tk.Uid == Model.UidHienTai;
+                    <tr>
+                        <td class="ad-mono"><b>@tk.TenDangNhap</b>@if (laMinh) { <span class="ad-opt"> (bạn)</span> }</td>
+                        <td>@(tk.HoTen ?? "—")</td>
+                        <td>
+                            @if (tk.VaiTro == "Admin")
+                            {
+                                <span class="ad-badge ad-badge--dang_xu_ly">Admin</span>
+                            }
+                            else
+                            {
+                                <span class="ad-badge ad-badge--off">Nhân viên</span>
+                            }
+                        </td>
+                        <td>
+                            @if (!tk.HoatDong)
+                            {
+                                <span class="ad-badge ad-badge--danger">Đã khóa</span>
+                            }
+                            else if (tk.CanDoiMatKhau)
+                            {
+                                <span class="ad-badge ad-badge--warn">Chờ đổi mật khẩu</span>
+                            }
+                            else
+                            {
+                                <span class="ad-badge ad-badge--ok">Hoạt động</span>
+                            }
+                        </td>
+                        <td>@tk.NgayTao.ToString("dd/MM/yyyy")</td>
+                        <td class="is-actions">
+                            <a asp-action="Edit" asp-route-id="@tk.Uid" class="ad-iconlink" title="Sửa" aria-label="Sửa tài khoản @tk.TenDangNhap"><i class="fa-solid fa-pen"></i></a>
+                            @if (!laMinh)
+                            {
+                                <a asp-action="DatLaiMatKhau" asp-route-id="@tk.Uid" class="ad-iconlink" title="Đặt lại mật khẩu" aria-label="Đặt lại mật khẩu của @tk.TenDangNhap"><i class="fa-solid fa-key"></i></a>
+                                <form asp-action="KhoaMo" asp-route-id="@tk.Uid" method="post" style="display:inline">
+                                    <button type="submit" class="@("ad-iconlink" + (tk.HoatDong ? " is-danger" : ""))"
+                                            title="@(tk.HoatDong ? "Khóa tài khoản" : "Mở khóa")"
+                                            aria-label="@(tk.HoatDong ? "Khóa" : "Mở khóa") tài khoản @tk.TenDangNhap"
+                                            data-confirm="@(tk.HoatDong ? "Người này sẽ bị đăng xuất ngay và không đăng nhập lại được cho đến khi mở khóa." : "Người này sẽ đăng nhập lại được.")"
+                                            data-confirm-title="@(tk.HoatDong ? "Khóa" : "Mở khóa") tài khoản @tk.TenDangNhap?"
+                                            data-confirm-ok="@(tk.HoatDong ? "Khóa tài khoản" : "Mở khóa")"><i class="fa-solid @(tk.HoatDong ? "fa-user-lock" : "fa-user-check")"></i></button>
+                                </form>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</section>

@@ -1,0 +1,22 @@
+@model WebLinhKien.Models.Requests.DatLaiMatKhauForm
+@{
+    var tk = (WebLinhKien.Models.Entities.TaiKhoan)ViewData["TaiKhoan"]!;
+    ViewData["Title"] = "Đặt lại mật khẩu";
+}
+
+<div class="ad-pagehead"><h1 class="ad-title">Đặt lại mật khẩu cho @tk.TenDangNhap</h1></div>
+
+<form asp-action="DatLaiMatKhau" asp-route-id="@tk.Uid" method="post" class="ad-card ad-form ad-form--narrow" autocomplete="off">
+    <div class="ad-card__body">
+        <div class="ad-field">
+            <label asp-for="MatKhauMoi">Mật khẩu tạm mới</label>
+            <input asp-for="MatKhauMoi" type="password" class="ad-input" autocomplete="new-password" />
+            <p class="ad-hint">Ít nhất 8 ký tự. Người dùng sẽ phải đổi mật khẩu ở lần đăng nhập tới.</p>
+            <span asp-validation-for="MatKhauMoi" class="ad-error"></span>
+        </div>
+    </div>
+    <div class="ad-card__head" style="border-top:1px solid var(--ad-line-soft);border-bottom:0;border-radius:0 0 8px 8px;justify-content:flex-start;gap:10px">
+        <button type="submit" class="ad-btn ad-btn--primary">Đặt lại mật khẩu</button>
+        <a asp-action="Index" class="ad-btn">Hủy</a>
+    </div>
+</form>

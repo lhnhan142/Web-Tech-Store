@@ -1,0 +1,32 @@
+@model WebLinhKien.Models.Requests.DoiMatKhauForm
+@{
+    ViewData["Title"] = "Đổi mật khẩu";
+}
+
+<div class="ad-pagehead"><h1 class="ad-title">Đổi mật khẩu</h1></div>
+
+<partial name="_ThongBao" />
+
+<form asp-action="DoiMatKhau" method="post" class="ad-card ad-form ad-form--narrow" autocomplete="off">
+    <div class="ad-card__body">
+        <div class="ad-field">
+            <label asp-for="MatKhauHienTai">Mật khẩu hiện tại</label>
+            <input asp-for="MatKhauHienTai" type="password" class="ad-input" autocomplete="current-password" />
+            <span asp-validation-for="MatKhauHienTai" class="ad-error"></span>
+        </div>
+        <div class="ad-field">
+            <label asp-for="MatKhauMoi">Mật khẩu mới</label>
+            <input asp-for="MatKhauMoi" type="password" class="ad-input" autocomplete="new-password" />
+            <p class="ad-hint">Ít nhất 8 ký tự và khác mật khẩu hiện tại.</p>
+            <span asp-validation-for="MatKhauMoi" class="ad-error"></span>
+        </div>
+        <div class="ad-field">
+            <label asp-for="XacNhanMatKhau">Nhập lại mật khẩu mới</label>
+            <input asp-for="XacNhanMatKhau" type="password" class="ad-input" autocomplete="new-password" />
+            <span asp-validation-for="XacNhanMatKhau" class="ad-error"></span>
+        </div>
+    </div>
+    <div class="ad-card__head" style="border-top:1px solid var(--ad-line-soft);border-bottom:0;border-radius:0 0 8px 8px;justify-content:flex-start;gap:10px">
+        <button type="submit" class="ad-btn ad-btn--primary">Đổi mật khẩu</button>
+    </div>
+</form>

@@ -1,0 +1,17 @@
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Không đủ quyền";
+}
+
+<div class="ad-pagehead"><h1 class="ad-title">Không đủ quyền truy cập</h1></div>
+
+<section class="ad-card">
+    <div class="ad-empty">
+        <i class="fa-solid fa-lock"></i>
+        <strong>Tài khoản của bạn không có quyền vào trang này</strong>
+        Chức năng này chỉ dành cho quản trị viên. Nếu cần, hãy nhờ quản trị viên hỗ trợ.
+        <div style="margin-top:14px">
+            <a asp-area="Admin" asp-controller="Home" asp-action="Index" class="ad-btn ad-btn--primary">Về trang tổng quan</a>
+        </div>
+    </div>
+</section>

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebLinhKien.Helpers;
 using WebLinhKien.Models.Entities;
@@ -6,6 +7,7 @@ using WebLinhKien.Repositories.Interfaces;
 
 namespace WebLinhKien.Areas.Admin.Controllers;
 
+[Authorize(Roles = AuthServiceExtensions.AdminRole)]
 public class CaiDatController : AdminController
 {
     private readonly ICaiDatRepository _repo;

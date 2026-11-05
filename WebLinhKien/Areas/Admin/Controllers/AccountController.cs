@@ -57,7 +57,7 @@ public class AccountController : Controller
             new(ClaimTypes.NameIdentifier, taiKhoan.Uid.ToString()),
             new(ClaimTypes.Name, taiKhoan.TenDangNhap),
             new("HoTen", taiKhoan.HoTen ?? taiKhoan.TenDangNhap),
-            new(ClaimTypes.Role, AuthServiceExtensions.AdminRole)
+            new(ClaimTypes.Role, taiKhoan.VaiTro)   // Admin hoặc NhanVien, đọc từ database
         };
 
         var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -77,6 +77,10 @@ public class AccountController : Controller
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         return RedirectToAction(nameof(Login));
     }
+
+    // Đã đăng nhập nhưng không đủ quyền (ví dụ nhân viên vào trang Cài đặt): AccessDeniedPath trỏ về đây.
+    [HttpGet]
+    public IActionResult AccessDenied() => View();
 
     // Chỉ chuyển hướng tới địa chỉ nội bộ, chặn tấn công open redirect qua returnUrl.
     private IActionResult RedirectToLocal(string? returnUrl)

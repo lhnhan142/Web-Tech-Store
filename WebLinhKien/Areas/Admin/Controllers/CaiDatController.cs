@@ -17,7 +17,13 @@ public class CaiDatController : AdminController
     public async Task<IActionResult> Index()
     {
         var caiDats = await _repo.GetAllAsync();
-        return View(new CaiDatForm { Items = caiDats.Select(c => ItemTu(c, c.GiaTri)).ToList() });
+        return View(new CaiDatForm
+        {
+            Items = caiDats
+                .Where(c => c.Khoa != "TenCuaHang")
+                .Select(c => ItemTu(c, c.GiaTri))
+                .ToList()
+        });
     }
 
     [HttpPost]

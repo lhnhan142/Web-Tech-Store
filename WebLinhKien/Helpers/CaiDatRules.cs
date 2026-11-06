@@ -16,7 +16,6 @@ public static class CaiDatRules
 
     private static readonly Dictionary<string, Rule> Rules = new()
     {
-        [CaiDatKeys.TenCuaHang]            = new("Tên cửa hàng", CaiDatLoai.Text, 1, 100),
         [CaiDatKeys.PhiGiaoHang]           = new("Phí giao hàng (đ)", CaiDatLoai.Money, 0, 10_000_000),
         [CaiDatKeys.NguongMienPhiGiaoHang] = new("Ngưỡng miễn phí giao hàng (đ)", CaiDatLoai.Money, 0, 1_000_000_000),
         [CaiDatKeys.NguongSapHetHang]      = new("Ngưỡng cảnh báo sắp hết hàng (số lượng)", CaiDatLoai.Int, 0, 1000)

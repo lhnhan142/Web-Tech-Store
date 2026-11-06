@@ -889,3 +889,65 @@ a.ad-pager__btn.is-active { color: #fff !important; }
 .ad-gallery__item { margin: 0; border: 1px solid var(--ad-line-soft); border-radius: 10px; overflow: hidden; background: #fff; }
 .ad-gallery__item img { display: block; width: 100%; aspect-ratio: 1 / 1; object-fit: cover; }
 .ad-gallery__item figcaption { display: flex; flex-wrap: wrap; gap: 6px; padding: 8px; }
+
+/* =====================================================================
+   10. TRANG 403 - KHÔNG ĐỦ QUYỀN TRUY CẬP
+   Dùng chung nền xanh (.login-theme) và màu của trang đăng nhập.
+   ===================================================================== */
+.ad-403 {
+    width: 100%; max-width: 950px; min-height: 550px;
+    display: flex; flex-direction: column;
+    background: #fff; border-radius: 24px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, .15);
+    overflow: hidden;
+}
+.ad-403__top { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 22px 32px; }
+.ad-403__brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 15px; color: #2d3436; }
+.ad-403__mark {
+    display: grid; place-items: center; width: 30px; height: 30px; border-radius: 7px;
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: #fff; font-size: 15px;
+}
+.ad-403__brand small { font-weight: 500; font-size: 11px; color: #636e72; border: 1px solid #dfe6e9; border-radius: 4px; padding: 0 5px; }
+
+.ad-403__body {
+    flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: 8px 32px 24px;
+}
+.ad-403__code { font-size: 64px; font-weight: 800; line-height: 1; letter-spacing: 2px; color: #4b7bec; }
+.ad-403 .ad-403__title { margin: 8px 0 10px; font-size: 20px; font-weight: 700; color: #2d3436; }
+.ad-403 .ad-403__desc { margin: 0 0 22px; max-width: 440px; font-size: 13.5px; line-height: 1.6; color: #636e72; }
+.ad-403__desc strong { color: #2d3436; font-weight: 600; }
+
+.ad-403__actions { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-bottom: 8px; }
+.ad-403__btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 20px; border-radius: 8px; border: 1px solid #4b7bec;
+    font: 600 13.5px var(--ad-font); cursor: pointer; text-decoration: none !important;
+    transition: background .15s, border-color .15s, transform .15s;
+}
+.ad-403__btn--primary { background: #4b7bec; color: #fff !important; }
+.ad-403__btn--primary:hover { background: #3867d6; border-color: #3867d6; }
+.ad-403__btn--ghost { background: #fff; color: #4b7bec !important; }
+.ad-403__btn--ghost:hover { background: #eaf0fe; }
+.ad-403__btn:active { transform: translateY(1px); }
+
+.ad-403__art { width: 190px; height: auto; margin-top: 14px; }
+.ad-403__art .float { animation: ad-403-float 3.6s ease-in-out infinite; }
+.ad-403__art .shadow { animation: ad-403-shadow 3.6s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+@keyframes ad-403-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+@keyframes ad-403-shadow { 0%, 100% { transform: scaleX(1); opacity: .22; } 50% { transform: scaleX(.86); opacity: .14; } }
+@media (prefers-reduced-motion: reduce) { .ad-403__art .float, .ad-403__art .shadow { animation: none; } }
+
+.ad-403__foot {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+    padding: 14px 32px; border-top: 1px solid #eef1f6; font-size: 12px; color: #636e72;
+}
+.ad-403__foot form { margin: 0; }
+.ad-403__link { padding: 0; border: 0; background: none; font: 500 12px var(--ad-font); color: #4b7bec; cursor: pointer; }
+.ad-403__link:hover { text-decoration: underline; }
+
+@media (max-width: 600px) {
+    .ad-403__top, .ad-403__foot { padding-left: 20px; padding-right: 20px; }
+    .ad-403__code { font-size: 52px; }
+    .ad-403__art { width: 150px; }
+}

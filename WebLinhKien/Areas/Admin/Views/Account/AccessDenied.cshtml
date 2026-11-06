@@ -1,17 +1,79 @@
 @{
-    Layout = "_AdminLayout";
-    ViewData["Title"] = "Không đủ quyền";
+    Layout = null;
+    ViewData["Title"] = "Không đủ quyền truy cập";
 }
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>403 - @ViewData["Title"] - Quản trị TECHZONE</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+    <link rel="stylesheet" href="~/css/admin.css" asp-append-version="true" />
+</head>
+<body class="ad-body login-theme">
+    <main class="ad-403">
+        <header class="ad-403__top">
+            <div class="ad-403__brand">
+                <span class="ad-403__mark"><i class="fa-solid fa-microchip"></i></span>
+                TECHZONE <small>Admin</small>
+            </div>
+        </header>
 
-<div class="ad-pagehead"><h1 class="ad-title">Không đủ quyền truy cập</h1></div>
+        <section class="ad-403__body">
+            <h1 class="ad-403__code">403</h1>
+            <h2 class="ad-403__title">Không đủ quyền truy cập</h2>
+            <p class="ad-403__desc">
+                Tài khoản của bạn <strong>không có quyền</strong> vào trang này.
+                Chức năng này chỉ dành cho quản trị viên, hãy liên hệ quản trị viên nếu bạn cần được hỗ trợ.
+            </p>
 
-<section class="ad-card">
-    <div class="ad-empty">
-        <i class="fa-solid fa-lock"></i>
-        <strong>Tài khoản của bạn không có quyền vào trang này</strong>
-        Chức năng này chỉ dành cho quản trị viên. Nếu cần, hãy nhờ quản trị viên hỗ trợ.
-        <div style="margin-top:14px">
-            <a asp-area="Admin" asp-controller="Home" asp-action="Index" class="ad-btn ad-btn--primary">Về trang tổng quan</a>
-        </div>
-    </div>
-</section>
+            <div class="ad-403__actions">
+                <button type="button" class="ad-403__btn ad-403__btn--ghost" id="ad403-back">
+                    <i class="fa-solid fa-arrow-left"></i> Quay lại trang trước
+                </button>
+                <a asp-area="Admin" asp-controller="Home" asp-action="Index" id="ad403-home" class="ad-403__btn ad-403__btn--primary">
+                    <i class="fa-solid fa-gauge-high"></i> Về trang tổng quan
+                </a>
+            </div>
+
+            <svg class="ad-403__art" viewBox="0 0 220 190" role="img" aria-label="Ổ khóa bị khóa chặt">
+                <ellipse class="shadow" cx="110" cy="176" rx="62" ry="8" fill="#4b7bec" />
+                <g class="float">
+                    <path d="M72 84 V62 a38 38 0 0 1 76 0 V84" fill="none" stroke="#74a1f9" stroke-width="14" stroke-linecap="round" />
+                    <rect x="48" y="80" width="124" height="86" rx="16" fill="#4b7bec" />
+                    <rect x="48" y="80" width="124" height="86" rx="16" fill="url(#ad403-grad)" />
+                    <circle cx="110" cy="116" r="11" fill="#fff" />
+                    <path d="M106 120 h8 l3 22 h-14 z" fill="#fff" />
+                    <circle cx="66" cy="98" r="3" fill="#fff" opacity=".55" />
+                    <circle cx="154" cy="98" r="3" fill="#fff" opacity=".55" />
+                </g>
+                <defs>
+                    <linearGradient id="ad403-grad" x1="0" y1="0" x2="1" y2="1">
+                        <stop offset="0" stop-color="#74a1f9" stop-opacity=".55" />
+                        <stop offset="1" stop-color="#3867d6" stop-opacity=".25" />
+                    </linearGradient>
+                </defs>
+            </svg>
+        </section>
+
+        <footer class="ad-403__foot">
+            <span>&copy; @DateTime.Now.Year TECHZONE</span>
+            <form asp-area="Admin" asp-controller="Account" asp-action="Logout" method="post">
+                <button type="submit" class="ad-403__link"><i class="fa-solid fa-right-from-bracket"></i> Đăng nhập bằng tài khoản khác</button>
+            </form>
+        </footer>
+    </main>
+
+    <script>
+        // Quay lại trang trước; nếu mở trực tiếp (không có trang trước) thì về trang tổng quan
+        document.getElementById('ad403-back').addEventListener('click', function () {
+            if (document.referrer && history.length > 1) history.back();
+            else window.location.href = document.getElementById('ad403-home').href;
+        });
+    </script>
+</body>
+</html>

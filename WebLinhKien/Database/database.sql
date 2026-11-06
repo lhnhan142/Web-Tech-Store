@@ -9,11 +9,12 @@
      C. Dữ liệu mẫu                     (tình trạng đơn, cài đặt, danh mục, thương hiệu, sản phẩm)
      D. Thông tin chuyển khoản mẫu      (sửa thành tài khoản ngân hàng thật)
      E. Đơn hàng mẫu                    (tùy chọn, đặt @NapDonMau = 0 để bỏ qua)
+     F. Khóa ngoại                      (nối các bảng với nhau để có sơ đồ quan hệ)
 
    Tài khoản admin KHÔNG nằm ở đây vì cần hash mật khẩu bằng code C#:
    khai báo AdminSeed:TenDangNhap và AdminSeed:MatKhau trong User Secrets, web tự tạo khi chạy lần đầu.
 
-   Quy ước: chỉ khóa chính, không khai báo FOREIGN KEY (xem phần tùy chọn ở cuối mục A)
+   Quan hệ giữa các bảng được khai báo bằng khóa ngoại ở mục F (cuối file)
    Tiền tệ: VND, kiểu DECIMAL(18,0)
    ===================================================================== */
 
@@ -239,22 +240,6 @@ IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = N'IX_ChiTiet_DonHang' AND 
 GO
 
 /* =====================================================================
-   TÙY CHỌN: khóa ngoại
-   Mặc định bỏ qua để giống README. Nếu giảng viên yêu cầu ràng buộc
-   toàn vẹn, bỏ comment khối dưới (cần chạy sau khi đã tạo đủ bảng).
-   ===================================================================== */
-/*
-ALTER TABLE dbo.SanPhams          ADD CONSTRAINT FK_SanPhams_DanhMuc     FOREIGN KEY (MaDanhMuc)    REFERENCES dbo.DanhMucs (MaDanhMuc);
-ALTER TABLE dbo.SanPhams          ADD CONSTRAINT FK_SanPhams_ThuongHieu  FOREIGN KEY (MaThuongHieu) REFERENCES dbo.ThuongHieus (MaThuongHieu);
-ALTER TABLE dbo.HinhAnhSanPhams   ADD CONSTRAINT FK_HinhAnh_SanPham      FOREIGN KEY (UidSanPham)   REFERENCES dbo.SanPhams (Uid) ON DELETE CASCADE;
-ALTER TABLE dbo.ThongSoKyThuats   ADD CONSTRAINT FK_ThongSo_SanPham      FOREIGN KEY (UidSanPham)   REFERENCES dbo.SanPhams (Uid) ON DELETE CASCADE;
-ALTER TABLE dbo.DonDatHangs       ADD CONSTRAINT FK_DonDatHangs_TinhTrang FOREIGN KEY (MaTinhTrang)  REFERENCES dbo.TinhTrangDonHangs (MaTinhTrang);
-ALTER TABLE dbo.ChiTietDonHangs   ADD CONSTRAINT FK_ChiTiet_DonHang      FOREIGN KEY (UidDonHang)   REFERENCES dbo.DonDatHangs (Uid) ON DELETE CASCADE;
-ALTER TABLE dbo.ChiTietDonHangs   ADD CONSTRAINT FK_ChiTiet_SanPham      FOREIGN KEY (UidSanPham)   REFERENCES dbo.SanPhams (Uid);
-*/
-GO
-
-/* =====================================================================
    B. NÂNG CẤP bảng TaiKhoans cho database CŨ (thêm vai trò Admin / NhanVien)
    Database mới tạo ở mục A đã có sẵn 2 cột nên phần này tự bỏ qua.
    Với database cũ: mọi tài khoản đang có được đặt thành Admin
@@ -265,14 +250,13 @@ BEGIN
     ALTER TABLE dbo.TaiKhoans ADD VaiTro NVARCHAR(20) NOT NULL
         CONSTRAINT DF_TaiKhoans_VaiTro DEFAULT N'NhanVien';
     EXEC (N'UPDATE dbo.TaiKhoans SET VaiTro = N''Admin''');
-    ALTER TABLE dbo.TaiKhoans ADD CONSTRAINT CK_TaiKhoans_VaiTro CHECK (VaiTro IN (N'Admin', N'NhanVien'));
+    EXEC (N'ALTER TABLE dbo.TaiKhoans ADD CONSTRAINT CK_TaiKhoans_VaiTro CHECK (VaiTro IN (N''Admin'', N''NhanVien''))');
 END
 GO
 
 IF COL_LENGTH(N'dbo.TaiKhoans', N'CanDoiMatKhau') IS NULL
     ALTER TABLE dbo.TaiKhoans ADD CanDoiMatKhau BIT NOT NULL
         CONSTRAINT DF_TaiKhoans_CanDoiMatKhau DEFAULT 0;
-GO
 GO
 
 /* =====================================================================
@@ -302,12 +286,15 @@ GO
 INSERT INTO dbo.CaiDats (Khoa, GiaTri, MoTa)
 SELECT v.Khoa, v.GiaTri, v.MoTa
 FROM (VALUES
-    (N'TenCuaHang',            N'TECHZONE', N'Tên cửa hàng hiển thị trên website'),
     (N'PhiGiaoHang',           N'30000',       N'Phí giao hàng (VND)'),
     (N'NguongMienPhiGiaoHang', N'500000',      N'Đơn từ mức này trở lên được miễn phí giao hàng (VND)'),
     (N'NguongSapHetHang',      N'5',           N'Tồn kho từ mức này trở xuống thì cảnh báo sắp hết hàng')
 ) AS v(Khoa, GiaTri, MoTa)
 WHERE NOT EXISTS (SELECT 1 FROM dbo.CaiDats c WHERE c.Khoa = v.Khoa);
+GO
+
+-- Tên cửa hàng cố định là TECHZONE trong code, không còn chỉnh ở trang Cài đặt: xóa dòng cũ nếu database đã có
+DELETE FROM dbo.CaiDats WHERE Khoa = N'TenCuaHang';
 GO
 
 /* ---------------------------------------------------------------------
@@ -586,6 +573,65 @@ BEGIN
     FROM dbo.DonDatHangs WHERE GhiChu LIKE N'Đơn mẫu%' ORDER BY NgayDat DESC;
 END
 GO
+
+/* =====================================================================
+   F. KHÓA NGOẠI (FOREIGN KEY): nối các bảng để SSMS vẽ được sơ đồ quan hệ
+   và database tự chặn dữ liệu sai (vd: sản phẩm trỏ tới danh mục không có).
+   Đặt ở cuối để dữ liệu mẫu ở trên được nạp xong trước. Khóa nào đã có thì bỏ qua.
+
+   Nếu một lệnh báo lỗi "conflicted with the FOREIGN KEY constraint" nghĩa là
+   đang có dòng mồ côi (trỏ tới dòng không còn tồn tại): chạy các câu SELECT
+   kiểm tra ở cuối file để tìm và sửa, rồi chạy lại.
+   ===================================================================== */
+IF NOT EXISTS (SELECT 1 FROM sys.foreign_keys WHERE name = N'FK_SanPhams_DanhMuc')
+    ALTER TABLE dbo.SanPhams ADD CONSTRAINT FK_SanPhams_DanhMuc
+        FOREIGN KEY (MaDanhMuc) REFERENCES dbo.DanhMucs (MaDanhMuc);
+
+IF NOT EXISTS (SELECT 1 FROM sys.foreign_keys WHERE name = N'FK_SanPhams_ThuongHieu')
+    ALTER TABLE dbo.SanPhams ADD CONSTRAINT FK_SanPhams_ThuongHieu
+        FOREIGN KEY (MaThuongHieu) REFERENCES dbo.ThuongHieus (MaThuongHieu);
+
+IF NOT EXISTS (SELECT 1 FROM sys.foreign_keys WHERE name = N'FK_HinhAnh_SanPham')
+    ALTER TABLE dbo.HinhAnhSanPhams ADD CONSTRAINT FK_HinhAnh_SanPham
+        FOREIGN KEY (UidSanPham) REFERENCES dbo.SanPhams (Uid) ON DELETE CASCADE;
+
+IF NOT EXISTS (SELECT 1 FROM sys.foreign_keys WHERE name = N'FK_ThongSo_SanPham')
+    ALTER TABLE dbo.ThongSoKyThuats ADD CONSTRAINT FK_ThongSo_SanPham
+        FOREIGN KEY (UidSanPham) REFERENCES dbo.SanPhams (Uid) ON DELETE CASCADE;
+
+IF NOT EXISTS (SELECT 1 FROM sys.foreign_keys WHERE name = N'FK_DonDatHangs_TinhTrang')
+    ALTER TABLE dbo.DonDatHangs ADD CONSTRAINT FK_DonDatHangs_TinhTrang
+        FOREIGN KEY (MaTinhTrang) REFERENCES dbo.TinhTrangDonHangs (MaTinhTrang);
+
+IF NOT EXISTS (SELECT 1 FROM sys.foreign_keys WHERE name = N'FK_ChiTiet_DonHang')
+    ALTER TABLE dbo.ChiTietDonHangs ADD CONSTRAINT FK_ChiTiet_DonHang
+        FOREIGN KEY (UidDonHang) REFERENCES dbo.DonDatHangs (Uid) ON DELETE CASCADE;
+
+-- Không CASCADE: sản phẩm đã có trong đơn thì không được xóa (web cũng đã chặn việc này)
+IF NOT EXISTS (SELECT 1 FROM sys.foreign_keys WHERE name = N'FK_ChiTiet_SanPham')
+    ALTER TABLE dbo.ChiTietDonHangs ADD CONSTRAINT FK_ChiTiet_SanPham
+        FOREIGN KEY (UidSanPham) REFERENCES dbo.SanPhams (Uid);
+GO
+
+-- Danh sách khóa ngoại đã có (phải thấy 7 dòng)
+SELECT fk.name AS KhoaNgoai,
+       OBJECT_NAME(fk.parent_object_id)     AS BangCon,
+       OBJECT_NAME(fk.referenced_object_id) AS BangCha
+FROM sys.foreign_keys fk
+ORDER BY BangCon, KhoaNgoai;
+GO
+
+/* ---------------------------------------------------------------------
+   KIỂM TRA dòng mồ côi (chỉ cần khi mục F báo lỗi). Mỗi câu phải trả về 0 dòng.
+
+   SELECT * FROM dbo.SanPhams s WHERE NOT EXISTS (SELECT 1 FROM dbo.DanhMucs d WHERE d.MaDanhMuc = s.MaDanhMuc);
+   SELECT * FROM dbo.SanPhams s WHERE s.MaThuongHieu IS NOT NULL AND NOT EXISTS (SELECT 1 FROM dbo.ThuongHieus t WHERE t.MaThuongHieu = s.MaThuongHieu);
+   SELECT * FROM dbo.HinhAnhSanPhams h WHERE NOT EXISTS (SELECT 1 FROM dbo.SanPhams s WHERE s.Uid = h.UidSanPham);
+   SELECT * FROM dbo.ThongSoKyThuats t WHERE NOT EXISTS (SELECT 1 FROM dbo.SanPhams s WHERE s.Uid = t.UidSanPham);
+   SELECT * FROM dbo.DonDatHangs o WHERE NOT EXISTS (SELECT 1 FROM dbo.TinhTrangDonHangs t WHERE t.MaTinhTrang = o.MaTinhTrang);
+   SELECT * FROM dbo.ChiTietDonHangs c WHERE NOT EXISTS (SELECT 1 FROM dbo.DonDatHangs o WHERE o.Uid = c.UidDonHang);
+   SELECT * FROM dbo.ChiTietDonHangs c WHERE NOT EXISTS (SELECT 1 FROM dbo.SanPhams s WHERE s.Uid = c.UidSanPham);
+   --------------------------------------------------------------------- */
 
 /* ---------------------------------------------------------------------
    XÓA đơn mẫu khi không cần nữa (bỏ comment rồi chạy):

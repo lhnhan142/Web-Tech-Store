@@ -21,14 +21,8 @@
         }
     </div>
 
-    <!-- Quick Action Float Buttons (Yêu thích, Xem nhanh & So sánh) -->
+    <!-- Quick Action Float Buttons (Xem nhanh & So sánh) -->
     <div class="tz-card-floating-actions">
-        <button type="button" class="tz-card-float-btn tz-btn-wishlist"
-                data-wishlist-uid="@Model.Uid"
-                title="Thêm vào yêu thích"
-                onclick="tzToggleWishlist(this, { uid: @Model.Uid, ten: '@Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(Model.TenSanPham))', gia: '@Model.GiaBan.ToVnd()', anh: '@Model.AnhDaiDien', url: '/SanPham/ChiTiet/@Model.Uid' })">
-            <i class="fa-regular fa-heart"></i>
-        </button>
         <button type="button" class="tz-card-float-btn tz-btn-quickview"
                 title="Xem nhanh chi tiết"
                 onclick="tzOpenQuickView(@Model.Uid)">

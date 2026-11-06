@@ -222,13 +222,8 @@
                     }
                 </form>
 
-                <!-- Nút phụ: Yêu thích & So sánh -->
+                <!-- Nút phụ: So sánh -->
                 <div class="d-flex align-items-center gap-4 mt-3 pt-3 border-top small">
-                    <button type="button" class="btn btn-link p-0 text-muted text-decoration-none tz-btn-wishlist"
-                            data-wishlist-uid="@Model.SanPham.Uid"
-                            onclick="tzToggleWishlist(this, { uid: @Model.SanPham.Uid, ten: '@Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(Model.SanPham.TenSanPham))', gia: '@Model.SanPham.GiaBan.ToVnd()', anh: '@Model.SanPham.AnhDaiDien', url: '/SanPham/ChiTiet/@Model.SanPham.Uid' })">
-                        <i class="fa-regular fa-heart text-danger me-1"></i><span>Thêm vào danh sách yêu thích</span>
-                    </button>
                     <button type="button" class="btn btn-link p-0 text-muted text-decoration-none tz-btn-compare"
                             data-compare-uid="@Model.SanPham.Uid"
                             onclick="tzToggleCompare(this, { uid: @Model.SanPham.Uid, ten: '@Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(Model.SanPham.TenSanPham))', gia: '@Model.SanPham.GiaBan.ToVnd()', anh: '@Model.SanPham.AnhDaiDien', url: '/SanPham/ChiTiet/@Model.SanPham.Uid' })">

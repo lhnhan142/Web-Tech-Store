@@ -2,10 +2,9 @@
  * TECHZONE – PC COMPONENTS STORE
  * Client JavaScript Library (client.js)
  * Tương tác UI: Header, Mega menu, Mobile drawer, Toast, Back-to-top, Image fallback,
- * Live search, Wishlist, Compare, Recently Viewed, Quick View Modal.
+ * Live search, Compare, Recently Viewed, Quick View Modal.
  */
 
-const STORAGE_KEY_WISHLIST = 'techzone_wishlist';
 const STORAGE_KEY_COMPARE = 'techzone_compare';
 const STORAGE_KEY_RECENT = 'techzone_recently_viewed';
 
@@ -15,7 +14,6 @@ document.addEventListener('DOMContentLoaded', function () {
     initBackToTop();
     initImageFallbacks();
     initLiveSearch();
-    tzUpdateWishlistUI();
     tzUpdateCompareUI();
 });
 
@@ -288,188 +286,6 @@ function initLiveSearch() {
     searchInput.addEventListener('focus', function () {
         if (this.value.trim().length > 0 && suggestionsBox.innerHTML.trim().length > 0) {
             suggestionsBox.style.display = 'block';
-        }
-    });
-}
-
-/**
- * 7. WISHLIST – SẢN PHẨM YÊU THÍCH (LocalStorage)
- */
-function tzGetWishlist() {
-    try {
-        const raw = localStorage.getItem(STORAGE_KEY_WISHLIST);
-        return raw ? JSON.parse(raw) : [];
-    } catch {
-        return [];
-    }
-}
-
-function tzSaveWishlist(list) {
-    try {
-        localStorage.setItem(STORAGE_KEY_WISHLIST, JSON.stringify(list));
-    } catch (e) {
-        console.error(e);
-    }
-    tzUpdateWishlistUI();
-}
-
-window.tzToggleWishlist = function (btn, item) {
-    if (typeof item === 'string') {
-        item = { uid: 0, ten: item, gia: '', anh: '', url: '#' };
-    }
-    if (!item || !item.uid) return;
-
-    let list = tzGetWishlist();
-    const index = list.findIndex(p => p.uid === item.uid);
-    if (index >= 0) {
-        list.splice(index, 1);
-        tzSaveWishlist(list);
-        TzToast.info('Yêu thích', `Đã xóa "${item.ten}" khỏi danh sách yêu thích.`);
-    } else {
-        list.unshift(item);
-        tzSaveWishlist(list);
-        TzToast.success('Yêu thích', `Đã thêm "${item.ten}" vào danh sách yêu thích!`);
-    }
-};
-
-window.tzRemoveWishlist = function (uid) {
-    let list = tzGetWishlist();
-    const item = list.find(p => p.uid === uid);
-    list = list.filter(p => p.uid !== uid);
-    tzSaveWishlist(list);
-    tzRenderWishlistModal();
-    if (item) {
-        TzToast.info('Yêu thích', `Đã xóa "${item.ten}" khỏi danh sách yêu thích.`);
-    }
-};
-
-window.tzClearWishlist = function () {
-    const list = tzGetWishlist();
-    if (list.length === 0) return;
-    tzSaveWishlist([]);
-    tzRenderWishlistModal();
-    TzToast.info('Yêu thích', 'Đã xóa toàn bộ sản phẩm khỏi danh sách yêu thích.');
-};
-
-window.tzWishlistAddToCart = function (uid) {
-    const token = getAntiForgeryToken();
-    const formData = new FormData();
-    formData.append('uid', uid);
-    formData.append('soLuong', 1);
-    formData.append('muaNgay', false);
-    if (token) formData.append('__RequestVerificationToken', token);
-
-    fetch('/SanPham/ThemVaoGio', {
-        method: 'POST',
-        body: formData
-    })
-    .then(r => r.json())
-    .then(data => {
-        if (data.success) {
-            const badge = document.getElementById('tz-header-cart-count');
-            if (badge && data.totalCount !== undefined) {
-                badge.textContent = data.totalCount;
-            }
-            TzToast.success('Giỏ hàng', data.message || 'Đã thêm vào giỏ hàng thành công!');
-        } else {
-            TzToast.error('Không thành công', data.message || 'Không thể thêm vào giỏ hàng.');
-        }
-    })
-    .catch(() => {
-        TzToast.error('Lỗi', 'Không thể kết nối đến máy chủ.');
-    });
-};
-
-function tzRenderWishlistModal() {
-    const modalBody = document.getElementById('tz-wishlist-modal-body');
-    if (!modalBody) return;
-
-    const list = tzGetWishlist();
-    if (list.length === 0) {
-        modalBody.innerHTML = `
-            <div class="text-center py-5">
-                <i class="fa-regular fa-heart fa-3x text-muted mb-3 d-block" style="opacity: 0.4;"></i>
-                <h5 class="fw-bold text-dark mb-1">Chưa có sản phẩm yêu thích nào</h5>
-                <p class="text-muted small mb-3">Hãy dạo một vòng cửa hàng và bấm vào biểu tượng trái tim để lưu lại những linh kiện bạn ưng ý nhất nhé!</p>
-                <a href="/SanPham" class="tz-btn tz-btn-outline tz-btn-sm" data-bs-dismiss="modal">
-                    <i class="fa-solid fa-compass me-1"></i>Khám phá linh kiện ngay
-                </a>
-            </div>
-        `;
-        return;
-    }
-
-    let html = '<div class="tz-wishlist-items-list">';
-    list.forEach(p => {
-        const thumb = p.anh
-            ? `<img src="${p.anh}" alt="${escapeHtml(p.ten)}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
-               <i class="fa-solid fa-microchip text-muted" style="display:none;font-size:1.2rem;"></i>`
-            : `<i class="fa-solid fa-microchip text-muted" style="font-size:1.2rem;"></i>`;
-
-        html += `
-            <div class="tz-wishlist-item">
-                <div class="d-flex align-items-center gap-3 flex-grow-1 overflow-hidden">
-                    <a href="${p.url}" class="tz-wishlist-thumb">
-                        ${thumb}
-                    </a>
-                    <div class="overflow-hidden">
-                        <a href="${p.url}" class="fw-bold text-dark text-truncate d-block text-decoration-none small" title="${escapeHtml(p.ten)}">
-                            ${escapeHtml(p.ten)}
-                        </a>
-                        <div class="text-danger fw-bold small mt-1">${p.gia || ''}</div>
-                    </div>
-                </div>
-                <div class="d-flex align-items-center gap-2 flex-shrink-0">
-                    <button type="button" class="tz-btn tz-btn-accent tz-btn-sm" onclick="tzWishlistAddToCart(${p.uid})" title="Thêm vào giỏ">
-                        <i class="fa-solid fa-cart-plus me-1"></i><span class="d-none d-sm-inline">Thêm giỏ</span>
-                    </button>
-                    <button type="button" class="btn btn-outline-danger btn-sm" onclick="tzRemoveWishlist(${p.uid})" title="Xóa">
-                        <i class="fa-solid fa-xmark"></i>
-                    </button>
-                </div>
-            </div>
-        `;
-    });
-    html += '</div>';
-    modalBody.innerHTML = html;
-}
-
-window.tzOpenWishlistModal = function () {
-    tzRenderWishlistModal();
-    const modalEl = document.getElementById('tzWishlistModal');
-    if (modalEl && window.bootstrap) {
-        const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
-        modal.show();
-    }
-};
-
-function tzUpdateWishlistUI() {
-    const list = tzGetWishlist();
-    const uids = new Set(list.map(p => p.uid));
-
-    // Update Header Badges (desktop & mobile)
-    const badgeDesktop = document.getElementById('tz-header-wishlist-count');
-    if (badgeDesktop) badgeDesktop.textContent = list.length;
-
-    const badgeMobile = document.getElementById('tz-mobile-wishlist-count');
-    if (badgeMobile) badgeMobile.textContent = list.length;
-
-    // Update all Wishlist buttons on page
-    document.querySelectorAll('[data-wishlist-uid]').forEach(btn => {
-        const uid = parseInt(btn.getAttribute('data-wishlist-uid'));
-        const icon = btn.querySelector('i');
-        if (uids.has(uid)) {
-            btn.classList.add('active');
-            if (icon) {
-                icon.className = 'fa-solid fa-heart text-danger';
-            }
-            btn.setAttribute('title', 'Đã lưu yêu thích (Click để xóa)');
-        } else {
-            btn.classList.remove('active');
-            if (icon) {
-                icon.className = 'fa-regular fa-heart';
-            }
-            btn.setAttribute('title', 'Thêm vào yêu thích');
         }
     });
 }

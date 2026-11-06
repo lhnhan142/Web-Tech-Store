@@ -121,18 +121,6 @@
                     </div>
                 </a>
 
-                <!-- Yêu thích (Wishlist modal) -->
-                <a href="javascript:void(0)" class="tz-action-item" onclick="tzOpenWishlistModal()" title="Danh sách yêu thích">
-                    <div class="tz-action-icon-wrap">
-                        <i class="fa-regular fa-heart"></i>
-                        <span class="tz-badge-count" id="tz-header-wishlist-count">0</span>
-                    </div>
-                    <div class="tz-action-text">
-                        <span class="tz-action-label">Yêu thích</span>
-                        <span class="tz-action-title">Sản phẩm</span>
-                    </div>
-                </a>
-
                 <!-- Giỏ hàng (chuyển sang /DatHang của Thành viên C) -->
                 <a href="~/DatHang" class="tz-action-item" title="Giỏ hàng & Đặt hàng">
                     <div class="tz-action-icon-wrap">
@@ -327,7 +315,6 @@
             <li><a href="~/SanPham?danhMuc=PSU" class="@(IsCatActive("PSU") ? "active" : "")"><i class="fa-solid fa-bolt"></i> Nguồn máy tính (PSU)</a></li>
             <li><a href="~/SanPham?danhMuc=CASE" class="@(IsCatActive("CASE") ? "active" : "")"><i class="fa-solid fa-desktop"></i> Vỏ Case Gaming</a></li>
             <li><a href="~/SanPham?danhMuc=PHUKIEN" class="@(IsCatActive("PHUKIEN") ? "active" : "")"><i class="fa-solid fa-computer-mouse"></i> Phụ kiện & Gear</a></li>
-            <li><a href="javascript:void(0)" onclick="tzOpenWishlistModal()"><i class="fa-regular fa-heart"></i> Yêu thích (<span id="tz-mobile-wishlist-count">0</span>)</a></li>
             <li><a href="~/DatHang"><i class="fa-solid fa-cart-shopping"></i> Giỏ hàng (@soLuongGioHang)</a></li>
             <li><a href="~/Admin/Account/Login"><i class="fa-regular fa-user"></i> Đăng nhập Quản trị</a></li>
         </ul>

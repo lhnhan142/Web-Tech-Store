@@ -31,6 +31,9 @@ public interface ISanPhamRepository
     /// <summary>Lấy danh sách sản phẩm đang có giá khuyến mãi (GiaGoc > GiaBan, HienThi = 1)</summary>
     Task<IReadOnlyList<SanPham>> GetBestDealsAsync(int limit = 8);
 
+    /// <summary>Lấy danh sách thương hiệu có sản phẩm thuộc danh mục chỉ định kèm số lượng sản phẩm</summary>
+    Task<IReadOnlyList<ThuongHieuFilterItem>> GetBrandsByCategoryAsync(string maDanhMuc);
+
     /// <summary>Lọc sản phẩm đa tiêu chí kết hợp sắp xếp và phân trang tại SQL Server</summary>
     Task<PagedResult<SanPham>> GetPagedProductsAsync(ProductFilterRequest filter);
 

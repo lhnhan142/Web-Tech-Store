@@ -169,3 +169,73 @@ public class EmptyStateViewModel
     public string ActionUrl { get; set; } = "/";
 }
 
+/// <summary>
+/// ViewModel dùng chung cho Partial View bộ lọc linh kiện (_FilterPanel.cshtml)
+/// Dùng được cho cả trang khách hàng và trang quản trị Admin.
+/// </summary>
+public class FilterPanelViewModel
+{
+    /// <summary>Chế độ hiển thị: "client" (mặc định) hoặc "admin"</summary>
+    public string Mode { get; set; } = "client";
+
+    /// <summary>URL submit form</summary>
+    public string ActionUrl { get; set; } = "/SanPham";
+
+    /// <summary>URL reset bộ lọc</summary>
+    public string ResetUrl { get; set; } = "/SanPham";
+
+    /// <summary>Tiền tố phân biệt ID các phần tử HTML để tránh trùng lặp khi nhúng nhiều nơi</summary>
+    public string IdPrefix { get; set; } = "client";
+
+    /// <summary>Từ khóa tìm kiếm (q)</summary>
+    public string? Q { get; set; }
+
+    /// <summary>Mã danh mục đang chọn</summary>
+    public string? SelectedDanhMuc { get; set; }
+
+    /// <summary>Mã thương hiệu đang chọn</summary>
+    public string? SelectedThuongHieu { get; set; }
+
+    /// <summary>Khoảng giá nhanh đang chọn</summary>
+    public string? SelectedPriceRange { get; set; }
+
+    /// <summary>Giá tối thiểu nhập tay</summary>
+    public decimal? MinPrice { get; set; }
+
+    /// <summary>Giá tối đa nhập tay</summary>
+    public decimal? MaxPrice { get; set; }
+
+    /// <summary>Chỉ lọc còn hàng</summary>
+    public bool? ConHang { get; set; }
+
+    /// <summary>Tiêu chí sắp xếp hiện tại</summary>
+    public string? Sort { get; set; } = "default";
+
+    /// <summary>Kích thước trang</summary>
+    public int PageSize { get; set; } = 12;
+
+    /// <summary>Thông báo lỗi khoảng giá (nếu có)</summary>
+    public string? PriceErrorMessage { get; set; }
+
+    /// <summary>Danh sách danh mục linh kiện</summary>
+    public IReadOnlyList<DanhMuc> Categories { get; set; } = Array.Empty<DanhMuc>();
+
+    /// <summary>Danh sách thương hiệu theo danh mục</summary>
+    public IReadOnlyList<ThuongHieuFilterItem> CategoryBrands { get; set; } = Array.Empty<ThuongHieuFilterItem>();
+
+    /// <summary>Có hiển thị bộ lọc giá hay không (Admin có thể tắt nếu không dùng)</summary>
+    public bool ShowPriceFilter { get; set; } = true;
+
+    /// <summary>Có hiển thị bộ lọc tình trạng kho hay không</summary>
+    public bool ShowStockFilter { get; set; } = true;
+
+    /// <summary>Kiểm tra xem người dùng có đang áp dụng bất kỳ tiêu chí lọc nào không</summary>
+    public bool HasActiveFilters =>
+        !string.IsNullOrEmpty(SelectedDanhMuc) ||
+        !string.IsNullOrEmpty(SelectedThuongHieu) ||
+        !string.IsNullOrEmpty(SelectedPriceRange) ||
+        MinPrice.HasValue ||
+        MaxPrice.HasValue ||
+        ConHang == true;
+}
+

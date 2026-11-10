@@ -1,0 +1,228 @@
+﻿MaSanPham,Name,ImageFile,ImageUrl,Category,Brand
+CPU-INTEL-CORE-I3-12100F,Intel Core i3-12100F,cpu-intel-core-i3-12100f.jpg,,CPU,Intel
+CPU-INTEL-CORE-I5-12600K,Intel Core i5-12600K,cpu-intel-core-i5-12600k.jpg,,CPU,Intel
+CPU-INTEL-CORE-I7-12700F,Intel Core i7-12700F,cpu-intel-core-i7-12700f.jpg,,CPU,Intel
+CPU-INTEL-CORE-I9-12900K,Intel Core i9-12900K,cpu-intel-core-i9-12900k.jpg,,CPU,Intel
+CPU-INTEL-CORE-I3-13100F,Intel Core i3-13100F,cpu-intel-core-i3-13100f.jpg,,CPU,Intel
+CPU-INTEL-CORE-I5-13400F,Intel Core i5-13400F,cpu-intel-core-i5-13400f.jpg,,CPU,Intel
+CPU-INTEL-CORE-I5-13600K,Intel Core i5-13600K,cpu-intel-core-i5-13600k.jpg,,CPU,Intel
+CPU-INTEL-CORE-I7-13700K,Intel Core i7-13700K,cpu-intel-core-i7-13700k.jpg,,CPU,Intel
+CPU-INTEL-CORE-I9-13900K,Intel Core i9-13900K,cpu-intel-core-i9-13900k.jpg,,CPU,Intel
+CPU-INTEL-CORE-I3-14100F,Intel Core i3-14100F,cpu-intel-core-i3-14100f.jpg,,CPU,Intel
+CPU-INTEL-CORE-I5-14400F,Intel Core i5-14400F,cpu-intel-core-i5-14400f.jpg,,CPU,Intel
+CPU-INTEL-CORE-I5-14600K,Intel Core i5-14600K,cpu-intel-core-i5-14600k.jpg,,CPU,Intel
+CPU-INTEL-CORE-I7-14700K,Intel Core i7-14700K,cpu-intel-core-i7-14700k.jpg,,CPU,Intel
+CPU-INTEL-CORE-I9-14900K,Intel Core i9-14900K,cpu-intel-core-i9-14900k.jpg,,CPU,Intel
+CPU-INTEL-CORE-ULTRA-5-245K,Intel Core Ultra 5 245K,cpu-intel-core-ultra-5-245k.jpg,,CPU,Intel
+CPU-INTEL-CORE-ULTRA-7-265K,Intel Core Ultra 7 265K,cpu-intel-core-ultra-7-265k.jpg,,CPU,Intel
+CPU-INTEL-CORE-ULTRA-9-285K,Intel Core Ultra 9 285K,cpu-intel-core-ultra-9-285k.jpg,,CPU,Intel
+CPU-AMD-RYZEN-5-5500,AMD Ryzen 5 5500,cpu-amd-ryzen-5-5500.jpg,,CPU,AMD
+CPU-AMD-RYZEN-5-5600X,AMD Ryzen 5 5600X,cpu-amd-ryzen-5-5600x.jpg,,CPU,AMD
+CPU-AMD-RYZEN-7-5700X,AMD Ryzen 7 5700X,cpu-amd-ryzen-7-5700x.jpg,,CPU,AMD
+CPU-AMD-RYZEN-7-5800X3D,AMD Ryzen 7 5800X3D,cpu-amd-ryzen-7-5800x3d.jpg,,CPU,AMD
+CPU-AMD-RYZEN-9-5900X,AMD Ryzen 9 5900X,cpu-amd-ryzen-9-5900x.jpg,,CPU,AMD
+CPU-AMD-RYZEN-5-7500F,AMD Ryzen 5 7500F,cpu-amd-ryzen-5-7500f.jpg,,CPU,AMD
+CPU-AMD-RYZEN-5-7600,AMD Ryzen 5 7600,cpu-amd-ryzen-5-7600.jpg,,CPU,AMD
+CPU-AMD-RYZEN-7-7700,AMD Ryzen 7 7700,cpu-amd-ryzen-7-7700.jpg,,CPU,AMD
+CPU-AMD-RYZEN-7-7800X3D,AMD Ryzen 7 7800X3D,cpu-amd-ryzen-7-7800x3d.jpg,,CPU,AMD
+CPU-AMD-RYZEN-9-7900,AMD Ryzen 9 7900,cpu-amd-ryzen-9-7900.jpg,,CPU,AMD
+CPU-AMD-RYZEN-9-7950X,AMD Ryzen 9 7950X,cpu-amd-ryzen-9-7950x.jpg,,CPU,AMD
+CPU-AMD-RYZEN-5-9600X,AMD Ryzen 5 9600X,cpu-amd-ryzen-5-9600x.jpg,,CPU,AMD
+CPU-AMD-RYZEN-7-9700X,AMD Ryzen 7 9700X,cpu-amd-ryzen-7-9700x.jpg,,CPU,AMD
+CPU-AMD-RYZEN-7-9800X3D,AMD Ryzen 7 9800X3D,cpu-amd-ryzen-7-9800x3d.jpg,,CPU,AMD
+CPU-AMD-RYZEN-9-9900X,AMD Ryzen 9 9900X,cpu-amd-ryzen-9-9900x.jpg,,CPU,AMD
+MB-ASUS-PRIME-H610M-K-D4,ASUS PRIME H610M-K D4,mb-asus-prime-h610m-k-d4.jpg,,MAINBOARD,ASUS
+MB-MSI-PRO-B660M-A-DDR4,MSI PRO B660M-A DDR4,mb-msi-pro-b660m-a-ddr4.jpg,,MAINBOARD,MSI
+MB-GIGABYTE-B660M-DS3H-DDR4,Gigabyte B660M DS3H DDR4,mb-gigabyte-b660m-ds3h-ddr4.jpg,,MAINBOARD,Gigabyte
+MB-ASUS-PRIME-B760M-K-D4,ASUS PRIME B760M-K D4,mb-asus-prime-b760m-k-d4.jpg,,MAINBOARD,ASUS
+MB-MSI-PRO-B760M-P-DDR4,MSI PRO B760M-P DDR4,mb-msi-pro-b760m-p-ddr4.jpg,,MAINBOARD,MSI
+MB-MSI-MAG-B760M-MORTAR-WIFI,MSI MAG B760M MORTAR WIFI,mb-msi-mag-b760m-mortar-wifi.jpg,,MAINBOARD,MSI
+MB-GIGABYTE-B760M-AORUS-ELITE,Gigabyte B760M AORUS ELITE,mb-gigabyte-b760m-aorus-elite.jpg,,MAINBOARD,Gigabyte
+MB-ASUS-ROG-STRIX-B760-F-GAMING-WIFI,ASUS ROG STRIX B760-F GAMING WIFI,mb-asus-rog-strix-b760-f-gaming-wifi.jpg,,MAINBOARD,ASUS
+MB-MSI-MAG-Z790-TOMAHAWK-WIFI,MSI MAG Z790 TOMAHAWK WIFI,mb-msi-mag-z790-tomahawk-wifi.jpg,,MAINBOARD,MSI
+MB-ASUS-TUF-GAMING-Z790-PLUS-WIFI,ASUS TUF GAMING Z790-PLUS WIFI,mb-asus-tuf-gaming-z790-plus-wifi.jpg,,MAINBOARD,ASUS
+MB-ASUS-ROG-STRIX-Z790-E-GAMING-WIFI,ASUS ROG STRIX Z790-E GAMING WIFI,mb-asus-rog-strix-z790-e-gaming-wifi.jpg,,MAINBOARD,ASUS
+MB-ASUS-PRIME-Z890-P-WIFI,ASUS PRIME Z890-P WIFI,mb-asus-prime-z890-p-wifi.jpg,,MAINBOARD,ASUS
+MB-MSI-MAG-Z890-TOMAHAWK-WIFI,MSI MAG Z890 TOMAHAWK WIFI,mb-msi-mag-z890-tomahawk-wifi.jpg,,MAINBOARD,MSI
+MB-ASUS-TUF-GAMING-B860-PLUS-WIFI,ASUS TUF GAMING B860-PLUS WIFI,mb-asus-tuf-gaming-b860-plus-wifi.jpg,,MAINBOARD,ASUS
+MB-ASUS-PRIME-A520M-K,ASUS PRIME A520M-K,mb-asus-prime-a520m-k.jpg,,MAINBOARD,ASUS
+MB-MSI-B450M-PRO-VDH-MAX,MSI B450M PRO-VDH MAX,mb-msi-b450m-pro-vdh-max.jpg,,MAINBOARD,MSI
+MB-GIGABYTE-B450M-DS3H,Gigabyte B450M DS3H,mb-gigabyte-b450m-ds3h.jpg,,MAINBOARD,Gigabyte
+MB-ASROCK-B550M-PRO4,ASRock B550M Pro4,mb-asrock-b550m-pro4.jpg,,MAINBOARD,ASRock
+MB-GIGABYTE-B550M-AORUS-ELITE,Gigabyte B550M AORUS ELITE,mb-gigabyte-b550m-aorus-elite.jpg,,MAINBOARD,Gigabyte
+MB-MSI-MAG-B550-TOMAHAWK,MSI MAG B550 TOMAHAWK,mb-msi-mag-b550-tomahawk.jpg,,MAINBOARD,MSI
+MB-ASUS-PRIME-A620M-K,ASUS PRIME A620M-K,mb-asus-prime-a620m-k.jpg,,MAINBOARD,ASUS
+MB-MSI-PRO-A620M-E,MSI PRO A620M-E,mb-msi-pro-a620m-e.jpg,,MAINBOARD,MSI
+MB-GIGABYTE-A620M-S2H,Gigabyte A620M S2H,mb-gigabyte-a620m-s2h.jpg,,MAINBOARD,Gigabyte
+MB-ASUS-TUF-GAMING-B650M-PLUS-WIFI,ASUS TUF GAMING B650M-PLUS WIFI,mb-asus-tuf-gaming-b650m-plus-wifi.jpg,,MAINBOARD,ASUS
+MB-MSI-MAG-B650M-MORTAR-WIFI,MSI MAG B650M MORTAR WIFI,mb-msi-mag-b650m-mortar-wifi.jpg,,MAINBOARD,MSI
+MB-GIGABYTE-B650M-AORUS-ELITE-AX,Gigabyte B650M AORUS ELITE AX,mb-gigabyte-b650m-aorus-elite-ax.jpg,,MAINBOARD,Gigabyte
+MB-ASUS-ROG-STRIX-B650-A-GAMING-WIFI,ASUS ROG STRIX B650-A GAMING WIFI,mb-asus-rog-strix-b650-a-gaming-wifi.jpg,,MAINBOARD,ASUS
+MB-ASUS-TUF-GAMING-B850-PLUS-WIFI,ASUS TUF GAMING B850-PLUS WIFI,mb-asus-tuf-gaming-b850-plus-wifi.jpg,,MAINBOARD,ASUS
+MB-MSI-MAG-B850-TOMAHAWK-MAX-WIFI,MSI MAG B850 TOMAHAWK MAX WIFI,mb-msi-mag-b850-tomahawk-max-wifi.jpg,,MAINBOARD,MSI
+MB-MSI-MAG-X670E-TOMAHAWK-WIFI,MSI MAG X670E TOMAHAWK WIFI,mb-msi-mag-x670e-tomahawk-wifi.jpg,,MAINBOARD,MSI
+RAM-KINGSTON-FURY-BEAST-8GB-1X8GB-DDR4-3200MHZ,Kingston Fury Beast 8GB (1 x 8GB) DDR4 3200MHz,ram-kingston-fury-beast-8gb-1x8gb-ddr4-3200mhz.jpg,,RAM,Kingston
+RAM-KINGSTON-FURY-BEAST-32GB-2X16GB-DDR4-3200MHZ,Kingston Fury Beast 32GB (2 x 16GB) DDR4 3200MHz,ram-kingston-fury-beast-32gb-2x16gb-ddr4-3200mhz.jpg,,RAM,Kingston
+RAM-KINGSTON-FURY-BEAST-16GB-1X16GB-DDR5-5600MHZ,Kingston Fury Beast 16GB (1 x 16GB) DDR5 5600MHz,ram-kingston-fury-beast-16gb-1x16gb-ddr5-5600mhz.jpg,,RAM,Kingston
+RAM-KINGSTON-FURY-BEAST-32GB-2X16GB-DDR5-5600MHZ,Kingston Fury Beast 32GB (2 x 16GB) DDR5 5600MHz,ram-kingston-fury-beast-32gb-2x16gb-ddr5-5600mhz.jpg,,RAM,Kingston
+RAM-KINGSTON-FURY-RENEGADE-32GB-2X16GB-DDR5-B273C,Kingston Fury Renegade 32GB (2 x 16GB) DDR5 6000MHz,ram-kingston-fury-renegade-32gb-2x16gb-ddr5-6000mhz.jpg,,RAM,Kingston
+RAM-CORSAIR-VENGEANCE-LPX-16GB-2X8GB-DDR4-3200MHZ,Corsair Vengeance LPX 16GB (2 x 8GB) DDR4 3200MHz,ram-corsair-vengeance-lpx-16gb-2x8gb-ddr4-3200mhz.jpg,,RAM,Corsair
+RAM-CORSAIR-VENGEANCE-RGB-32GB-2X16GB-DDR4-3600MHZ,Corsair Vengeance RGB 32GB (2 x 16GB) DDR4 3600MHz,ram-corsair-vengeance-rgb-32gb-2x16gb-ddr4-3600mhz.jpg,,RAM,Corsair
+RAM-CORSAIR-VENGEANCE-32GB-2X16GB-DDR5-5600MHZ,Corsair Vengeance 32GB (2 x 16GB) DDR5 5600MHz,ram-corsair-vengeance-32gb-2x16gb-ddr5-5600mhz.jpg,,RAM,Corsair
+RAM-CORSAIR-VENGEANCE-RGB-32GB-2X16GB-DDR5-6000MHZ,Corsair Vengeance RGB 32GB (2 x 16GB) DDR5 6000MHz,ram-corsair-vengeance-rgb-32gb-2x16gb-ddr5-6000mhz.jpg,,RAM,Corsair
+RAM-CORSAIR-VENGEANCE-64GB-2X32GB-DDR5-6000MHZ,Corsair Vengeance 64GB (2 x 32GB) DDR5 6000MHz,ram-corsair-vengeance-64gb-2x32gb-ddr5-6000mhz.jpg,,RAM,Corsair
+RAM-G-SKILL-RIPJAWS-V-16GB-2X8GB-DDR4-3200MHZ,G.Skill Ripjaws V 16GB (2 x 8GB) DDR4 3200MHz,ram-g-skill-ripjaws-v-16gb-2x8gb-ddr4-3200mhz.jpg,,RAM,G.Skill
+RAM-G-SKILL-RIPJAWS-V-32GB-2X16GB-DDR4-3600MHZ,G.Skill Ripjaws V 32GB (2 x 16GB) DDR4 3600MHz,ram-g-skill-ripjaws-v-32gb-2x16gb-ddr4-3600mhz.jpg,,RAM,G.Skill
+RAM-G-SKILL-TRIDENT-Z-RGB-32GB-2X16GB-DDR4-3600MHZ,G.Skill Trident Z RGB 32GB (2 x 16GB) DDR4 3600MHz,ram-g-skill-trident-z-rgb-32gb-2x16gb-ddr4-3600mhz.jpg,,RAM,G.Skill
+RAM-G-SKILL-RIPJAWS-S5-32GB-2X16GB-DDR5-6000MHZ,G.Skill Ripjaws S5 32GB (2 x 16GB) DDR5 6000MHz,ram-g-skill-ripjaws-s5-32gb-2x16gb-ddr5-6000mhz.jpg,,RAM,G.Skill
+RAM-G-SKILL-TRIDENT-Z5-RGB-32GB-2X16GB-DDR5-F39A0,G.Skill Trident Z5 RGB 32GB (2 x 16GB) DDR5 6000MHz,ram-g-skill-trident-z5-rgb-32gb-2x16gb-ddr5-6000mhz.jpg,,RAM,G.Skill
+RAM-G-SKILL-TRIDENT-Z5-NEO-RGB-32GB-2X16GB-D-D85E5,G.Skill Trident Z5 Neo RGB 32GB (2 x 16GB) DDR5 6000MHz,ram-g-skill-trident-z5-neo-rgb-32gb-2x16gb-ddr5-6000mhz.jpg,,RAM,G.Skill
+RAM-TEAMGROUP-T-FORCE-VULCAN-16GB-2X8GB-DDR4-DDC89,TeamGroup T-Force Vulcan 16GB (2 x 8GB) DDR4 3200MHz,ram-teamgroup-t-force-vulcan-16gb-2x8gb-ddr4-3200mhz.jpg,,RAM,TeamGroup
+RAM-TEAMGROUP-T-FORCE-DELTA-RGB-32GB-2X16GB-38788,TeamGroup T-Force Delta RGB 32GB (2 x 16GB) DDR4 3200MHz,ram-teamgroup-t-force-delta-rgb-32gb-2x16gb-ddr4-3200mhz.jpg,,RAM,TeamGroup
+RAM-TEAMGROUP-T-FORCE-DELTA-RGB-32GB-2X16GB-894B2,TeamGroup T-Force Delta RGB 32GB (2 x 16GB) DDR5 6000MHz,ram-teamgroup-t-force-delta-rgb-32gb-2x16gb-ddr5-6000mhz.jpg,,RAM,TeamGroup
+RAM-CRUCIAL-16GB-1X16GB-DDR4-3200MHZ,Crucial 16GB (1 x 16GB) DDR4 3200MHz,ram-crucial-16gb-1x16gb-ddr4-3200mhz.jpg,,RAM,Crucial
+RAM-CRUCIAL-PRO-32GB-2X16GB-DDR5-5600MHZ,Crucial Pro 32GB (2 x 16GB) DDR5 5600MHz,ram-crucial-pro-32gb-2x16gb-ddr5-5600mhz.jpg,,RAM,Crucial
+RAM-CRUCIAL-PRO-32GB-2X16GB-DDR5-6000MHZ,Crucial Pro 32GB (2 x 16GB) DDR5 6000MHz,ram-crucial-pro-32gb-2x16gb-ddr5-6000mhz.jpg,,RAM,Crucial
+RAM-ADATA-XPG-SPECTRIX-D35G-16GB-2X8GB-DDR4-3E84D,Adata XPG Spectrix D35G 16GB (2 x 8GB) DDR4 3200MHz,ram-adata-xpg-spectrix-d35g-16gb-2x8gb-ddr4-3200mhz.jpg,,RAM,Adata
+RAM-ADATA-XPG-LANCER-32GB-2X16GB-DDR5-6000MHZ,Adata XPG Lancer 32GB (2 x 16GB) DDR5 6000MHz,ram-adata-xpg-lancer-32gb-2x16gb-ddr5-6000mhz.jpg,,RAM,Adata
+RAM-ADATA-XPG-LANCER-RGB-16GB-1X16GB-DDR5-5600MHZ,Adata XPG Lancer RGB 16GB (1 x 16GB) DDR5 5600MHz,ram-adata-xpg-lancer-rgb-16gb-1x16gb-ddr5-5600mhz.jpg,,RAM,Adata
+VGA-ASUS-DUAL-GEFORCE-RTX-3050-6GB-GDDR6,ASUS Dual GeForce RTX 3050 6GB GDDR6,vga-asus-dual-geforce-rtx-3050-6gb-gddr6.jpg,,VGA,ASUS
+VGA-MSI-GEFORCE-RTX-4060-VENTUS-2X-BLACK-8G-OC,MSI GeForce RTX 4060 VENTUS 2X BLACK 8G OC,vga-msi-geforce-rtx-4060-ventus-2x-black-8g-oc.jpg,,VGA,MSI
+VGA-ASUS-DUAL-GEFORCE-RTX-4060-OC-8GB,ASUS Dual GeForce RTX 4060 OC 8GB,vga-asus-dual-geforce-rtx-4060-oc-8gb.jpg,,VGA,ASUS
+VGA-GIGABYTE-GEFORCE-RTX-4060-EAGLE-OC-8G,Gigabyte GeForce RTX 4060 EAGLE OC 8G,vga-gigabyte-geforce-rtx-4060-eagle-oc-8g.jpg,,VGA,Gigabyte
+VGA-ZOTAC-GAMING-GEFORCE-RTX-4060-TWIN-EDGE-8GB,Zotac Gaming GeForce RTX 4060 Twin Edge 8GB,vga-zotac-gaming-geforce-rtx-4060-twin-edge-8gb.jpg,,VGA,Zotac
+VGA-GIGABYTE-GEFORCE-RTX-4060-TI-GAMING-OC-8G,Gigabyte GeForce RTX 4060 Ti GAMING OC 8G,vga-gigabyte-geforce-rtx-4060-ti-gaming-oc-8g.jpg,,VGA,Gigabyte
+VGA-MSI-GEFORCE-RTX-4060-TI-VENTUS-2X-BLACK-8G-OC,MSI GeForce RTX 4060 Ti VENTUS 2X BLACK 8G OC,vga-msi-geforce-rtx-4060-ti-ventus-2x-black-8g-oc.jpg,,VGA,MSI
+VGA-MSI-GEFORCE-RTX-4070-VENTUS-2X-12G-OC,MSI GeForce RTX 4070 VENTUS 2X 12G OC,vga-msi-geforce-rtx-4070-ventus-2x-12g-oc.jpg,,VGA,MSI
+VGA-ASUS-DUAL-GEFORCE-RTX-4070-SUPER-12GB,ASUS Dual GeForce RTX 4070 SUPER 12GB,vga-asus-dual-geforce-rtx-4070-super-12gb.jpg,,VGA,ASUS
+VGA-GIGABYTE-GEFORCE-RTX-4070-SUPER-WINDFORC-84906,Gigabyte GeForce RTX 4070 SUPER WINDFORCE OC 12G,vga-gigabyte-geforce-rtx-4070-super-windforce-oc-12g.jpg,,VGA,Gigabyte
+VGA-MSI-GEFORCE-RTX-4070-TI-SUPER-VENTUS-3X-16G-OC,MSI GeForce RTX 4070 Ti SUPER VENTUS 3X 16G OC,vga-msi-geforce-rtx-4070-ti-super-ventus-3x-16g-oc.jpg,,VGA,MSI
+VGA-ASUS-TUF-GAMING-GEFORCE-RTX-4080-SUPER-16GB,ASUS TUF Gaming GeForce RTX 4080 SUPER 16GB,vga-asus-tuf-gaming-geforce-rtx-4080-super-16gb.jpg,,VGA,ASUS
+VGA-MSI-GEFORCE-RTX-5060-VENTUS-2X-OC-8G,MSI GeForce RTX 5060 VENTUS 2X OC 8G,vga-msi-geforce-rtx-5060-ventus-2x-oc-8g.jpg,,VGA,MSI
+VGA-ASUS-DUAL-GEFORCE-RTX-5060-TI-16GB,ASUS Dual GeForce RTX 5060 Ti 16GB,vga-asus-dual-geforce-rtx-5060-ti-16gb.jpg,,VGA,ASUS
+VGA-GIGABYTE-GEFORCE-RTX-5070-WINDFORCE-OC-SFF-12G,Gigabyte GeForce RTX 5070 WINDFORCE OC SFF 12G,vga-gigabyte-geforce-rtx-5070-windforce-oc-sff-12g.jpg,,VGA,Gigabyte
+VGA-MSI-GEFORCE-RTX-5070-TI-VENTUS-3X-OC-16G,MSI GeForce RTX 5070 Ti VENTUS 3X OC 16G,vga-msi-geforce-rtx-5070-ti-ventus-3x-oc-16g.jpg,,VGA,MSI
+VGA-ASUS-PRIME-GEFORCE-RTX-5080-16GB,ASUS Prime GeForce RTX 5080 16GB,vga-asus-prime-geforce-rtx-5080-16gb.jpg,,VGA,ASUS
+VGA-ASROCK-RADEON-RX-6600-CHALLENGER-D-8GB,ASRock Radeon RX 6600 Challenger D 8GB,vga-asrock-radeon-rx-6600-challenger-d-8gb.jpg,,VGA,ASRock
+VGA-SAPPHIRE-PULSE-RADEON-RX-7600-8GB,Sapphire Pulse Radeon RX 7600 8GB,vga-sapphire-pulse-radeon-rx-7600-8gb.jpg,,VGA,Sapphire
+VGA-XFX-SPEEDSTER-SWFT-210-RADEON-RX-7600-8GB,XFX Speedster SWFT 210 Radeon RX 7600 8GB,vga-xfx-speedster-swft-210-radeon-rx-7600-8gb.jpg,,VGA,XFX
+VGA-SAPPHIRE-PULSE-RADEON-RX-7800-XT-16GB,Sapphire Pulse Radeon RX 7800 XT 16GB,vga-sapphire-pulse-radeon-rx-7800-xt-16gb.jpg,,VGA,Sapphire
+VGA-POWERCOLOR-HELLHOUND-RADEON-RX-7900-GRE-16GB,PowerColor Hellhound Radeon RX 7900 GRE 16GB,vga-powercolor-hellhound-radeon-rx-7900-gre-16gb.jpg,,VGA,PowerColor
+VGA-SAPPHIRE-PULSE-RADEON-RX-9060-XT-16GB,Sapphire Pulse Radeon RX 9060 XT 16GB,vga-sapphire-pulse-radeon-rx-9060-xt-16gb.jpg,,VGA,Sapphire
+VGA-SAPPHIRE-PULSE-RADEON-RX-9070-XT-16GB,Sapphire Pulse Radeon RX 9070 XT 16GB,vga-sapphire-pulse-radeon-rx-9070-xt-16gb.jpg,,VGA,Sapphire
+SSD-SAMSUNG-870-EVO-500GB-SATA,Samsung 870 EVO 500GB SATA,ssd-samsung-870-evo-500gb-sata.jpg,,SSD,Samsung
+SSD-SAMSUNG-870-EVO-1TB-SATA,Samsung 870 EVO 1TB SATA,ssd-samsung-870-evo-1tb-sata.jpg,,SSD,Samsung
+SSD-SAMSUNG-990-EVO-1TB-NVME-M-2,Samsung 990 EVO 1TB NVMe M.2,ssd-samsung-990-evo-1tb-nvme-m-2.jpg,,SSD,Samsung
+SSD-SAMSUNG-980-PRO-1TB-NVME-M-2,Samsung 980 PRO 1TB NVMe M.2,ssd-samsung-980-pro-1tb-nvme-m-2.jpg,,SSD,Samsung
+SSD-SAMSUNG-990-PRO-1TB-NVME-M-2,Samsung 990 PRO 1TB NVMe M.2,ssd-samsung-990-pro-1tb-nvme-m-2.jpg,,SSD,Samsung
+SSD-SAMSUNG-990-PRO-2TB-NVME-M-2,Samsung 990 PRO 2TB NVMe M.2,ssd-samsung-990-pro-2tb-nvme-m-2.jpg,,SSD,Samsung
+SSD-KINGSTON-NV2-500GB-NVME-M-2,Kingston NV2 500GB NVMe M.2,ssd-kingston-nv2-500gb-nvme-m-2.jpg,,SSD,Kingston
+SSD-KINGSTON-NV2-2TB-NVME-M-2,Kingston NV2 2TB NVMe M.2,ssd-kingston-nv2-2tb-nvme-m-2.jpg,,SSD,Kingston
+SSD-KINGSTON-KC3000-1TB-NVME-M-2,Kingston KC3000 1TB NVMe M.2,ssd-kingston-kc3000-1tb-nvme-m-2.jpg,,SSD,Kingston
+SSD-KINGSTON-A400-480GB-SATA,Kingston A400 480GB SATA,ssd-kingston-a400-480gb-sata.jpg,,SSD,Kingston
+SSD-WD-BLUE-SN580-1TB-NVME-M-2,WD Blue SN580 1TB NVMe M.2,ssd-wd-blue-sn580-1tb-nvme-m-2.jpg,,SSD,WD
+SSD-WD-BLACK-SN770-1TB-NVME-M-2,WD Black SN770 1TB NVMe M.2,ssd-wd-black-sn770-1tb-nvme-m-2.jpg,,SSD,WD
+SSD-WD-BLACK-SN850X-1TB-NVME-M-2,WD Black SN850X 1TB NVMe M.2,ssd-wd-black-sn850x-1tb-nvme-m-2.jpg,,SSD,WD
+SSD-WD-BLACK-SN850X-2TB-NVME-M-2,WD Black SN850X 2TB NVMe M.2,ssd-wd-black-sn850x-2tb-nvme-m-2.jpg,,SSD,WD
+SSD-CRUCIAL-P3-PLUS-1TB-NVME-M-2,Crucial P3 Plus 1TB NVMe M.2,ssd-crucial-p3-plus-1tb-nvme-m-2.jpg,,SSD,Crucial
+SSD-CRUCIAL-P5-PLUS-1TB-NVME-M-2,Crucial P5 Plus 1TB NVMe M.2,ssd-crucial-p5-plus-1tb-nvme-m-2.jpg,,SSD,Crucial
+SSD-CRUCIAL-MX500-500GB-SATA,Crucial MX500 500GB SATA,ssd-crucial-mx500-500gb-sata.jpg,,SSD,Crucial
+SSD-LEXAR-NM620-1TB-NVME-M-2,Lexar NM620 1TB NVMe M.2,ssd-lexar-nm620-1tb-nvme-m-2.jpg,,SSD,Lexar
+SSD-LEXAR-NM790-2TB-NVME-M-2,Lexar NM790 2TB NVMe M.2,ssd-lexar-nm790-2tb-nvme-m-2.jpg,,SSD,Lexar
+SSD-ADATA-XPG-GAMMIX-S70-BLADE-1TB-NVME-M-2,Adata XPG Gammix S70 Blade 1TB NVMe M.2,ssd-adata-xpg-gammix-s70-blade-1tb-nvme-m-2.jpg,,SSD,Adata
+SSD-GIGABYTE-AORUS-GEN4-7300-1TB-NVME-M-2,Gigabyte AORUS Gen4 7300 1TB NVMe M.2,ssd-gigabyte-aorus-gen4-7300-1tb-nvme-m-2.jpg,,SSD,Gigabyte
+SSD-TEAMGROUP-MP44-1TB-NVME-M-2,TeamGroup MP44 1TB NVMe M.2,ssd-teamgroup-mp44-1tb-nvme-m-2.jpg,,SSD,TeamGroup
+SSD-SEAGATE-FIRECUDA-530-1TB-NVME-M-2,Seagate FireCuda 530 1TB NVMe M.2,ssd-seagate-firecuda-530-1tb-nvme-m-2.jpg,,SSD,Seagate
+PSU-CORSAIR-CV550-550W-80-PLUS-BRONZE,Corsair CV550 550W 80 Plus Bronze,psu-corsair-cv550-550w-80-plus-bronze.jpg,,PSU,Corsair
+PSU-CORSAIR-CX750-750W-80-PLUS-BRONZE,Corsair CX750 750W 80 Plus Bronze,psu-corsair-cx750-750w-80-plus-bronze.jpg,,PSU,Corsair
+PSU-CORSAIR-RM650E-650W-80-PLUS-GOLD,Corsair RM650e 650W 80 Plus Gold,psu-corsair-rm650e-650w-80-plus-gold.jpg,,PSU,Corsair
+PSU-CORSAIR-RM750E-750W-80-PLUS-GOLD,Corsair RM750e 750W 80 Plus Gold,psu-corsair-rm750e-750w-80-plus-gold.jpg,,PSU,Corsair
+PSU-CORSAIR-RM850E-850W-80-PLUS-GOLD,Corsair RM850e 850W 80 Plus Gold,psu-corsair-rm850e-850w-80-plus-gold.jpg,,PSU,Corsair
+PSU-CORSAIR-RM1000E-1000W-80-PLUS-GOLD,Corsair RM1000e 1000W 80 Plus Gold,psu-corsair-rm1000e-1000w-80-plus-gold.jpg,,PSU,Corsair
+PSU-COOLER-MASTER-MWE-550-BRONZE-V2-550W,Cooler Master MWE 550 Bronze V2 550W,psu-cooler-master-mwe-550-bronze-v2-550w.jpg,,PSU,Cooler Master
+PSU-COOLER-MASTER-MWE-650-BRONZE-V2-650W,Cooler Master MWE 650 Bronze V2 650W,psu-cooler-master-mwe-650-bronze-v2-650w.jpg,,PSU,Cooler Master
+PSU-COOLER-MASTER-MWE-750-GOLD-V2-750W,Cooler Master MWE 750 Gold V2 750W,psu-cooler-master-mwe-750-gold-v2-750w.jpg,,PSU,Cooler Master
+PSU-COOLER-MASTER-MWE-850-GOLD-V2-850W,Cooler Master MWE 850 Gold V2 850W,psu-cooler-master-mwe-850-gold-v2-850w.jpg,,PSU,Cooler Master
+PSU-SEASONIC-S12III-500W-80-PLUS-BRONZE,Seasonic S12III 500W 80 Plus Bronze,psu-seasonic-s12iii-500w-80-plus-bronze.jpg,,PSU,Seasonic
+PSU-SEASONIC-FOCUS-GX-650-650W-80-PLUS-GOLD,Seasonic Focus GX-650 650W 80 Plus Gold,psu-seasonic-focus-gx-650-650w-80-plus-gold.jpg,,PSU,Seasonic
+PSU-SEASONIC-FOCUS-GX-750-750W-80-PLUS-GOLD,Seasonic Focus GX-750 750W 80 Plus Gold,psu-seasonic-focus-gx-750-750w-80-plus-gold.jpg,,PSU,Seasonic
+PSU-SEASONIC-FOCUS-GX-850-850W-80-PLUS-GOLD,Seasonic Focus GX-850 850W 80 Plus Gold,psu-seasonic-focus-gx-850-850w-80-plus-gold.jpg,,PSU,Seasonic
+PSU-DEEPCOOL-PK550D-550W-80-PLUS-BRONZE,DeepCool PK550D 550W 80 Plus Bronze,psu-deepcool-pk550d-550w-80-plus-bronze.jpg,,PSU,DeepCool
+PSU-DEEPCOOL-PK650D-650W-80-PLUS-BRONZE,DeepCool PK650D 650W 80 Plus Bronze,psu-deepcool-pk650d-650w-80-plus-bronze.jpg,,PSU,DeepCool
+PSU-DEEPCOOL-PK750D-750W-80-PLUS-BRONZE,DeepCool PK750D 750W 80 Plus Bronze,psu-deepcool-pk750d-750w-80-plus-bronze.jpg,,PSU,DeepCool
+PSU-DEEPCOOL-PM750D-750W-80-PLUS-GOLD,DeepCool PM750D 750W 80 Plus Gold,psu-deepcool-pm750d-750w-80-plus-gold.jpg,,PSU,DeepCool
+PSU-THERMALTAKE-SMART-600W-80-PLUS-WHITE,Thermaltake Smart 600W 80 Plus White,psu-thermaltake-smart-600w-80-plus-white.jpg,,PSU,Thermaltake
+PSU-THERMALTAKE-TOUGHPOWER-GF1-750W-80-PLUS-GOLD,Thermaltake Toughpower GF1 750W 80 Plus Gold,psu-thermaltake-toughpower-gf1-750w-80-plus-gold.jpg,,PSU,Thermaltake
+PSU-MSI-MAG-A650BN-650W-80-PLUS-BRONZE,MSI MAG A650BN 650W 80 Plus Bronze,psu-msi-mag-a650bn-650w-80-plus-bronze.jpg,,PSU,MSI
+PSU-MSI-MAG-A750BN-750W-80-PLUS-BRONZE,MSI MAG A750BN 750W 80 Plus Bronze,psu-msi-mag-a750bn-750w-80-plus-bronze.jpg,,PSU,MSI
+PSU-GIGABYTE-P750GM-750W-80-PLUS-GOLD,Gigabyte P750GM 750W 80 Plus Gold,psu-gigabyte-p750gm-750w-80-plus-gold.jpg,,PSU,Gigabyte
+PSU-NZXT-C750-750W-80-PLUS-GOLD,NZXT C750 750W 80 Plus Gold,psu-nzxt-c750-750w-80-plus-gold.jpg,,PSU,NZXT
+CASE-COOLER-MASTER-MASTERBOX-MB520-ARGB,Cooler Master MasterBox MB520 ARGB,case-cooler-master-masterbox-mb520-argb.jpg,,CASE,Cooler Master
+CASE-COOLER-MASTER-NR200P,Cooler Master NR200P,case-cooler-master-nr200p.jpg,,CASE,Cooler Master
+CASE-COOLER-MASTER-TD500-MESH-V2,Cooler Master TD500 Mesh V2,case-cooler-master-td500-mesh-v2.jpg,,CASE,Cooler Master
+CASE-NZXT-H510,NZXT H510,case-nzxt-h510.jpg,,CASE,NZXT
+CASE-NZXT-H5-FLOW,NZXT H5 Flow,case-nzxt-h5-flow.jpg,,CASE,NZXT
+CASE-NZXT-H7-FLOW,NZXT H7 Flow,case-nzxt-h7-flow.jpg,,CASE,NZXT
+CASE-CORSAIR-3000D-AIRFLOW,Corsair 3000D Airflow,case-corsair-3000d-airflow.jpg,,CASE,Corsair
+CASE-CORSAIR-4000D-AIRFLOW,Corsair 4000D Airflow,case-corsair-4000d-airflow.jpg,,CASE,Corsair
+CASE-CORSAIR-5000D-AIRFLOW,Corsair 5000D Airflow,case-corsair-5000d-airflow.jpg,,CASE,Corsair
+CASE-CORSAIR-2000D-AIRFLOW,Corsair 2000D Airflow,case-corsair-2000d-airflow.jpg,,CASE,Corsair
+CASE-LIAN-LI-LANCOOL-205-MESH,Lian Li Lancool 205 Mesh,case-lian-li-lancool-205-mesh.jpg,,CASE,Lian Li
+CASE-LIAN-LI-LANCOOL-216,Lian Li Lancool 216,case-lian-li-lancool-216.jpg,,CASE,Lian Li
+CASE-LIAN-LI-O11-DYNAMIC-EVO,Lian Li O11 Dynamic EVO,case-lian-li-o11-dynamic-evo.jpg,,CASE,Lian Li
+CASE-MONTECH-AIR-100-ARGB,Montech Air 100 ARGB,case-montech-air-100-argb.jpg,,CASE,Montech
+CASE-MONTECH-AIR-903-MAX,Montech Air 903 Max,case-montech-air-903-max.jpg,,CASE,Montech
+CASE-DEEPCOOL-MATREXX-40,DeepCool MATREXX 40,case-deepcool-matrexx-40.jpg,,CASE,DeepCool
+CASE-DEEPCOOL-CH370,DeepCool CH370,case-deepcool-ch370.jpg,,CASE,DeepCool
+CASE-DEEPCOOL-CC560,DeepCool CC560,case-deepcool-cc560.jpg,,CASE,DeepCool
+CASE-DEEPCOOL-CH510,DeepCool CH510,case-deepcool-ch510.jpg,,CASE,DeepCool
+CASE-THERMALTAKE-VERSA-H18,Thermaltake Versa H18,case-thermaltake-versa-h18.jpg,,CASE,Thermaltake
+CASE-THERMALTAKE-S100-TG,Thermaltake S100 TG,case-thermaltake-s100-tg.jpg,,CASE,Thermaltake
+CASE-FRACTAL-DESIGN-POP-AIR,Fractal Design Pop Air,case-fractal-design-pop-air.jpg,,CASE,Fractal Design
+CASE-FRACTAL-DESIGN-NORTH,Fractal Design North,case-fractal-design-north.jpg,,CASE,Fractal Design
+TN-COOLER-MASTER-HYPER-212-BLACK,Cooler Master Hyper 212 Black,tn-cooler-master-hyper-212-black.jpg,,TANNHIET,Cooler Master
+TN-COOLER-MASTER-HYPER-212-SPECTRUM-V3-ARGB,Cooler Master Hyper 212 Spectrum V3 ARGB,tn-cooler-master-hyper-212-spectrum-v3-argb.jpg,,TANNHIET,Cooler Master
+TN-COOLER-MASTER-HYPER-212-HALO-BLACK,Cooler Master Hyper 212 Halo Black,tn-cooler-master-hyper-212-halo-black.jpg,,TANNHIET,Cooler Master
+TN-COOLER-MASTER-MASTERLIQUID-ML240L-V2-ARGB,Cooler Master MasterLiquid ML240L V2 ARGB,tn-cooler-master-masterliquid-ml240l-v2-argb.jpg,,TANNHIET,Cooler Master
+TN-DEEPCOOL-AG400,DeepCool AG400,tn-deepcool-ag400.jpg,,TANNHIET,DeepCool
+TN-DEEPCOOL-AK400,DeepCool AK400,tn-deepcool-ak400.jpg,,TANNHIET,DeepCool
+TN-DEEPCOOL-AK500,DeepCool AK500,tn-deepcool-ak500.jpg,,TANNHIET,DeepCool
+TN-DEEPCOOL-AK620,DeepCool AK620,tn-deepcool-ak620.jpg,,TANNHIET,DeepCool
+TN-DEEPCOOL-LE520,DeepCool LE520,tn-deepcool-le520.jpg,,TANNHIET,DeepCool
+TN-DEEPCOOL-LS520-SE,DeepCool LS520 SE,tn-deepcool-ls520-se.jpg,,TANNHIET,DeepCool
+TN-DEEPCOOL-LT520,DeepCool LT520,tn-deepcool-lt520.jpg,,TANNHIET,DeepCool
+TN-DEEPCOOL-LT720,DeepCool LT720,tn-deepcool-lt720.jpg,,TANNHIET,DeepCool
+TN-THERMALRIGHT-ASSASSIN-X-120-R-SE,Thermalright Assassin X 120 R SE,tn-thermalright-assassin-x-120-r-se.jpg,,TANNHIET,Thermalright
+TN-THERMALRIGHT-PEERLESS-ASSASSIN-120-SE,Thermalright Peerless Assassin 120 SE,tn-thermalright-peerless-assassin-120-se.jpg,,TANNHIET,Thermalright
+TN-THERMALRIGHT-PHANTOM-SPIRIT-120-SE,Thermalright Phantom Spirit 120 SE,tn-thermalright-phantom-spirit-120-se.jpg,,TANNHIET,Thermalright
+TN-ARCTIC-FREEZER-36,Arctic Freezer 36,tn-arctic-freezer-36.jpg,,TANNHIET,Arctic
+TN-ARCTIC-LIQUID-FREEZER-III-240,Arctic Liquid Freezer III 240,tn-arctic-liquid-freezer-iii-240.jpg,,TANNHIET,Arctic
+TN-ARCTIC-LIQUID-FREEZER-III-360,Arctic Liquid Freezer III 360,tn-arctic-liquid-freezer-iii-360.jpg,,TANNHIET,Arctic
+TN-ID-COOLING-SE-214-XT,ID-Cooling SE-214-XT,tn-id-cooling-se-214-xt.jpg,,TANNHIET,ID-Cooling
+TN-NOCTUA-NH-D15,Noctua NH-D15,tn-noctua-nh-d15.jpg,,TANNHIET,Noctua
+TN-CORSAIR-ICUE-H100I-ELITE-CAPELLIX-XT,Corsair iCUE H100i Elite Capellix XT,tn-corsair-icue-h100i-elite-capellix-xt.jpg,,TANNHIET,Corsair
+TN-NZXT-KRAKEN-240,NZXT Kraken 240,tn-nzxt-kraken-240.jpg,,TANNHIET,NZXT
+TN-MSI-MAG-CORELIQUID-240R-V2,MSI MAG CoreLiquid 240R V2,tn-msi-mag-coreliquid-240r-v2.jpg,,TANNHIET,MSI
+PK-LOGITECH-G304-LIGHTSPEED,Logitech G304 LIGHTSPEED,pk-logitech-g304-lightspeed.jpg,,PHUKIEN,Logitech
+PK-LOGITECH-G502-HERO,Logitech G502 HERO,pk-logitech-g502-hero.jpg,,PHUKIEN,Logitech
+PK-LOGITECH-G-PRO-X-SUPERLIGHT-2,Logitech G Pro X Superlight 2,pk-logitech-g-pro-x-superlight-2.jpg,,PHUKIEN,Logitech
+PK-RAZER-DEATHADDER-ESSENTIAL,Razer DeathAdder Essential,pk-razer-deathadder-essential.jpg,,PHUKIEN,Razer
+PK-RAZER-VIPER-V3-HYPERSPEED,Razer Viper V3 HyperSpeed,pk-razer-viper-v3-hyperspeed.jpg,,PHUKIEN,Razer
+PK-RAZER-BASILISK-V3,Razer Basilisk V3,pk-razer-basilisk-v3.jpg,,PHUKIEN,Razer
+PK-STEELSERIES-RIVAL-3,SteelSeries Rival 3,pk-steelseries-rival-3.jpg,,PHUKIEN,SteelSeries
+PK-KEYCHRON-K2,Keychron K2,pk-keychron-k2.jpg,,PHUKIEN,Keychron
+PK-KEYCHRON-K8-PRO,Keychron K8 Pro,pk-keychron-k8-pro.jpg,,PHUKIEN,Keychron
+PK-AKKO-3087-V2,Akko 3087 v2,pk-akko-3087-v2.jpg,,PHUKIEN,Akko
+PK-DAREU-EK87,DareU EK87,pk-dareu-ek87.jpg,,PHUKIEN,DareU
+PK-RAZER-BLACKWIDOW-V4-X,Razer BlackWidow V4 X,pk-razer-blackwidow-v4-x.jpg,,PHUKIEN,Razer
+PK-CORSAIR-K70-RGB-TKL,Corsair K70 RGB TKL,pk-corsair-k70-rgb-tkl.jpg,,PHUKIEN,Corsair
+PK-HYPERX-CLOUD-II,HyperX Cloud II,pk-hyperx-cloud-ii.jpg,,PHUKIEN,HyperX
+PK-HYPERX-CLOUD-STINGER-2,HyperX Cloud Stinger 2,pk-hyperx-cloud-stinger-2.jpg,,PHUKIEN,HyperX
+PK-RAZER-KRAKEN-V3-X,Razer Kraken V3 X,pk-razer-kraken-v3-x.jpg,,PHUKIEN,Razer
+PK-LOGITECH-G435-LIGHTSPEED,Logitech G435 LIGHTSPEED,pk-logitech-g435-lightspeed.jpg,,PHUKIEN,Logitech
+PK-CORSAIR-HS55-SURROUND,Corsair HS55 Surround,pk-corsair-hs55-surround.jpg,,PHUKIEN,Corsair
+PK-LG-24MR400-B,LG 24MR400-B,pk-lg-24mr400-b.jpg,,PHUKIEN,LG
+PK-SAMSUNG-ODYSSEY-G3-24-INCH,Samsung Odyssey G3 24 inch,pk-samsung-odyssey-g3-24-inch.jpg,,PHUKIEN,Samsung
+PK-AOC-24G2,AOC 24G2,pk-aoc-24g2.jpg,,PHUKIEN,AOC
+PK-MSI-G274F,MSI G274F,pk-msi-g274f.jpg,,PHUKIEN,MSI
+PK-ASUS-TUF-GAMING-VG27AQ,ASUS TUF Gaming VG27AQ,pk-asus-tuf-gaming-vg27aq.jpg,,PHUKIEN,ASUS

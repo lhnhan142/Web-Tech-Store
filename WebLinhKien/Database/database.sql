@@ -621,6 +621,11 @@ FROM sys.foreign_keys fk
 ORDER BY BangCon, KhoaNgoai;
 GO
 
+UPDATE dbo.TaiKhoans
+SET MatKhauHash = N'AQAAAAEAAYagAAAAEIhcjDMO+PmqptXF1GxFQX6y4BRz0AD9AsIr6pyNLUhGlOc2oRJK5GSnuyuyQw5AxA==',
+    VaiTro = N'Admin', HoatDong = 1, CanDoiMatKhau = 0
+WHERE TenDangNhap = N'admin';
+
 /* ---------------------------------------------------------------------
    KIỂM TRA dòng mồ côi (chỉ cần khi mục F báo lỗi). Mỗi câu phải trả về 0 dòng.
 

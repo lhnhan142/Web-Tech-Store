@@ -1,0 +1,6 @@
+﻿cpu-intel-core-i5-13400f.jpg	Intel Core i5-13400F	không tải được ảnh
+mb-gigabyte-b450m-ds3h.jpg	Gigabyte B450M DS3H	không tải được ảnh
+ram-corsair-vengeance-lpx-16gb-2x8gb-ddr4-3200mhz.jpg	Corsair Vengeance LPX 16GB (2 x 8GB) DDR4 3200MHz	không tải được ảnh
+ram-g-skill-trident-z5-neo-rgb-32gb-2x16gb-ddr5-6000mhz.jpg	G.Skill Trident Z5 Neo RGB 32GB (2 x 16GB) DDR5 6000MHz	không tải được ảnh
+ssd-wd-blue-sn580-1tb-nvme-m-2.jpg	WD Blue SN580 1TB NVMe M.2	không tải được ảnh
+psu-seasonic-s12iii-500w-80-plus-bronze.jpg	Seasonic S12III 500W 80 Plus Bronze	không tải được ảnh

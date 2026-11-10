@@ -33,19 +33,60 @@ public class SanPhamController : Controller
     public async Task<IActionResult> Index([FromQuery] ProductFilterRequest request)
     {
         request ??= new ProductFilterRequest();
+
+        // Xử lý giá trị minPrice / maxPrice nếu người dùng nhập có dấu chấm phân cách hàng nghìn (vd: 1.000.000)
+        var hasMin = Request.Query.TryGetValue("minPrice", out var rawMinValues) && !string.IsNullOrWhiteSpace(rawMinValues.ToString());
+        var hasMax = Request.Query.TryGetValue("maxPrice", out var rawMaxValues) && !string.IsNullOrWhiteSpace(rawMaxValues.ToString());
+
+        if (hasMin)
+        {
+            request.MinPrice = ProductFilterRequest.ParsePrice(rawMinValues.ToString());
+        }
+        else if (Request.Query.ContainsKey("minPrice"))
+        {
+            request.MinPrice = null;
+        }
+
+        if (hasMax)
+        {
+            request.MaxPrice = ProductFilterRequest.ParsePrice(rawMaxValues.ToString());
+        }
+        else if (Request.Query.ContainsKey("maxPrice"))
+        {
+            request.MaxPrice = null;
+        }
+
+        // Chỉ hủy PriceRange khi người dùng thực sự nhập giá trị minPrice hoặc maxPrice khác rỗng
+        if (hasMin || hasMax)
+        {
+            request.PriceRange = null;
+        }
+
         request.Normalize();
+
+        string? priceErrorMessage = null;
+        if (request.MinPrice.HasValue && request.MaxPrice.HasValue && request.MinPrice.Value > request.MaxPrice.Value)
+        {
+            priceErrorMessage = "Giá tối thiểu không được lớn hơn giá tối đa. Vui lòng kiểm tra lại.";
+        }
 
         try
         {
-            var categoriesTask = _danhMucRepo.GetAllAsync(chiHienThi: true);
-            var brandsTask = _thuongHieuRepo.GetAllAsync(chiHienThi: true);
-            var pagedProductsTask = _sanPhamRepo.GetPagedProductsAsync(request);
+            var categories = await _danhMucRepo.GetAllAsync(chiHienThi: true);
 
-            await Task.WhenAll(categoriesTask, brandsTask, pagedProductsTask);
+            IReadOnlyList<ThuongHieuFilterItem> categoryBrands = Array.Empty<ThuongHieuFilterItem>();
+            if (!string.IsNullOrEmpty(request.DanhMuc))
+            {
+                categoryBrands = await _sanPhamRepo.GetBrandsByCategoryAsync(request.DanhMuc);
+                // Nếu người dùng chọn một thương hiệu không thuộc danh mục này -> tự động loại bỏ
+                if (!string.IsNullOrEmpty(request.ThuongHieu) &&
+                    !categoryBrands.Any(b => b.MaThuongHieu.Equals(request.ThuongHieu, StringComparison.OrdinalIgnoreCase)))
+                {
+                    request.ThuongHieu = null;
+                }
+            }
 
-            var categories = await categoriesTask;
-            var brands = await brandsTask;
-            var pagedEntity = await pagedProductsTask;
+            var pagedEntity = await _sanPhamRepo.GetPagedProductsAsync(request);
 
             var cardItems = pagedEntity.Items.Select(p => new ProductCardViewModel(p)).ToList();
             var pagedResult = new PagedResult<ProductCardViewModel>(cardItems, pagedEntity.Page, pagedEntity.PageSize, pagedEntity.TotalItems);
@@ -54,9 +95,19 @@ public class SanPhamController : Controller
                 ? categories.FirstOrDefault(c => c.MaDanhMuc.Equals(request.DanhMuc, StringComparison.OrdinalIgnoreCase))
                 : null;
 
-            var currentBrand = !string.IsNullOrEmpty(request.ThuongHieu)
-                ? brands.FirstOrDefault(b => b.MaThuongHieu.Equals(request.ThuongHieu, StringComparison.OrdinalIgnoreCase))
-                : null;
+            ThuongHieu? currentBrand = null;
+            if (!string.IsNullOrEmpty(request.ThuongHieu))
+            {
+                currentBrand = await _thuongHieuRepo.GetByMaAsync(request.ThuongHieu);
+                if (currentBrand == null)
+                {
+                    var matchFamous = categoryBrands.FirstOrDefault(b => b.MaThuongHieu.Equals(request.ThuongHieu, StringComparison.OrdinalIgnoreCase));
+                    if (matchFamous != null)
+                    {
+                        currentBrand = new ThuongHieu { MaThuongHieu = matchFamous.MaThuongHieu, TenThuongHieu = matchFamous.TenThuongHieu, HienThi = true };
+                    }
+                }
+            }
 
             var breadcrumbs = new List<BreadcrumbItem>
             {
@@ -71,6 +122,13 @@ public class SanPhamController : Controller
                 pageTitle = $"Kết quả tìm kiếm: \"{request.Q}\"";
                 pageDesc = $"Tìm thấy {pagedResult.TotalItems} sản phẩm phù hợp với từ khóa \"{request.Q}\".";
                 breadcrumbs.Add(new($"Tìm kiếm: \"{request.Q}\"", null, true));
+            }
+            else if (currentCategory != null && currentBrand != null)
+            {
+                pageTitle = $"{currentCategory.TenDanhMuc} - {currentBrand.TenThuongHieu}";
+                pageDesc = $"Danh sách linh kiện {currentCategory.TenDanhMuc} thương hiệu {currentBrand.TenThuongHieu} chính hãng.";
+                breadcrumbs.Add(new(currentCategory.TenDanhMuc, $"/SanPham?danhMuc={currentCategory.MaDanhMuc}", false));
+                breadcrumbs.Add(new(currentBrand.TenThuongHieu, null, true));
             }
             else if (currentCategory != null)
             {
@@ -94,12 +152,14 @@ public class SanPhamController : Controller
                 PagedProducts = pagedResult,
                 Filter = request,
                 Categories = categories,
-                Brands = brands,
+                Brands = categoryBrands.Select(b => new ThuongHieu { MaThuongHieu = b.MaThuongHieu, TenThuongHieu = b.TenThuongHieu, HienThi = true }).ToList(),
+                CategoryBrands = categoryBrands,
                 CurrentCategory = currentCategory,
                 CurrentBrand = currentBrand,
                 Breadcrumbs = breadcrumbs,
                 PageTitle = pageTitle,
-                PageDescription = pageDesc
+                PageDescription = pageDesc,
+                PriceErrorMessage = priceErrorMessage
             };
 
             return View("Index", vm);
@@ -109,6 +169,19 @@ public class SanPhamController : Controller
             _logger.LogError(ex, "Lỗi xảy ra khi lọc danh sách sản phẩm.");
             return View("Index", new ProductListViewModel());
         }
+    }
+
+    // GET /SanPham/GetBrandsByCategory?maDanhMuc=CPU
+    [HttpGet("GetBrandsByCategory")]
+    public async Task<IActionResult> GetBrandsByCategory(string? maDanhMuc)
+    {
+        if (string.IsNullOrWhiteSpace(maDanhMuc))
+        {
+            return Json(new { success = true, data = Array.Empty<ThuongHieuFilterItem>() });
+        }
+
+        var brands = await _sanPhamRepo.GetBrandsByCategoryAsync(maDanhMuc);
+        return Json(new { success = true, data = brands });
     }
 
     // GET /SanPham/DanhMuc/{maDanhMuc}

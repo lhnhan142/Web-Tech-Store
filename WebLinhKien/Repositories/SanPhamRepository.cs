@@ -73,6 +73,143 @@ public class SanPhamRepository : RepositoryBase, ISanPhamRepository
         return await DemAsync(sql);
     }
 
+    // Danh mục thương hiệu nổi tiếng / phổ biến theo từng loại linh kiện
+    private static readonly Dictionary<string, (string Ma, string Ten)[]> DanhSachThuongHieuPhoBien = new(StringComparer.OrdinalIgnoreCase)
+    {
+        ["CPU"] = new[]
+        {
+            ("INTEL", "Intel"),
+            ("AMD", "AMD")
+        },
+        ["MAINBOARD"] = new[]
+        {
+            ("ASUS", "ASUS"),
+            ("MSI", "MSI"),
+            ("GIGABYTE", "Gigabyte"),
+            ("ASROCK", "ASRock")
+        },
+        ["RAM"] = new[]
+        {
+            ("KINGSTON", "Kingston"),
+            ("CORSAIR", "Corsair"),
+            ("GSKILL", "G.Skill"),
+            ("TEAMGROUP", "TeamGroup"),
+            ("CRUCIAL", "Crucial"),
+            ("ADATA", "Adata"),
+            ("SAMSUNG", "Samsung")
+        },
+        ["VGA"] = new[]
+        {
+            ("NVIDIA", "NVIDIA"),
+            ("ASUS", "ASUS"),
+            ("MSI", "MSI"),
+            ("GIGABYTE", "Gigabyte"),
+            ("ZOTAC", "Zotac"),
+            ("SAPPHIRE", "Sapphire"),
+            ("POWERCOLOR", "PowerColor"),
+            ("ASROCK", "ASRock"),
+            ("COLORFUL", "Colorful"),
+            ("GALAX", "Galax"),
+            ("XFX", "XFX")
+        },
+        ["SSD"] = new[]
+        {
+            ("SAMSUNG", "Samsung"),
+            ("KINGSTON", "Kingston"),
+            ("WD", "WD"),
+            ("CRUCIAL", "Crucial"),
+            ("LEXAR", "Lexar"),
+            ("TEAMGROUP", "TeamGroup"),
+            ("SEAGATE", "Seagate")
+        },
+        ["PSU"] = new[]
+        {
+            ("CORSAIR", "Corsair"),
+            ("COOLERMASTER", "Cooler Master"),
+            ("SEASONIC", "Seasonic"),
+            ("DEEPCOOL", "DeepCool"),
+            ("MSI", "MSI"),
+            ("ASUS", "ASUS"),
+            ("GIGABYTE", "Gigabyte"),
+            ("THERMALTAKE", "Thermaltake")
+        },
+        ["CASE"] = new[]
+        {
+            ("NZXT", "NZXT"),
+            ("CORSAIR", "Corsair"),
+            ("COOLERMASTER", "Cooler Master"),
+            ("LIANLI", "Lian Li"),
+            ("DEEPCOOL", "DeepCool"),
+            ("MONTECH", "Montech"),
+            ("FRACTAL", "Fractal Design"),
+            ("THERMALTAKE", "Thermaltake")
+        },
+        ["TANNHIET"] = new[]
+        {
+            ("THERMALRIGHT", "Thermalright"),
+            ("DEEPCOOL", "DeepCool"),
+            ("NOCTUA", "Noctua"),
+            ("COOLERMASTER", "Cooler Master"),
+            ("ARCTIC", "Arctic"),
+            ("IDCOOLING", "ID-Cooling"),
+            ("NZXT", "NZXT"),
+            ("CORSAIR", "Corsair")
+        },
+        ["PHUKIEN"] = new[]
+        {
+            ("LOGITECH", "Logitech"),
+            ("RAZER", "Razer"),
+            ("CORSAIR", "Corsair"),
+            ("AKKO", "Akko"),
+            ("DAREU", "DareU"),
+            ("KEYCHRON", "Keychron"),
+            ("HYPERX", "HyperX"),
+            ("STEELSERIES", "SteelSeries")
+        }
+    };
+
+    public async Task<IReadOnlyList<ThuongHieuFilterItem>> GetBrandsByCategoryAsync(string maDanhMuc)
+    {
+        if (string.IsNullOrWhiteSpace(maDanhMuc))
+            return Array.Empty<ThuongHieuFilterItem>();
+
+        const string sql = @"
+            SELECT 
+                t.MaThuongHieu, 
+                t.TenThuongHieu, 
+                COUNT(s.Uid) AS SoLuongSanPham
+            FROM dbo.ThuongHieus t
+            INNER JOIN dbo.SanPhams s ON t.MaThuongHieu = s.MaThuongHieu
+            WHERE s.MaDanhMuc = @MaDanhMuc
+              AND s.HienThi = 1
+              AND t.HienThi = 1
+            GROUP BY t.MaThuongHieu, t.TenThuongHieu
+            ORDER BY t.TenThuongHieu ASC;";
+
+        using var conn = Context.CreateConnection();
+        var rows = (await conn.QueryAsync<ThuongHieuFilterItem>(sql, new { MaDanhMuc = maDanhMuc.Trim() })).ToList();
+
+        // Luôn bổ sung các thương hiệu nổi tiếng của linh kiện đó (dù database chưa có sản phẩm mẫu thì vẫn hiển thị với số lượng 0)
+        if (DanhSachThuongHieuPhoBien.TryGetValue(maDanhMuc.Trim(), out var famousBrands))
+        {
+            var existingCodes = new HashSet<string>(rows.Select(r => r.MaThuongHieu), StringComparer.OrdinalIgnoreCase);
+            foreach (var (ma, ten) in famousBrands)
+            {
+                if (!existingCodes.Contains(ma))
+                {
+                    rows.Add(new ThuongHieuFilterItem
+                    {
+                        MaThuongHieu = ma,
+                        TenThuongHieu = ten,
+                        SoLuongSanPham = 0
+                    });
+                }
+            }
+        }
+
+        return rows.OrderBy(r => r.TenThuongHieu).ToList();
+    }
+
     private async Task<Dictionary<string, int>> DemAsync(string sql)
     {
         using var conn = Context.CreateConnection();

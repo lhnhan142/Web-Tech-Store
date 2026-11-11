@@ -22,6 +22,20 @@ public partial class ThuongHieuRepository : RepositoryBase, IThuongHieuRepositor
         return rows.ToList();
     }
 
+    public async Task<IReadOnlyList<ThuongHieu>> GetByDanhMucAsync(string maDanhMuc)
+    {
+        const string sql = @"
+        SELECT DISTINCT th.MaThuongHieu, th.TenThuongHieu, th.Logo, th.HienThi
+        FROM dbo.ThuongHieus th
+        JOIN dbo.SanPhams sp ON sp.MaThuongHieu = th.MaThuongHieu
+        WHERE sp.MaDanhMuc = @MaDanhMuc AND sp.HienThi = 1 AND th.HienThi = 1
+        ORDER BY th.TenThuongHieu";
+
+        using var conn = Context.CreateConnection();
+        var rows = await conn.QueryAsync<ThuongHieu>(sql, new { MaDanhMuc = maDanhMuc });
+        return rows.ToList();
+    }
+
     public async Task<ThuongHieu?> GetByMaAsync(string maThuongHieu)
     {
         const string sql = @"

@@ -188,25 +188,6 @@ public class SanPhamRepository : RepositoryBase, ISanPhamRepository
 
         using var conn = Context.CreateConnection();
         var rows = (await conn.QueryAsync<ThuongHieuFilterItem>(sql, new { MaDanhMuc = maDanhMuc.Trim() })).ToList();
-
-        // Luôn bổ sung các thương hiệu nổi tiếng của linh kiện đó (dù database chưa có sản phẩm mẫu thì vẫn hiển thị với số lượng 0)
-        if (DanhSachThuongHieuPhoBien.TryGetValue(maDanhMuc.Trim(), out var famousBrands))
-        {
-            var existingCodes = new HashSet<string>(rows.Select(r => r.MaThuongHieu), StringComparer.OrdinalIgnoreCase);
-            foreach (var (ma, ten) in famousBrands)
-            {
-                if (!existingCodes.Contains(ma))
-                {
-                    rows.Add(new ThuongHieuFilterItem
-                    {
-                        MaThuongHieu = ma,
-                        TenThuongHieu = ten,
-                        SoLuongSanPham = 0
-                    });
-                }
-            }
-        }
-
         return rows.OrderBy(r => r.TenThuongHieu).ToList();
     }
 

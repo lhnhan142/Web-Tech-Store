@@ -4,6 +4,7 @@ using Microsoft.Data.SqlClient;
 using WebLinhKien.Helpers;
 using WebLinhKien.Models.Entities;
 using WebLinhKien.Models.Requests;
+using WebLinhKien.Models.ViewModels.Client;
 using WebLinhKien.Models.ViewModels;
 using WebLinhKien.Repositories.Interfaces;
 using WebLinhKien.Services;
@@ -39,19 +40,26 @@ public class SanPhamController : AdminController
         _env = env;
     }
 
-    // GET /Admin/SanPham?q=...&danhMuc=CPU&sapHet=true&page=1
-    public async Task<IActionResult> Index(string? q, string? danhMuc, bool sapHet = false, int page = 1)
+    // GET /Admin/SanPham?q=...&danhMuc=CPU&thuongHieu=INTEL&kho=sap-het&page=1
+    // kho: "sap-het" (còn 1..ngưỡng) | "het-hang" (tồn 0) | bỏ trống (tất cả)
+    public async Task<IActionResult> Index(string? q, string? danhMuc, string? thuongHieu, string? kho, int page = 1)
     {
         page = Math.Max(1, page);
         var nguong = await LayNguongAsync();
+        q = string.IsNullOrWhiteSpace(q) ? null : q.Trim();
+        danhMuc = string.IsNullOrWhiteSpace(danhMuc) ? null : danhMuc.Trim();
+        thuongHieu = string.IsNullOrWhiteSpace(thuongHieu) ? null : thuongHieu.Trim();
+        kho = kho is "sap-het" or "het-hang" ? kho : null;
+        if (danhMuc is null) thuongHieu = null;   // hãng chỉ có nghĩa khi đã chọn loại
 
-        var ketQua = await _repo.GetPagedAdminAsync(q, danhMuc, sapHet, nguong, page, PageSize);
+        var ketQua = await _repo.GetPagedAdminAsync(q, danhMuc, kho, nguong, page, PageSize, thuongHieu);
         if (ketQua.TotalPages > 0 && page > ketQua.TotalPages)
         {
             page = ketQua.TotalPages;
-            ketQua = await _repo.GetPagedAdminAsync(q, danhMuc, sapHet, nguong, page, PageSize);
+            ketQua = await _repo.GetPagedAdminAsync(q, danhMuc, kho, nguong, page, PageSize, thuongHieu);
         }
 
+        var (soSapHet, soHetHang) = await _repo.DemKhoAsync(q, danhMuc, thuongHieu, nguong);
         var vm = new SanPhamListViewModel
         {
             Items = ketQua.Items,
@@ -60,11 +68,16 @@ public class SanPhamController : AdminController
             TotalItems = ketQua.TotalItems,
             Q = q,
             MaDanhMuc = danhMuc,
-            ChiSapHet = sapHet,
+            MaThuongHieu = thuongHieu,
+            Kho = kho,
             NguongSapHet = nguong,
-            SoSapHet = await _repo.DemSapHetAsync(nguong),
+            SoSapHet = soSapHet,
+            SoHetHang = soHetHang,
             DanhMucs = await _danhMucRepo.GetAllAsync(chiHienThi: false),
-            ThuongHieus = await _thuongHieuRepo.GetAllAsync(chiHienThi: false)
+            ThuongHieus = await _thuongHieuRepo.GetAllAsync(chiHienThi: false),
+            HangTheoLoai = danhMuc is null
+                ? Array.Empty<ThuongHieuFilterItem>()
+                : await _repo.GetBrandsByCategoryAsync(danhMuc)
         };
         return View(vm);
     }

@@ -5,6 +5,12 @@
     var quayLai = Context.Request.Path + Context.Request.QueryString;
 }
 
+<div class="ad-split">
+<div class="ad-split__side">
+    <partial name="_FilterPanel" model="Model.ToFilterPanelViewModel()" />
+</div>
+<div class="ad-split__main">
+
 <div class="ad-pagehead">
     <div>
         <h1 class="ad-title">Sản phẩm</h1>
@@ -17,38 +23,35 @@
 
 <partial name="_ThongBao" />
 
-@if (Model.SoSapHet > 0)
+        @{
+            var rvHetHang = Model.RouteValues("het-hang");
+            var rvSapHet = Model.RouteValues("sap-het");
+        }
+@if (Model.SoSapHet > 0 || Model.SoHetHang > 0)
 {
     <div class="ad-alert ad-alert--warn" role="status">
         <i class="fa-solid fa-triangle-exclamation"></i>
         <span>
-            Có <b>@Model.SoSapHet</b> sản phẩm sắp hết hoặc đã hết hàng (tồn kho từ @Model.NguongSapHet trở xuống).
-            @if (!Model.ChiSapHet)
+            @if (Model.SoHetHang > 0)
             {
-                <a asp-action="Index" asp-route-sapHet="true">Chỉ xem các sản phẩm này</a>
+                <b>@Model.SoHetHang</b> <text>sản phẩm đã hết hàng</text>
+                @if (Model.Kho != "het-hang")
+                {
+                            <a asp-action="Index" asp-all-route-data="rvHetHang" >(xem)</a>
+                }
+            }
+            @if (Model.SoSapHet > 0)
+            {
+                @(Model.SoHetHang > 0 ? " · " : "")
+                <b>@Model.SoSapHet</b> <text>sản phẩm sắp hết (còn 1–@Model.NguongSapHet)</text>
+                @if (Model.Kho != "sap-het")
+                {
+                            <a asp-action="Index" asp-all-route-data="rvSapHet">(xem)</a>
+                }
             }
         </span>
     </div>
 }
-
-<form asp-action="Index" method="get" class="ad-filter">
-    <div class="ad-search">
-        <i class="fa-solid fa-magnifying-glass"></i>
-        <input type="search" name="q" value="@Model.Q" class="ad-input" placeholder="Tên hoặc mã sản phẩm..." aria-label="Tìm sản phẩm" />
-    </div>
-    <select name="danhMuc" class="ad-select" aria-label="Lọc theo danh mục">
-        <option value="">Tất cả danh mục</option>
-        @foreach (var dm in Model.DanhMucs)
-        {
-            <option value="@dm.MaDanhMuc" selected="@(dm.MaDanhMuc == Model.MaDanhMuc)">@dm.TenDanhMuc</option>
-        }
-    </select>
-    <label class="ad-check">
-        <span class="ad-switch"><input type="checkbox" name="sapHet" value="true" checked="@Model.ChiSapHet" /><span></span></span>
-        Chỉ sắp hết hàng
-    </label>
-    <button type="submit" class="ad-btn ad-btn--primary">Lọc</button>
-</form>
 
 <section class="ad-card">
     <div class="ad-tablebar">
@@ -155,15 +158,18 @@
             <div class="ad-pager__btns">
                 @if (Model.Page > 1)
                 {
-                    <a asp-action="Index" asp-route-q="@Model.Q" asp-route-danhMuc="@Model.MaDanhMuc" asp-route-sapHet="@Model.ChiSapHet" asp-route-page="@(Model.Page - 1)"
+                    <a asp-action="Index" asp-all-route-data="Model.RouteValues(Model.Kho, Model.Page - 1)"
                        class="ad-pager__btn" aria-label="Trang trước"><i class="fa-solid fa-chevron-left"></i></a>
                 }
                 @if (Model.Page < Model.TotalPages)
                 {
-                    <a asp-action="Index" asp-route-q="@Model.Q" asp-route-danhMuc="@Model.MaDanhMuc" asp-route-sapHet="@Model.ChiSapHet" asp-route-page="@(Model.Page + 1)"
+                    <a asp-action="Index" asp-all-route-data="Model.RouteValues(Model.Kho, Model.Page + 1)"
                        class="ad-pager__btn" aria-label="Trang sau"><i class="fa-solid fa-chevron-right"></i></a>
                 }
             </div>
         </div>
     }
 </section>
+
+</div>
+</div>

@@ -229,8 +229,16 @@ public class FilterPanelViewModel
     /// <summary>Có hiển thị bộ lọc tình trạng kho hay không</summary>
     public bool ShowStockFilter { get; set; } = true;
 
+    // ---- Chỉ dùng khi Mode = "admin" ----
+    /// <summary>Trạng thái kho đang lọc: null | "sap-het" | "het-hang"</summary>
+    public string? Kho { get; set; }
+    public int NguongSapHet { get; set; }
+    public int SoSapHet { get; set; }
+    public int SoHetHang { get; set; }
+
     /// <summary>Kiểm tra xem người dùng có đang áp dụng bất kỳ tiêu chí lọc nào không</summary>
     public bool HasActiveFilters =>
+        !string.IsNullOrEmpty(Kho) ||
         !string.IsNullOrEmpty(SelectedDanhMuc) ||
         !string.IsNullOrEmpty(SelectedThuongHieu) ||
         !string.IsNullOrEmpty(SelectedPriceRange) ||

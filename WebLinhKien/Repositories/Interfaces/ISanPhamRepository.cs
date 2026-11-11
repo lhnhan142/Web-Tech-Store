@@ -51,11 +51,14 @@ public interface ISanPhamRepository
 
     // ===================== Trang quản trị =====================
 
-    /// <summary>Danh sách cho trang quản trị: thấy cả sản phẩm đang ẩn, không lấy cột MoTa cho nhẹ.</summary>
-    Task<PagedResult<SanPham>> GetPagedAdminAsync(string? tuKhoa, string? maDanhMuc, bool chiSapHet, int nguongSapHet, int page, int pageSize);
+    /// <summary>
+    /// Danh sách cho trang quản trị: thấy cả sản phẩm đang ẩn, không lấy cột MoTa cho nhẹ.
+    /// kho: null = tất cả, "sap-het" = tồn từ 1 đến ngưỡng, "het-hang" = tồn 0.
+    /// </summary>
+    Task<PagedResult<SanPham>> GetPagedAdminAsync(string? tuKhoa, string? maDanhMuc, string? kho, int nguongSapHet, int page, int pageSize, string? maThuongHieu = null);
 
-    /// <summary>Số sản phẩm có tồn kho từ ngưỡng trở xuống (gồm cả hết hàng).</summary>
-    Task<int> DemSapHetAsync(int nguongSapHet);
+    /// <summary>Đếm sắp hết (1..ngưỡng) và hết hàng (0) theo CÙNG điều kiện tìm kiếm/danh mục/thương hiệu với danh sách.</summary>
+    Task<(int SoSapHet, int SoHetHang)> DemKhoAsync(string? tuKhoa, string? maDanhMuc, string? maThuongHieu, int nguongSapHet);
 
     Task<bool> MaSanPhamTonTaiAsync(string maSanPham, int? boQuaUid = null);
 

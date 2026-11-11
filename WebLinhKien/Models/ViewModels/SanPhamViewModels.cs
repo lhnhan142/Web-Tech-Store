@@ -1,4 +1,5 @@
 using WebLinhKien.Models.Entities;
+using WebLinhKien.Models.ViewModels.Client;
 
 namespace WebLinhKien.Models.ViewModels;
 
@@ -11,10 +12,45 @@ public class SanPhamListViewModel
 
     public string? Q { get; set; }
     public string? MaDanhMuc { get; set; }
-    public bool ChiSapHet { get; set; }
+    public string? MaThuongHieu { get; set; }
+    public string? Kho { get; set; }           // null | "sap-het" | "het-hang"
 
     public int NguongSapHet { get; set; }
-    public int SoSapHet { get; set; }          // số sản phẩm sắp hết / hết hàng (toàn cửa hàng)
+    public int SoSapHet { get; set; }          // còn 1..ngưỡng, đếm theo cùng bộ lọc với danh sách
+    public int SoHetHang { get; set; }         // tồn kho = 0, đếm theo cùng bộ lọc với danh sách
+
+    public IReadOnlyList<ThuongHieuFilterItem> HangTheoLoai { get; set; } = Array.Empty<ThuongHieuFilterItem>();
+
+    /// <summary>Tham số hiện tại để giữ nguyên bộ lọc khi chuyển trang hoặc đổi trạng thái kho.</summary>
+    public Dictionary<string, string?> RouteValues(string? kho, int? page = null)
+    {
+        var d = new Dictionary<string, string?>();
+        if (!string.IsNullOrEmpty(Q)) d["q"] = Q;
+        if (!string.IsNullOrEmpty(MaDanhMuc)) d["danhMuc"] = MaDanhMuc;
+        if (!string.IsNullOrEmpty(MaThuongHieu)) d["thuongHieu"] = MaThuongHieu;
+        if (!string.IsNullOrEmpty(kho)) d["kho"] = kho;
+        if (page is > 1) d["page"] = page.Value.ToString();
+        return d;
+    }
+
+    public FilterPanelViewModel ToFilterPanelViewModel() => new()
+    {
+        Mode = "admin",
+        ActionUrl = "/Admin/SanPham",
+        ResetUrl = "/Admin/SanPham",
+        IdPrefix = "admin",
+        Q = Q,
+        SelectedDanhMuc = MaDanhMuc,
+        SelectedThuongHieu = MaThuongHieu,
+        Categories = DanhMucs,
+        CategoryBrands = HangTheoLoai,
+        ShowPriceFilter = false,
+        ShowStockFilter = true,
+        Kho = Kho,
+        NguongSapHet = NguongSapHet,
+        SoSapHet = SoSapHet,
+        SoHetHang = SoHetHang
+    };
 
     public IReadOnlyList<DanhMuc> DanhMucs { get; set; } = Array.Empty<DanhMuc>();
     public IReadOnlyList<ThuongHieu> ThuongHieus { get; set; } = Array.Empty<ThuongHieu>();

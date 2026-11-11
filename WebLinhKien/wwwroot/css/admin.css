@@ -951,3 +951,50 @@ a.ad-pager__btn.is-active { color: #fff !important; }
     .ad-403__code { font-size: 52px; }
     .ad-403__art { width: 150px; }
 }
+
+
+/* =====================================================================
+   BỐ CỤC ADMIN: tiêu đề + nút sang trái, bộ lọc bên trái (dùng _FilterPanel của trang khách)
+   ===================================================================== */
+.ad-pagehead { justify-content: flex-start; }
+.ad-pagehead > .ad-actions { margin-left: 4px; }
+.ad-top__right { margin-right: auto; padding-left: 8px; }
+.ad-tabs { flex: 0 1 auto; }
+
+.ad-split { display: grid; grid-template-columns: 270px minmax(0, 1fr); gap: 20px; align-items: start; }
+.ad-split__side { position: sticky; top: calc(var(--ad-nav-height) + 14px); max-height: calc(100vh - var(--ad-nav-height) - 28px); overflow-y: auto; }
+.ad-split__main { min-width: 0; }
+@media (max-width: 991px) { .ad-split { grid-template-columns: minmax(0, 1fr); } .ad-split__side { position: static; max-height: none; } }
+
+/* Tiện ích Bootstrap tối thiểu mà _FilterPanel cần (admin không nạp Bootstrap) */
+.ad-filterhost { position: static; background: #fff; border: 1px solid var(--ad-line); border-radius: 10px; padding: 14px; font-size: 13.5px; }
+.ad-filterhost .d-flex { display: flex; }
+.ad-filterhost .align-items-center { align-items: center; }
+.ad-filterhost .justify-content-between { justify-content: space-between; }
+.ad-filterhost .gap-2 { gap: 8px; }
+.ad-filterhost .w-100 { width: 100%; }
+.ad-filterhost .mb-0 { margin-bottom: 0; } .ad-filterhost .mb-2 { margin-bottom: 8px; } .ad-filterhost .mb-3 { margin-bottom: 12px; } .ad-filterhost .mb-4 { margin-bottom: 16px; }
+.ad-filterhost .pb-2 { padding-bottom: 8px; } .ad-filterhost .p-3 { padding: 12px; }
+.ad-filterhost .border-bottom { border-bottom: 1px solid var(--ad-line-soft); }
+.ad-filterhost .border { border: 1px solid var(--ad-line); }
+.ad-filterhost .rounded-2 { border-radius: 6px; }
+.ad-filterhost .text-center { text-align: center; }
+.ad-filterhost .text-muted { color: var(--ad-muted); }
+.ad-filterhost .text-danger { color: #dc2626; }
+.ad-filterhost .text-warning { color: #d97706; }
+.ad-filterhost .text-decoration-none { text-decoration: none; }
+.ad-filterhost .small { font-size: 12.5px; }
+.ad-filterhost .fw-bold { font-weight: 700; }
+.ad-filterhost .bg-light { background: var(--ad-bg); }
+.ad-filterhost .me-1 { margin-right: 4px; } .ad-filterhost .me-2 { margin-right: 8px; }
+.ad-filterhost h5 { margin: 0; }
+.ad-filterhost .badge { display: inline-block; padding: 1px 7px; border-radius: 9px; font-size: 11.5px; background: var(--ad-bg); border: 1px solid var(--ad-line); }
+.ad-filterhost .form-control { width: 100%; padding: 7px 10px; border: 1px solid var(--ad-line); border-radius: 6px; font: inherit; }
+.ad-filterhost .tz-filter-title { font-size: 13.5px; font-weight: 700; margin: 0 0 8px; padding-bottom: 4px; border-bottom: 1.5px solid var(--ad-line-soft); }
+.ad-filterhost .tz-filter-options { display: flex; flex-direction: column; gap: 4px; }
+.ad-filterhost .tz-filter-radio, .ad-filterhost .tz-filter-checkbox { display: flex; align-items: center; gap: 8px; padding: 5px 9px; border-radius: 6px; cursor: pointer; margin: 0; }
+.ad-filterhost .tz-filter-radio:hover { background: var(--ad-primary-soft); color: var(--ad-primary); }
+.ad-filterhost .tz-filter-radio.active { background: var(--ad-primary-soft); color: var(--ad-primary); font-weight: 600; }
+.ad-filterhost .tz-btn { display: block; padding: 8px 12px; border: 1px solid var(--ad-line); border-radius: 6px; background: #fff; color: var(--ad-text) !important; text-decoration: none; text-align: center; }
+.ad-filterhost .tz-btn:hover { background: var(--ad-bg); }
+.ad-filterhost input[type=radio] { accent-color: var(--ad-primary); }

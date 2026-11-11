@@ -58,7 +58,7 @@ FROM (VALUES
      N'<p>RAM Kingston Fury Beast RGB 16GB DDR4 3200MHz mang lại hiệu năng ổn định cùng dải đèn RGB sống động hỗ trợ đồng bộ ánh sáng đa nền tảng.</p><ul><li>Loại RAM: DDR4</li><li>Dung lượng: 16GB (2 x 8GB)</li><li>Bus: 3200 MHz</li><li>Hỗ trợ Intel XMP 2.0</li></ul>',
      36, 1),
 
-    (N'RAM-CORSAIR-DOMINATOR-TITANIUM-32GB-2X16GB-DDR5-6600',
+    (N'RAM-CORSAIR-DOMINATOR-TITANIUM-32GB-DDR5-6600',
      N'RAM Corsair Dominator Titanium RGB 32GB (2 x 16GB) DDR5 6600MHz White',
      N'RAM', N'CORSAIR', 4890000, 4490000, 15,
      N'/images/products/ram-corsair-vengeance-rgb-32gb-2x16gb-ddr5-6000mhz.jpg',
@@ -82,7 +82,7 @@ FROM (VALUES
      N'<p>TeamGroup T-Force Vulcan Z DDR4 8GB với giáp tản nhiệt nhôm đỏ nổi bật, độ bền cao, thích hợp cho các bộ PC giá rẻ phổ thông.</p><ul><li>Loại RAM: DDR4</li><li>Dung lượng: 8GB (1 x 8GB)</li><li>Bus: 3200 MHz</li></ul>',
      36, 0),
 
-    (N'RAM-ADATA-XPG-LANCER-BLADE-RGB-32GB-2X16GB-DDR5-6000',
+    (N'RAM-ADATA-XPG-LANCER-BLADE-32GB-DDR5-6000',
      N'RAM Adata XPG Lancer Blade RGB 32GB (2 x 16GB) DDR5 6000MHz White',
      N'RAM', N'ADATA', 3390000, 3090000, 20,
      N'/images/products/ram-adata-xpg-lancer-32gb-2x16gb-ddr5-6000mhz.jpg',
@@ -142,7 +142,7 @@ FROM (VALUES
      N'<p>Colorful iGame GeForce RTX 4060 Ultra W OC sở hữu thiết kế Pop-Art độc đáo, hỗ trợ nút bấm One-Key Overclock vật lý tiện lợi cho người dùng.</p><ul><li>GPU: GeForce RTX 4060</li><li>Bộ nhớ: 8GB GDDR6</li><li>Nguồn đề nghị: 500W</li><li>Chiều dài: 255 mm</li></ul>',
      36, 0),
 
-    (N'VGA-COLORFUL-IGAME-GEFORCE-RTX-4070-SUPER-VULCAN-W-12GB',
+    (N'VGA-COLORFUL-IGAME-RTX-4070-SUPER-VULCAN-W-12GB',
      N'Card màn hình Colorful iGame GeForce RTX 4070 SUPER Vulcan W OC 12GB-V',
      N'VGA', N'COLORFUL', 2150000, 19990000, 8,
      N'/images/products/vga-msi-geforce-rtx-4070-ventus-2x-12g-oc.jpg',
@@ -174,7 +174,7 @@ FROM (VALUES
      N'<p>Trang bị hệ thống làm mát WINDFORCE 3 quạt 90mm quay đối xứng, ống đồng tiếp xúc trực tiếp GPU, tấm lưng kim loại bảo vệ mạch bền bỉ.</p><ul><li>GPU: Radeon RX 7700 XT</li><li>Bộ nhớ: 12GB GDDR6</li><li>Nguồn đề nghị: 700W</li><li>Chiều dài: 301 mm</li></ul>',
      36, 0),
 
-    (N'VGA-ZOTAC-GAMING-GEFORCE-RTX-4070-TI-SUPER-TRINITY-BLACK-16GB',
+    (N'VGA-ZOTAC-RTX-4070-TI-SUPER-TRINITY-BLACK-16GB',
      N'Card màn hình ZOTAC Gaming GeForce RTX 4070 Ti SUPER Trinity Black Edition 16GB GDDR6X',
      N'VGA', N'ZOTAC', 23990000, 21990000, 9,
      N'/images/products/vga-zotac-gaming-geforce-rtx-4060-twin-edge-8gb.jpg',
@@ -182,7 +182,7 @@ FROM (VALUES
      N'<p>ZOTAC GAMING RTX 4070 Ti SUPER Trinity sở hữu dung lượng VRAM 16GB GDDR6X rộng rãi cho tác vụ AI và chiến mượt mọi tựa game 2K/4K max settings.</p><ul><li>GPU: GeForce RTX 4070 Ti SUPER</li><li>Bộ nhớ: 16GB GDDR6X</li><li>Nguồn đề nghị: 750W</li><li>Chiều dài: 306 mm</li></ul>',
      36, 0),
 
-    (N'VGA-NVIDIA-GEFORCE-RTX-4080-SUPER-FOUNDERS-EDITION-16GB',
+    (N'VGA-NVIDIA-RTX-4080-SUPER-FOUNDERS-16GB',
      N'Card màn hình NVIDIA GeForce RTX 4080 SUPER Founders Edition 16GB GDDR6X',
      N'VGA', N'NVIDIA', 31990000, 29990000, 6,
      N'/images/products/vga-asus-tuf-gaming-geforce-rtx-4080-super-16gb.jpg',
@@ -205,9 +205,9 @@ FROM (VALUES
     (N'RAM-KINGSTON-FURY-BEAST-RGB-16GB-2X8GB-DDR4-3200', N'Bus',                  N'3200 MHz', 3),
 
     -- RAM CORSAIR TITANIUM 32GB DDR5 6600
-    (N'RAM-CORSAIR-DOMINATOR-TITANIUM-32GB-2X16GB-DDR5-6600', N'Loại RAM',         N'DDR5', 1),
-    (N'RAM-CORSAIR-DOMINATOR-TITANIUM-32GB-2X16GB-DDR5-6600', N'Dung lượng',       N'32GB (2 x 16GB)', 2),
-    (N'RAM-CORSAIR-DOMINATOR-TITANIUM-32GB-2X16GB-DDR5-6600', N'Bus',              N'6600 MHz', 3),
+    (N'RAM-CORSAIR-DOMINATOR-TITANIUM-32GB-DDR5-6600', N'Loại RAM',         N'DDR5', 1),
+    (N'RAM-CORSAIR-DOMINATOR-TITANIUM-32GB-DDR5-6600', N'Dung lượng',       N'32GB (2 x 16GB)', 2),
+    (N'RAM-CORSAIR-DOMINATOR-TITANIUM-32GB-DDR5-6600', N'Bus',              N'6600 MHz', 3),
 
     -- RAM GSKILL TRIDENT Z5 64GB DDR5 6400
     (N'RAM-GSKILL-TRIDENT-Z5-RGB-64GB-2X32GB-DDR5-6400', N'Loại RAM',              N'DDR5', 1),
@@ -220,9 +220,9 @@ FROM (VALUES
     (N'RAM-TEAMGROUP-T-FORCE-VULCAN-Z-8GB-1X8GB-DDR4-3200', N'Bus',                N'3200 MHz', 3),
 
     -- RAM ADATA LANCER BLADE 32GB DDR5 6000
-    (N'RAM-ADATA-XPG-LANCER-BLADE-RGB-32GB-2X16GB-DDR5-6000', N'Loại RAM',         N'DDR5', 1),
-    (N'RAM-ADATA-XPG-LANCER-BLADE-RGB-32GB-2X16GB-DDR5-6000', N'Dung lượng',       N'32GB (2 x 16GB)', 2),
-    (N'RAM-ADATA-XPG-LANCER-BLADE-RGB-32GB-2X16GB-DDR5-6000', N'Bus',              N'6000 MHz', 3),
+    (N'RAM-ADATA-XPG-LANCER-BLADE-32GB-DDR5-6000', N'Loại RAM',         N'DDR5', 1),
+    (N'RAM-ADATA-XPG-LANCER-BLADE-32GB-DDR5-6000', N'Dung lượng',       N'32GB (2 x 16GB)', 2),
+    (N'RAM-ADATA-XPG-LANCER-BLADE-32GB-DDR5-6000', N'Bus',              N'6000 MHz', 3),
 
     -- RAM CRUCIAL BASICS 8GB DDR4 2666
     (N'RAM-CRUCIAL-BASICS-8GB-1X8GB-DDR4-2666', N'Loại RAM',                       N'DDR4', 1),
@@ -256,12 +256,12 @@ FROM (VALUES
     (N'VGA-COLORFUL-IGAME-GEFORCE-RTX-4060-ULTRA-W-OC-8GB', N'Chiều dài (mm)',     N'255 mm', 6),
 
     -- VGA COLORFUL RTX 4070 SUPER VULCAN
-    (N'VGA-COLORFUL-IGAME-GEFORCE-RTX-4070-SUPER-VULCAN-W-12GB', N'GPU',           N'GeForce RTX 4070 SUPER', 1),
-    (N'VGA-COLORFUL-IGAME-GEFORCE-RTX-4070-SUPER-VULCAN-W-12GB', N'Bộ nhớ',        N'12GB GDDR6X', 2),
-    (N'VGA-COLORFUL-IGAME-GEFORCE-RTX-4070-SUPER-VULCAN-W-12GB', N'Nguồn đề nghị', N'650W', 3),
-    (N'VGA-COLORFUL-IGAME-GEFORCE-RTX-4070-SUPER-VULCAN-W-12GB', N'Công suất tiêu thụ (W)', N'220W', 4),
-    (N'VGA-COLORFUL-IGAME-GEFORCE-RTX-4070-SUPER-VULCAN-W-12GB', N'Chiều dài',     N'310 mm', 5),
-    (N'VGA-COLORFUL-IGAME-GEFORCE-RTX-4070-SUPER-VULCAN-W-12GB', N'Chiều dài (mm)', N'310 mm', 6),
+    (N'VGA-COLORFUL-IGAME-RTX-4070-SUPER-VULCAN-W-12GB', N'GPU',           N'GeForce RTX 4070 SUPER', 1),
+    (N'VGA-COLORFUL-IGAME-RTX-4070-SUPER-VULCAN-W-12GB', N'Bộ nhớ',        N'12GB GDDR6X', 2),
+    (N'VGA-COLORFUL-IGAME-RTX-4070-SUPER-VULCAN-W-12GB', N'Nguồn đề nghị', N'650W', 3),
+    (N'VGA-COLORFUL-IGAME-RTX-4070-SUPER-VULCAN-W-12GB', N'Công suất tiêu thụ (W)', N'220W', 4),
+    (N'VGA-COLORFUL-IGAME-RTX-4070-SUPER-VULCAN-W-12GB', N'Chiều dài',     N'310 mm', 5),
+    (N'VGA-COLORFUL-IGAME-RTX-4070-SUPER-VULCAN-W-12GB', N'Chiều dài (mm)', N'310 mm', 6),
 
     -- VGA ASUS ROG STRIX RTX 4090 OC
     (N'VGA-ASUS-ROG-STRIX-GEFORCE-RTX-4090-OC-24GB', N'GPU',                       N'GeForce RTX 4090', 1),
@@ -288,20 +288,20 @@ FROM (VALUES
     (N'VGA-GIGABYTE-RADEON-RX-7700-XT-GAMING-OC-12G', N'Chiều dài (mm)',           N'301 mm', 6),
 
     -- VGA ZOTAC RTX 4070 TI SUPER TRINITY
-    (N'VGA-ZOTAC-GAMING-GEFORCE-RTX-4070-TI-SUPER-TRINITY-BLACK-16GB', N'GPU',      N'GeForce RTX 4070 Ti SUPER', 1),
-    (N'VGA-ZOTAC-GAMING-GEFORCE-RTX-4070-TI-SUPER-TRINITY-BLACK-16GB', N'Bộ nhớ',   N'16GB GDDR6X', 2),
-    (N'VGA-ZOTAC-GAMING-GEFORCE-RTX-4070-TI-SUPER-TRINITY-BLACK-16GB', N'Nguồn đề nghị', N'750W', 3),
-    (N'VGA-ZOTAC-GAMING-GEFORCE-RTX-4070-TI-SUPER-TRINITY-BLACK-16GB', N'Công suất tiêu thụ (W)', N'285W', 4),
-    (N'VGA-ZOTAC-GAMING-GEFORCE-RTX-4070-TI-SUPER-TRINITY-BLACK-16GB', N'Chiều dài', N'306 mm', 5),
-    (N'VGA-ZOTAC-GAMING-GEFORCE-RTX-4070-TI-SUPER-TRINITY-BLACK-16GB', N'Chiều dài (mm)', N'306 mm', 6),
+    (N'VGA-ZOTAC-RTX-4070-TI-SUPER-TRINITY-BLACK-16GB', N'GPU',      N'GeForce RTX 4070 Ti SUPER', 1),
+    (N'VGA-ZOTAC-RTX-4070-TI-SUPER-TRINITY-BLACK-16GB', N'Bộ nhớ',   N'16GB GDDR6X', 2),
+    (N'VGA-ZOTAC-RTX-4070-TI-SUPER-TRINITY-BLACK-16GB', N'Nguồn đề nghị', N'750W', 3),
+    (N'VGA-ZOTAC-RTX-4070-TI-SUPER-TRINITY-BLACK-16GB', N'Công suất tiêu thụ (W)', N'285W', 4),
+    (N'VGA-ZOTAC-RTX-4070-TI-SUPER-TRINITY-BLACK-16GB', N'Chiều dài', N'306 mm', 5),
+    (N'VGA-ZOTAC-RTX-4070-TI-SUPER-TRINITY-BLACK-16GB', N'Chiều dài (mm)', N'306 mm', 6),
 
     -- VGA NVIDIA RTX 4080 SUPER FE
-    (N'VGA-NVIDIA-GEFORCE-RTX-4080-SUPER-FOUNDERS-EDITION-16GB', N'GPU',            N'GeForce RTX 4080 SUPER', 1),
-    (N'VGA-NVIDIA-GEFORCE-RTX-4080-SUPER-FOUNDERS-EDITION-16GB', N'Bộ nhớ',         N'16GB GDDR6X', 2),
-    (N'VGA-NVIDIA-GEFORCE-RTX-4080-SUPER-FOUNDERS-EDITION-16GB', N'Nguồn đề nghị',  N'750W', 3),
-    (N'VGA-NVIDIA-GEFORCE-RTX-4080-SUPER-FOUNDERS-EDITION-16GB', N'Công suất tiêu thụ (W)', N'320W', 4),
-    (N'VGA-NVIDIA-GEFORCE-RTX-4080-SUPER-FOUNDERS-EDITION-16GB', N'Chiều dài',      N'304 mm', 5),
-    (N'VGA-NVIDIA-GEFORCE-RTX-4080-SUPER-FOUNDERS-EDITION-16GB', N'Chiều dài (mm)', N'304 mm', 6)
+    (N'VGA-NVIDIA-RTX-4080-SUPER-FOUNDERS-16GB', N'GPU',            N'GeForce RTX 4080 SUPER', 1),
+    (N'VGA-NVIDIA-RTX-4080-SUPER-FOUNDERS-16GB', N'Bộ nhớ',         N'16GB GDDR6X', 2),
+    (N'VGA-NVIDIA-RTX-4080-SUPER-FOUNDERS-16GB', N'Nguồn đề nghị',  N'750W', 3),
+    (N'VGA-NVIDIA-RTX-4080-SUPER-FOUNDERS-16GB', N'Công suất tiêu thụ (W)', N'320W', 4),
+    (N'VGA-NVIDIA-RTX-4080-SUPER-FOUNDERS-16GB', N'Chiều dài',      N'304 mm', 5),
+    (N'VGA-NVIDIA-RTX-4080-SUPER-FOUNDERS-16GB', N'Chiều dài (mm)', N'304 mm', 6)
 ) AS v(Ma, Ten, GiaTri, Ord)
 JOIN dbo.SanPhams sp ON sp.MaSanPham = v.Ma
 WHERE NOT EXISTS (

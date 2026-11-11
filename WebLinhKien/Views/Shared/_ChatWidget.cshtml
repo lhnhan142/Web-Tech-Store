@@ -1,0 +1,94 @@
+@* Khung chat tư vấn nổi ở góc phải. Nhúng vào _Layout bằng một dòng: @await Html.PartialAsync("_ChatWidget") *@
+<style>
+    .tzc-fab { position: fixed; right: 24px; bottom: 90px; z-index: 1080; width: 56px; height: 56px; border: 0; border-radius: 50%;
+        background: #f59e0b; color: #fff; font-size: 22px; box-shadow: 0 6px 18px rgba(0,0,0,.25); cursor: pointer; }
+    .tzc-box { position: fixed; right: 24px; bottom: 158px; z-index: 1080; width: 360px; max-width: calc(100vw - 24px); height: 520px; max-height: calc(100vh - 180px);
+        display: none; flex-direction: column; background: #fff; border: 1px solid #e2e8f0; border-radius: 14px; overflow: hidden; box-shadow: 0 12px 36px rgba(0,0,0,.25); }
+    .tzc-box.is-open { display: flex; }
+    .tzc-head { padding: 12px 14px; background: #0f172a; color: #fff; font-weight: 600; display: flex; justify-content: space-between; align-items: center; }
+    .tzc-head button { background: none; border: 0; color: #fff; font-size: 18px; cursor: pointer; }
+    .tzc-msgs { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 8px; background: #f8fafc; }
+    .tzc-m { max-width: 88%; padding: 8px 11px; border-radius: 12px; font-size: 14px; line-height: 1.45; white-space: pre-wrap; word-wrap: break-word; }
+    .tzc-m.bot { background: #fff; border: 1px solid #e2e8f0; align-self: flex-start; }
+    .tzc-m.me { background: #f59e0b; color: #fff; align-self: flex-end; }
+    .tzc-card { display: flex; gap: 8px; align-items: center; padding: 6px; margin-top: 6px; border: 1px solid #e2e8f0; border-radius: 8px; text-decoration: none; color: #0f172a; background: #fff; }
+    .tzc-card img { width: 44px; height: 44px; object-fit: contain; flex: none; }
+    .tzc-card b { display: block; font-size: 13px; }
+    .tzc-card span { font-size: 13px; color: #dc2626; font-weight: 600; }
+    .tzc-form { display: flex; gap: 6px; padding: 10px; border-top: 1px solid #e2e8f0; }
+    .tzc-form input { flex: 1; padding: 8px 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; }
+    .tzc-form button { padding: 0 14px; border: 0; border-radius: 8px; background: #0f172a; color: #fff; cursor: pointer; }
+    .tzc-form button:disabled { opacity: .5; cursor: default; }
+</style>
+
+<button type="button" class="tzc-fab" id="tzcFab" aria-label="Mở chat tư vấn"><i class="fa-solid fa-comments"></i></button>
+<div class="tzc-box" id="tzcBox" role="dialog" aria-label="Chat tư vấn">
+    <div class="tzc-head"><span><i class="fa-solid fa-robot me-1"></i> Tư vấn linh kiện</span><button type="button" id="tzcClose" aria-label="Đóng">&times;</button></div>
+    <div class="tzc-msgs" id="tzcMsgs"></div>
+    <form class="tzc-form" id="tzcForm" autocomplete="off">
+        <input type="text" id="tzcInput" maxlength="500" placeholder="Ví dụ: CPU gaming dưới 6 triệu" aria-label="Câu hỏi" />
+        <button type="submit" id="tzcSend">Gửi</button>
+    </form>
+</div>
+
+<script>
+(function () {
+    var box = document.getElementById('tzcBox'), msgs = document.getElementById('tzcMsgs'),
+        form = document.getElementById('tzcForm'), input = document.getElementById('tzcInput'), send = document.getElementById('tzcSend');
+    var history = [];
+
+    function add(text, who) {
+        var d = document.createElement('div');
+        d.className = 'tzc-m ' + who;
+        d.textContent = text;           // textContent: không chèn HTML từ phản hồi
+        msgs.appendChild(d);
+        msgs.scrollTop = msgs.scrollHeight;
+        return d;
+    }
+    function cards(div, products) {
+        (products || []).forEach(function (p) {
+            var a = document.createElement('a');
+            a.className = 'tzc-card'; a.href = p.url;
+            if (p.anh) { var i = document.createElement('img'); i.src = p.anh; i.alt = ''; a.appendChild(i); }
+            var t = document.createElement('div');
+            var b = document.createElement('b'); b.textContent = p.ten;
+            var s = document.createElement('span'); s.textContent = p.gia;
+            t.appendChild(b); t.appendChild(s); a.appendChild(t);
+            div.appendChild(a);
+        });
+    }
+
+    document.getElementById('tzcFab').addEventListener('click', function () {
+        box.classList.toggle('is-open');
+        if (box.classList.contains('is-open') && !msgs.children.length)
+            add('Xin chào! Bạn cần tư vấn linh kiện gì? Cho mình biết loại linh kiện và ngân sách nhé.', 'bot');
+        input.focus();
+    });
+    document.getElementById('tzcClose').addEventListener('click', function () { box.classList.remove('is-open'); });
+
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var text = input.value.trim();
+        if (!text) return;
+        add(text, 'me'); input.value = ''; send.disabled = true;
+        var wait = add('Đang tìm sản phẩm...', 'bot');
+        var tokenEl = document.querySelector('#tz-antiforgery-form input[name="__RequestVerificationToken"]');
+
+        fetch('/Chat/Hoi', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'RequestVerificationToken': tokenEl ? tokenEl.value : '' },
+            body: JSON.stringify({ message: text, history: history.slice(-6) })
+        }).then(function (r) {
+            if (r.status === 429) throw new Error('Bạn hỏi hơi nhanh, vui lòng thử lại sau ít phút.');
+            if (!r.ok) { console.error('Chat lỗi HTTP', r.status); throw new Error('Chatbot đang bận (mã ' + r.status + '), vui lòng thử lại.'); }
+            return r.json();
+        }).then(function (d) {
+            wait.textContent = d.answer;
+            cards(wait, d.products);
+            history.push({ role: 'user', text: text }, { role: 'assistant', text: d.answer });
+        }).catch(function (err) {
+            wait.textContent = err.message;
+        }).finally(function () { send.disabled = false; msgs.scrollTop = msgs.scrollHeight; });
+    });
+})();
+</script>

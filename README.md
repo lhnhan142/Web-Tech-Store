@@ -228,3 +228,15 @@ Các loại message dự kiến: `NEW_ORDER` (đơn mới), `LOW_STOCK` (sắp h
 | 4 | Trang quản trị: đăng nhập, CRUD sản phẩm/danh mục/thương hiệu, tích hợp CKEditor |
 | 5 | Quản lý đơn hàng và WebSocket thông báo đơn mới |
 | 6 | Hoàn thiện: phân trang, cảnh báo sắp hết hàng, kiểm thử, triển khai |
+
+## Chatbot tư vấn (thành viên D)
+
+Khung chat nổi ở góc phải trang khách hàng. Server tìm sản phẩm còn hàng trong database rồi nhờ mô hình AI chọn trong danh sách đó; mã sản phẩm mô hình trả về luôn được kiểm lại với database. Không có khóa API thì chatbot vẫn gợi ý theo luật đơn giản.
+
+```
+cd WebLinhKien
+dotnet user-secrets set "Chatbot:ApiKey" "<khóa API>"
+# tùy chọn: dotnet user-secrets set "Chatbot:Model" "claude-haiku-5-5"
+```
+
+Không đưa khóa API vào `appsettings*.json`. Giới hạn 8 câu hỏi/phút/IP.

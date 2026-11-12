@@ -12,18 +12,33 @@ public class CaiDatController : AdminController
 {
     private readonly ICaiDatRepository _repo;
 
+    // Khóa cài đặt của trang Build PC: hiện trên form kể cả khi database chưa có dòng nào,
+    // lần lưu đầu tiên sẽ tự thêm vào bảng CaiDats.
+    private static readonly string[] CaiDatBuildPc =
+    {
+        CaiDatKeys.BuildPcNganSachMacDinh,
+        CaiDatKeys.BuildPcNganSachGoiY
+    };
+
     public CaiDatController(ICaiDatRepository repo) => _repo = repo;
 
     public async Task<IActionResult> Index()
     {
         var caiDats = await _repo.GetAllAsync();
-        return View(new CaiDatForm
+        var hienCo = caiDats.ToDictionary(c => c.Khoa);
+
+        var items = caiDats
+            .Where(c => c.Khoa != "TenCuaHang")
+            .Select(c => ItemTu(c, c.GiaTri))
+            .ToList();
+
+        foreach (var khoa in CaiDatBuildPc)
         {
-            Items = caiDats
-                .Where(c => c.Khoa != "TenCuaHang")
-                .Select(c => ItemTu(c, c.GiaTri))
-                .ToList()
-        });
+            if (hienCo.ContainsKey(khoa)) continue;
+            items.Add(ItemTu(null, CaiDatRules.Get(khoa).MacDinh, khoa));
+        }
+
+        return View(new CaiDatForm { Items = items });
     }
 
     [HttpPost]
@@ -32,8 +47,11 @@ public class CaiDatController : AdminController
     {
         var hienCo = (await _repo.GetAllAsync()).ToDictionary(c => c.Khoa);
 
-        // Chỉ nhận các khóa ĐÃ CÓ trong database: người dùng không thể thêm khóa lạ bằng cách sửa form
-        form.Items = (form.Items ?? new()).Where(i => hienCo.ContainsKey(i.Khoa)).ToList();
+        // Chỉ nhận khóa đã có trong database hoặc đã khai báo quy tắc:
+        // người dùng không thể thêm khóa lạ bằng cách sửa form.
+        form.Items = (form.Items ?? new())
+            .Where(i => hienCo.ContainsKey(i.Khoa) || CaiDatRules.DaBiet(i.Khoa))
+            .ToList();
 
         for (var i = 0; i < form.Items.Count; i++)
         {
@@ -44,7 +62,11 @@ public class CaiDatController : AdminController
         if (!ModelState.IsValid)
         {
             // Điền lại phần hiển thị (nhãn, mô tả); giá trị người dùng đã gõ vẫn được giữ trong ô
-            form.Items = form.Items.Select(i => ItemTu(hienCo[i.Khoa], i.GiaTri)).ToList();
+            form.Items = form.Items
+                .Select(i => hienCo.TryGetValue(i.Khoa, out var c)
+                    ? ItemTu(c, i.GiaTri)
+                    : ItemTu(null, i.GiaTri, i.Khoa))
+                .ToList();
             return View(nameof(Index), form);
         }
 
@@ -52,7 +74,7 @@ public class CaiDatController : AdminController
         foreach (var item in form.Items)
         {
             var moi = item.GiaTri!.Trim();
-            if (moi == hienCo[item.Khoa].GiaTri) continue;   // không đổi thì không ghi
+            if (hienCo.TryGetValue(item.Khoa, out var cu) && moi == cu.GiaTri) continue;   // không đổi thì không ghi
             await _repo.SetAsync(item.Khoa, moi);
             soThayDoi++;
         }
@@ -61,15 +83,16 @@ public class CaiDatController : AdminController
         return RedirectToAction(nameof(Index));
     }
 
-    private static CaiDatItemForm ItemTu(CaiDat c, string? giaTri)
+    private static CaiDatItemForm ItemTu(CaiDat? c, string? giaTri, string? khoa = null)
     {
-        var rule = CaiDatRules.Get(c.Khoa);
+        var key = c?.Khoa ?? khoa ?? string.Empty;
+        var rule = CaiDatRules.Get(key);
         return new CaiDatItemForm
         {
-            Khoa = c.Khoa,
+            Khoa = key,
             GiaTri = giaTri,
             Nhan = rule.Nhan,
-            MoTa = c.MoTa,
+            MoTa = string.IsNullOrWhiteSpace(c?.MoTa) ? rule.MoTa : c!.MoTa,
             Loai = rule.Loai
         };
     }

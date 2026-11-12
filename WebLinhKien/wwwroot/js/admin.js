@@ -474,7 +474,7 @@
     // Form: ô chỉ nhận chữ số, đếm ký tự, xem trước ảnh, thông số kỹ thuật, kiểm tra bắt buộc
     // ------------------------------------------------------------------
     function initForms() {
-        $$('input[data-digits]').forEach(function (input) {
+        $$('input[data-digits="1"]').forEach(function (input) {
             input.addEventListener('input', function () {
                 var d = input.value.replace(/\D/g, '');
                 if (d !== input.value) input.value = d;

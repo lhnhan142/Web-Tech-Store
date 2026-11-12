@@ -6,4 +6,6 @@ public static class CaiDatKeys
     public const string PhiGiaoHang = "PhiGiaoHang";
     public const string NguongMienPhiGiaoHang = "NguongMienPhiGiaoHang";
     public const string NguongSapHetHang = "NguongSapHetHang";
+    public const string BuildPcNganSachMacDinh = "BuildPcNganSachMacDinh";
+    public const string BuildPcNganSachGoiY = "BuildPcNganSachGoiY";
 }

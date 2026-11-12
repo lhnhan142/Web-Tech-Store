@@ -99,6 +99,8 @@ StyleCopReport.xml
 *_wpftmp.csproj
 *.log
 *.tlog
+# Bản backup database không đưa lên GitHub (dùng database.sql hoặc restore riêng)
+WebLinhKien/Database/*.bak
 *.vspscc
 *.vssscc
 .builds

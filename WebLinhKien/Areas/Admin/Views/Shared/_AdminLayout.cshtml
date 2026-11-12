@@ -38,7 +38,6 @@
 
     var tab = tabs.FirstOrDefault(t => t.Khoa == tabHienTai);
     if (tab.Khoa is null) tab = tabs[0];
-    var side = mucBen[tabHienTai];
     var tieuDe = ViewData["Title"] as string ?? tab.Ten;
 
     var hoTen = User.FindFirst("HoTen")?.Value ?? User.Identity?.Name ?? "Quản trị";
@@ -58,93 +57,88 @@
     <link rel="stylesheet" href="~/css/admin.css" asp-append-version="true" />
 </head>
 <body class="ad-body">
+    @* Chỉ hiện trên điện thoại (từ 992px trở lên toàn bộ điều hướng nằm ở sidebar bên trái) *@
     <header class="ad-top">
         <button type="button" class="ad-burger" data-side-open aria-label="Mở menu"><i class="fa-solid fa-bars"></i></button>
         <a class="ad-brand" asp-area="Admin" asp-controller="Home" asp-action="Index">
-            <span class="ad-brand__mark"><i class="fa-solid fa-microchip"></i></span>TECHZONE <small>Admin</small>
+            <span class="ad-brand__mark"><i class="fa-solid fa-microchip"></i></span><span class="ad-brand__text">TECHZONE <small>Admin</small></span>
         </a>
-
-        <nav class="ad-tabs" aria-label="Chức năng chính">
-            @foreach (var t in tabs)
-            {
-                <a class="@("ad-tab" + (t.Khoa == tabHienTai ? " is-active" : ""))" asp-area="Admin" asp-controller="@t.Ctrl" asp-action="Index"
-                   aria-current="@(t.Khoa == tabHienTai ? "page" : null)"><i class="fa-solid @t.Icon"></i> @t.Ten</a>
-            }
-        </nav>
-
-        <div class="ad-top__right">
-            <div class="ad-dd">
-                <button type="button" class="ad-iconbtn" data-dd-toggle data-search-toggle aria-expanded="false" aria-label="Tìm đơn hàng (phím /)"><i class="fa-solid fa-magnifying-glass"></i></button>
-                <div class="ad-menu ad-searchbox">
-                    <form asp-area="Admin" asp-controller="DonHang" asp-action="Index" method="get">
-                        <input class="ad-input" type="search" name="q" placeholder="Mã đơn, tên khách, số điện thoại..." aria-label="Tìm đơn hàng" />
-                        <button type="submit" class="ad-btn ad-btn--primary">Tìm</button>
-                    </form>
-                </div>
-            </div>
-
-            <div class="ad-dd">
-                <button type="button" class="ad-iconbtn" data-dd-toggle aria-expanded="false" aria-label="Thông báo">
-                    <i class="fa-regular fa-bell"></i><span class="ad-iconbtn__dot" data-bell-count hidden>0</span>
-                </button>
-                <div class="ad-menu ad-notify">
-                    <div class="ad-notify__head"><strong>Thông báo</strong><button type="button" class="ad-linkbtn" data-read-all>Đánh dấu đã đọc</button></div>
-                    @* admin-notifications.js thêm thông báo vào đây khi WebSocket báo có đơn mới / sắp hết hàng *@
-                    <ul class="ad-notify__list" data-notify-list></ul>
-                    <p class="ad-notify__empty" data-notify-empty>Chưa có thông báo mới.</p>
-                    <div class="ad-notify__foot"><a asp-area="Admin" asp-controller="DonHang" asp-action="Index">Xem tất cả đơn hàng</a></div>
-                </div>
-            </div>
-
-            <a class="ad-viewsite" asp-area="" asp-controller="Home" asp-action="Index" target="_blank" rel="noopener">
-                <i class="fa-solid fa-arrow-up-right-from-square"></i><span>Xem website</span>
-            </a>
-
-            <div class="ad-dd">
-                <button type="button" class="ad-avatar" data-dd-toggle aria-expanded="false" aria-label="Tài khoản">@chuCai</button>
-                <div class="ad-menu">
-                    <div class="ad-menu__head"><strong>@hoTen</strong><span>@User.Identity?.Name · @(laAdmin ? "Quản trị" : "Nhân viên")</span></div>
-                    <div class="ad-menu__sep"></div>
-                    @if (laAdmin)
-                    {
-                        <a class="ad-menu__item" asp-area="Admin" asp-controller="CaiDat" asp-action="Index"><i class="fa-solid fa-gear"></i> Cài đặt cửa hàng</a>
-                    }
-                    <a class="ad-menu__item" asp-area="Admin" asp-controller="HoSo" asp-action="DoiMatKhau"><i class="fa-solid fa-key"></i> Đổi mật khẩu</a>
-                    <form asp-area="Admin" asp-controller="Account" asp-action="Logout" method="post">
-                        <button type="submit" class="ad-menu__item"><i class="fa-solid fa-right-from-bracket"></i> Đăng xuất</button>
-                    </form>
-                </div>
-            </div>
-        </div>
     </header>
 
     <div class="ad-shell">
         <aside class="ad-side" aria-label="Menu bên trái">
-            @* Chỉ hiện trên điện thoại: các tab chính (vì thanh tab ngang bị ẩn) *@
-            <div class="ad-side__mobile">
+            <div class="ad-side__brand">
+                <a class="ad-brand" asp-area="Admin" asp-controller="Home" asp-action="Index">
+                    <span class="ad-brand__mark"><i class="fa-solid fa-microchip"></i></span><span class="ad-brand__text">TECHZONE <small>Admin</small></span>
+                </a>
+            </div>
+
+            <div class="ad-side__scroll">
                 @foreach (var t in tabs)
                 {
-                    <a class="@("ad-side__link" + (t.Khoa == tabHienTai ? " is-active" : ""))" asp-area="Admin" asp-controller="@t.Ctrl" asp-action="Index">
-                        <i class="fa-solid @t.Icon"></i><span>@t.Ten</span>
-                    </a>
+                    var nhom = mucBen[t.Khoa];
+                    <div class="ad-side__group" data-group="@t.Khoa">
+                        <button type="button" class="ad-side__head"><i class="fa-solid fa-chevron-down ad-chev"></i>@nhom.Nhom</button>
+                        <ul class="ad-side__list">
+                            @foreach (var m in nhom.Muc)
+                            {
+                                <li>
+                                    <a class="@("ad-side__link" + (m.Ctrl == ctrl ? " is-active" : ""))" asp-area="Admin" asp-controller="@m.Ctrl" asp-action="Index" title="@m.Ten"
+                                       aria-current="@(m.Ctrl == ctrl ? "page" : null)">
+                                        <i class="fa-solid @m.Icon"></i><span>@m.Ten</span>
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </div>
                 }
             </div>
 
-            <div class="ad-side__group" data-group="@tabHienTai">
-                <button type="button" class="ad-side__head"><i class="fa-solid fa-chevron-down ad-chev"></i>@side.Nhom</button>
-                <ul class="ad-side__list">
-                    @foreach (var m in side.Muc)
-                    {
-                        <li>
-                            <a class="@("ad-side__link" + (m.Ctrl == ctrl ? " is-active" : ""))" asp-area="Admin" asp-controller="@m.Ctrl" asp-action="Index" title="@m.Ten">
-                                <i class="fa-solid @m.Icon"></i><span>@m.Ten</span>
-                            </a>
-                        </li>
-                    }
-                </ul>
-            </div>
-
             <div class="ad-side__foot">
+                <div class="ad-side__tools">
+                    <div class="ad-dd">
+                        <button type="button" class="ad-iconbtn" data-dd-toggle data-search-toggle aria-expanded="false" aria-label="Tìm đơn hàng (phím /)" title="Tìm đơn hàng (phím /)"><i class="fa-solid fa-magnifying-glass"></i></button>
+                        <div class="ad-menu ad-searchbox">
+                            <form asp-area="Admin" asp-controller="DonHang" asp-action="Index" method="get">
+                                <input class="ad-input" type="search" name="q" placeholder="Mã đơn, tên khách, số điện thoại..." aria-label="Tìm đơn hàng" />
+                                <button type="submit" class="ad-btn ad-btn--primary">Tìm</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="ad-dd">
+                        <button type="button" class="ad-iconbtn" data-dd-toggle aria-expanded="false" aria-label="Thông báo" title="Thông báo">
+                            <i class="fa-regular fa-bell"></i><span class="ad-iconbtn__dot" data-bell-count hidden>0</span>
+                        </button>
+                        <div class="ad-menu ad-notify">
+                            <div class="ad-notify__head"><strong>Thông báo</strong><button type="button" class="ad-linkbtn" data-read-all>Đánh dấu đã đọc</button></div>
+                            @* admin-notifications.js thêm thông báo vào đây khi WebSocket báo có đơn mới / sắp hết hàng *@
+                            <ul class="ad-notify__list" data-notify-list></ul>
+                            <p class="ad-notify__empty" data-notify-empty>Chưa có thông báo mới.</p>
+                            <div class="ad-notify__foot"><a asp-area="Admin" asp-controller="DonHang" asp-action="Index">Xem tất cả đơn hàng</a></div>
+                        </div>
+                    </div>
+
+                    <a class="ad-viewsite" asp-area="" asp-controller="Home" asp-action="Index" target="_blank" rel="noopener" title="Xem website" aria-label="Xem website">
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i><span>Xem website</span>
+                    </a>
+
+                    <div class="ad-dd">
+                        <button type="button" class="ad-avatar" data-dd-toggle aria-expanded="false" aria-label="Tài khoản" title="@hoTen">@chuCai</button>
+                        <div class="ad-menu">
+                            <div class="ad-menu__head"><strong>@hoTen</strong><span>@User.Identity?.Name · @(laAdmin ? "Quản trị" : "Nhân viên")</span></div>
+                            <div class="ad-menu__sep"></div>
+                            @if (laAdmin)
+                            {
+                                <a class="ad-menu__item" asp-area="Admin" asp-controller="CaiDat" asp-action="Index"><i class="fa-solid fa-gear"></i> Cài đặt cửa hàng</a>
+                            }
+                            <a class="ad-menu__item" asp-area="Admin" asp-controller="HoSo" asp-action="DoiMatKhau"><i class="fa-solid fa-key"></i> Đổi mật khẩu</a>
+                            <form asp-area="Admin" asp-controller="Account" asp-action="Logout" method="post">
+                                <button type="submit" class="ad-menu__item"><i class="fa-solid fa-right-from-bracket"></i> Đăng xuất</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
                 <button type="button" class="ad-side__collapse" data-side-collapse><i class="fa-solid fa-angles-left"></i><span>Thu gọn menu</span></button>
             </div>
         </aside>

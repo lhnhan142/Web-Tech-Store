@@ -1,3 +1,4 @@
+using System.Text;
 using Dapper;
 using WebLinhKien.Data;
 using WebLinhKien.Models.Entities;
@@ -73,101 +74,6 @@ public class SanPhamRepository : RepositoryBase, ISanPhamRepository
         return await DemAsync(sql);
     }
 
-    // Danh mục thương hiệu nổi tiếng / phổ biến theo từng loại linh kiện
-    private static readonly Dictionary<string, (string Ma, string Ten)[]> DanhSachThuongHieuPhoBien = new(StringComparer.OrdinalIgnoreCase)
-    {
-        ["CPU"] = new[]
-        {
-            ("INTEL", "Intel"),
-            ("AMD", "AMD")
-        },
-        ["MAINBOARD"] = new[]
-        {
-            ("ASUS", "ASUS"),
-            ("MSI", "MSI"),
-            ("GIGABYTE", "Gigabyte"),
-            ("ASROCK", "ASRock")
-        },
-        ["RAM"] = new[]
-        {
-            ("KINGSTON", "Kingston"),
-            ("CORSAIR", "Corsair"),
-            ("GSKILL", "G.Skill"),
-            ("TEAMGROUP", "TeamGroup"),
-            ("CRUCIAL", "Crucial"),
-            ("ADATA", "Adata"),
-            ("SAMSUNG", "Samsung")
-        },
-        ["VGA"] = new[]
-        {
-            ("NVIDIA", "NVIDIA"),
-            ("ASUS", "ASUS"),
-            ("MSI", "MSI"),
-            ("GIGABYTE", "Gigabyte"),
-            ("ZOTAC", "Zotac"),
-            ("SAPPHIRE", "Sapphire"),
-            ("POWERCOLOR", "PowerColor"),
-            ("ASROCK", "ASRock"),
-            ("COLORFUL", "Colorful"),
-            ("GALAX", "Galax"),
-            ("XFX", "XFX")
-        },
-        ["SSD"] = new[]
-        {
-            ("SAMSUNG", "Samsung"),
-            ("KINGSTON", "Kingston"),
-            ("WD", "WD"),
-            ("CRUCIAL", "Crucial"),
-            ("LEXAR", "Lexar"),
-            ("TEAMGROUP", "TeamGroup"),
-            ("SEAGATE", "Seagate")
-        },
-        ["PSU"] = new[]
-        {
-            ("CORSAIR", "Corsair"),
-            ("COOLERMASTER", "Cooler Master"),
-            ("SEASONIC", "Seasonic"),
-            ("DEEPCOOL", "DeepCool"),
-            ("MSI", "MSI"),
-            ("ASUS", "ASUS"),
-            ("GIGABYTE", "Gigabyte"),
-            ("THERMALTAKE", "Thermaltake")
-        },
-        ["CASE"] = new[]
-        {
-            ("NZXT", "NZXT"),
-            ("CORSAIR", "Corsair"),
-            ("COOLERMASTER", "Cooler Master"),
-            ("LIANLI", "Lian Li"),
-            ("DEEPCOOL", "DeepCool"),
-            ("MONTECH", "Montech"),
-            ("FRACTAL", "Fractal Design"),
-            ("THERMALTAKE", "Thermaltake")
-        },
-        ["TANNHIET"] = new[]
-        {
-            ("THERMALRIGHT", "Thermalright"),
-            ("DEEPCOOL", "DeepCool"),
-            ("NOCTUA", "Noctua"),
-            ("COOLERMASTER", "Cooler Master"),
-            ("ARCTIC", "Arctic"),
-            ("IDCOOLING", "ID-Cooling"),
-            ("NZXT", "NZXT"),
-            ("CORSAIR", "Corsair")
-        },
-        ["PHUKIEN"] = new[]
-        {
-            ("LOGITECH", "Logitech"),
-            ("RAZER", "Razer"),
-            ("CORSAIR", "Corsair"),
-            ("AKKO", "Akko"),
-            ("DAREU", "DareU"),
-            ("KEYCHRON", "Keychron"),
-            ("HYPERX", "HyperX"),
-            ("STEELSERIES", "SteelSeries")
-        }
-    };
-
     public async Task<IReadOnlyList<ThuongHieuFilterItem>> GetBrandsByCategoryAsync(string maDanhMuc)
     {
         if (string.IsNullOrWhiteSpace(maDanhMuc))
@@ -239,6 +145,75 @@ public class SanPhamRepository : RepositoryBase, ISanPhamRepository
         return rows.ToList();
     }
 
+    // Điều kiện lọc chung (từ khóa, danh mục, thương hiệu, giá, tồn kho). Bảng SanPhams có bí danh "sp".
+    private const string FilterWhere = @"
+            sp.HienThi = 1
+              AND (@Like IS NULL OR sp.MaSanPham LIKE @Like OR sp.TenSanPham LIKE @Like)
+              AND (@DanhMuc IS NULL OR sp.MaDanhMuc = @DanhMuc)
+              AND (@ThuongHieu IS NULL OR sp.MaThuongHieu = @ThuongHieu)
+              AND (@MinPrice IS NULL OR sp.GiaBan >= @MinPrice)
+              AND (@MaxPrice IS NULL OR sp.GiaBan <= @MaxPrice)
+              AND (@ConHang IS NULL OR (@ConHang = 1 AND sp.TonKho > 0) OR (@ConHang = 0))";
+
+    private static DynamicParameters CreateFilterParameters(ProductFilterRequest filter)
+    {
+        var likePattern = string.IsNullOrWhiteSpace(filter.Q)
+            ? null
+            : "%" + SqlHelper.EscapeLike(filter.Q.Trim()) + "%";
+
+        return new DynamicParameters(new
+        {
+            Like = likePattern,
+            DanhMuc = filter.DanhMuc,
+            ThuongHieu = filter.ThuongHieu,
+            MinPrice = filter.MinPrice,
+            MaxPrice = filter.MaxPrice,
+            ConHang = filter.ConHang
+        });
+    }
+
+    // Sinh điều kiện lọc theo thông số: giữa các nhóm là AND, trong một nhóm là OR.
+    // skipKey: bỏ qua một nhóm (dùng khi đếm số lượng cho chính nhóm đó).
+    private static string BuildSpecSql(ProductFilterRequest filter, DynamicParameters parameters, string? skipKey)
+    {
+        var sb = new StringBuilder();
+        var groupIndex = 0;
+
+        foreach (var group in SpecFilterDefinitions.ForCategory(filter.DanhMuc))
+        {
+            groupIndex++;
+            if (skipKey != null && group.Key == skipKey) continue;
+
+            var chosen = filter.GetSpecValues(group.Key).ToList();
+            var options = group.Options
+                .Where(o => chosen.Any(c => c.Equals(o.Value, StringComparison.OrdinalIgnoreCase)))
+                .ToList();
+            if (options.Count == 0) continue;
+
+            parameters.Add("sn" + groupIndex, group.TenThongSo);
+
+            var likes = new List<string>();
+            var n = 0;
+            foreach (var option in options)
+            {
+                foreach (var pattern in option.Patterns)
+                {
+                    var name = "sv" + groupIndex + "_" + n++;
+                    parameters.Add(name, pattern);
+                    likes.Add("t.GiaTri LIKE @" + name);
+                }
+            }
+
+            sb.Append(" AND EXISTS (SELECT 1 FROM dbo.ThongSoKyThuats t WHERE t.UidSanPham = sp.Uid AND t.TenThongSo = @sn")
+              .Append(groupIndex)
+              .Append(" AND (")
+              .Append(string.Join(" OR ", likes))
+              .Append("))");
+        }
+
+        return sb.ToString();
+    }
+
     public async Task<PagedResult<SanPham>> GetPagedProductsAsync(ProductFilterRequest filter)
     {
         filter.Normalize();
@@ -252,44 +227,21 @@ public class SanPhamRepository : RepositoryBase, ISanPhamRepository
             _          => "NoiBat DESC, NgayTao DESC, Uid DESC"
         };
 
-        var likePattern = string.IsNullOrWhiteSpace(filter.Q)
-            ? null
-            : "%" + SqlHelper.EscapeLike(filter.Q.Trim()) + "%";
+        var parameters = CreateFilterParameters(filter);
+        var specSql = BuildSpecSql(filter, parameters, null);
+        parameters.Add("Offset", (filter.Page - 1) * filter.PageSize);
+        parameters.Add("PageSize", filter.PageSize);
 
         var sql = $@"
             SELECT COUNT(1)
-            FROM dbo.SanPhams
-            WHERE HienThi = 1
-              AND (@Like IS NULL OR MaSanPham LIKE @Like OR TenSanPham LIKE @Like)
-              AND (@DanhMuc IS NULL OR MaDanhMuc = @DanhMuc)
-              AND (@ThuongHieu IS NULL OR MaThuongHieu = @ThuongHieu)
-              AND (@MinPrice IS NULL OR GiaBan >= @MinPrice)
-              AND (@MaxPrice IS NULL OR GiaBan <= @MaxPrice)
-              AND (@ConHang IS NULL OR (@ConHang = 1 AND TonKho > 0) OR (@ConHang = 0));
+            FROM dbo.SanPhams sp
+            WHERE {FilterWhere}{specSql};
 
             SELECT {SelectColumns}
-            FROM dbo.SanPhams
-            WHERE HienThi = 1
-              AND (@Like IS NULL OR MaSanPham LIKE @Like OR TenSanPham LIKE @Like)
-              AND (@DanhMuc IS NULL OR MaDanhMuc = @DanhMuc)
-              AND (@ThuongHieu IS NULL OR MaThuongHieu = @ThuongHieu)
-              AND (@MinPrice IS NULL OR GiaBan >= @MinPrice)
-              AND (@MaxPrice IS NULL OR GiaBan <= @MaxPrice)
-              AND (@ConHang IS NULL OR (@ConHang = 1 AND TonKho > 0) OR (@ConHang = 0))
+            FROM dbo.SanPhams sp
+            WHERE {FilterWhere}{specSql}
             ORDER BY {orderByClause}
             OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY;";
-
-        var parameters = new
-        {
-            Like = likePattern,
-            DanhMuc = filter.DanhMuc,
-            ThuongHieu = filter.ThuongHieu,
-            MinPrice = filter.MinPrice,
-            MaxPrice = filter.MaxPrice,
-            ConHang = filter.ConHang,
-            Offset = (filter.Page - 1) * filter.PageSize,
-            PageSize = filter.PageSize
-        };
 
         using var conn = Context.CreateConnection();
         using var multi = await conn.QueryMultipleAsync(sql, parameters);
@@ -305,6 +257,57 @@ public class SanPhamRepository : RepositoryBase, ISanPhamRepository
         }
 
         return new PagedResult<SanPham>(items, filter.Page, filter.PageSize, totalItems);
+    }
+
+    // Đếm số sản phẩm cho từng lựa chọn lọc thông số. Mỗi nhóm được đếm theo các bộ lọc KHÁC
+    // (không tính lựa chọn của chính nhóm đó) để khách thấy chọn thêm một mục sẽ ra bao nhiêu sản phẩm.
+    public async Task<Dictionary<string, int>> GetSpecFacetsAsync(ProductFilterRequest filter)
+    {
+        var result = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+        filter.Normalize();
+
+        var groups = SpecFilterDefinitions.ForCategory(filter.DanhMuc);
+        if (groups.Count == 0) return result;
+
+        using var conn = Context.CreateConnection();
+        foreach (var group in groups)
+        {
+            var parameters = CreateFilterParameters(filter);
+            var otherSpecs = BuildSpecSql(filter, parameters, group.Key);
+            parameters.Add("fTen", group.TenThongSo);
+
+            var inner = new List<string>();
+            var outer = new List<string>();
+            for (var i = 0; i < group.Options.Count; i++)
+            {
+                var likes = new List<string>();
+                var patterns = group.Options[i].Patterns;
+                for (var j = 0; j < patterns.Length; j++)
+                {
+                    var name = "fp" + i + "_" + j;
+                    parameters.Add(name, patterns[j]);
+                    likes.Add("t.GiaTri LIKE @" + name);
+                }
+
+                // SQL Server không cho SUM bọc trực tiếp EXISTS, nên tính cờ 0/1 ở truy vấn con rồi mới cộng ở ngoài
+                inner.Add("CASE WHEN EXISTS (SELECT 1 FROM dbo.ThongSoKyThuats t WHERE t.UidSanPham = sp.Uid AND t.TenThongSo = @fTen AND ("
+                          + string.Join(" OR ", likes) + ")) THEN 1 ELSE 0 END AS F" + i);
+                outer.Add("COALESCE(SUM(x.F" + i + "), 0) AS C" + i);
+            }
+
+            var sql = "SELECT " + string.Join(", ", outer)
+                      + " FROM (SELECT " + string.Join(", ", inner)
+                      + " FROM dbo.SanPhams sp WHERE " + FilterWhere + otherSpecs + ") x;";
+            var row = (IDictionary<string, object>)await conn.QuerySingleAsync(sql, parameters);
+
+            for (var i = 0; i < group.Options.Count; i++)
+            {
+                var value = row["C" + i];
+                result[group.Key + ":" + group.Options[i].Value] = value == null || value is DBNull ? 0 : Convert.ToInt32(value);
+            }
+        }
+
+        return result;
     }
 
     public async Task<IReadOnlyList<SanPham>> SearchSuggestionsAsync(string keyword, int limit = 6)

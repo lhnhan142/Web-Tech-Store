@@ -223,6 +223,12 @@ public class FilterPanelViewModel
     /// <summary>Danh sách thương hiệu theo danh mục</summary>
     public IReadOnlyList<ThuongHieuFilterItem> CategoryBrands { get; set; } = Array.Empty<ThuongHieuFilterItem>();
 
+    /// <summary>Các lựa chọn lọc theo thông số đang chọn, dạng "khóa:giá trị"</summary>
+    public List<string> SelectedSpecs { get; set; } = new();
+
+    /// <summary>Số sản phẩm của từng lựa chọn lọc thông số</summary>
+    public IReadOnlyDictionary<string, int> SpecFacets { get; set; } = new Dictionary<string, int>();
+
     /// <summary>Có hiển thị bộ lọc giá hay không (Admin có thể tắt nếu không dùng)</summary>
     public bool ShowPriceFilter { get; set; } = true;
 
@@ -234,6 +240,7 @@ public class FilterPanelViewModel
         !string.IsNullOrEmpty(SelectedDanhMuc) ||
         !string.IsNullOrEmpty(SelectedThuongHieu) ||
         !string.IsNullOrEmpty(SelectedPriceRange) ||
+        SelectedSpecs.Count > 0 ||
         MinPrice.HasValue ||
         MaxPrice.HasValue ||
         ConHang == true;

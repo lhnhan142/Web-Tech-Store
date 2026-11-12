@@ -86,6 +86,13 @@ public class SanPhamController : Controller
                 }
             }
 
+            // Số sản phẩm của từng lựa chọn lọc thông số (chỉ khi đã chọn danh mục có lọc thông số)
+            IReadOnlyDictionary<string, int> specFacets = new Dictionary<string, int>();
+            if (!string.IsNullOrEmpty(request.DanhMuc))
+            {
+                specFacets = await _sanPhamRepo.GetSpecFacetsAsync(request);
+            }
+
             var pagedEntity = await _sanPhamRepo.GetPagedProductsAsync(request);
 
             var cardItems = pagedEntity.Items.Select(p => new ProductCardViewModel(p)).ToList();
@@ -154,6 +161,7 @@ public class SanPhamController : Controller
                 Categories = categories,
                 Brands = categoryBrands.Select(b => new ThuongHieu { MaThuongHieu = b.MaThuongHieu, TenThuongHieu = b.TenThuongHieu, HienThi = true }).ToList(),
                 CategoryBrands = categoryBrands,
+                SpecFacets = specFacets,
                 CurrentCategory = currentCategory,
                 CurrentBrand = currentBrand,
                 Breadcrumbs = breadcrumbs,

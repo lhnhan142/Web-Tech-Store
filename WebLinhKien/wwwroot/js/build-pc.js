@@ -40,6 +40,9 @@
     };
 
     let plansData = [];
+    const SEARCH_STATE = {};
+    const ALL_OPTIONS = {};
+    const PLACEHOLDER_OPTIONS = {};
 
     function byId(id) {
         return document.getElementById(id);
@@ -57,6 +60,145 @@
 
     function splitList(value) {
         return (value || '').split('|').map(x => x.trim()).filter(Boolean);
+    }
+
+    function productUrl(uid) {
+        const holder = document.querySelector('[data-chi-tiet-url]');
+        const base = holder ? holder.dataset.chiTietUrl : '/SanPham/ChiTiet/';
+        return base + uid;
+    }
+
+    function normalizeText(value) {
+        return (value || '').toString().toLowerCase()
+            .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+            .replace(/đ/g, 'd');
+    }
+
+    function searchIndexFor(option) {
+        return normalizeText([
+            option.dataset.name,
+            option.dataset.brand,
+            option.dataset.socket,
+            option.dataset.ram,
+            option.dataset.form,
+            (option.dataset.specs || '').replace(/\|/g, ' ')
+        ].join(' '));
+    }
+
+    function rebuildSelectOptions(ma) {
+        const select = getSelect(ma);
+        const state = SEARCH_STATE[ma];
+        if (!select || !state) return;
+
+        const selectedValue = select.value;
+        const all = ALL_OPTIONS[ma] || [];
+        const matches = all.filter(option => {
+            if (state.brands.length && state.brands.indexOf((option.dataset.brand || '').toLowerCase()) < 0) {
+                return false;
+            }
+            if (!state.tokens.length) return true;
+            const haystack = option.dataset.search || '';
+            return state.tokens.every(token => haystack.indexOf(token) >= 0);
+        });
+
+        const selected = all.find(option => option.value === selectedValue);
+        const matchCount = matches.length;
+        if (selected && matches.indexOf(selected) < 0) matches.unshift(selected);
+
+        select.innerHTML = '';
+        if (PLACEHOLDER_OPTIONS[ma]) select.appendChild(PLACEHOLDER_OPTIONS[ma]);
+        matches.forEach(option => select.appendChild(option));
+        if (selectedValue && select.querySelector('option[value="' + selectedValue + '"]')) {
+            select.value = selectedValue;
+        }
+
+        const note = document.querySelector('[data-search-note="' + ma + '"]');
+        if (note) {
+            const filtering = state.tokens.length > 0 || state.brands.length > 0;
+            note.classList.toggle('d-none', !filtering);
+            if (filtering) {
+                note.textContent = matchCount
+                    ? 'Hiện ' + matchCount + '/' + all.length + ' lựa chọn phù hợp.'
+                    : 'Không tìm thấy linh kiện phù hợp, thử từ khóa khác.';
+            }
+        }
+
+        const clearButton = document.querySelector('[data-step-search-clear="' + ma + '"]');
+        if (clearButton) clearButton.classList.toggle('d-none', !state.term);
+    }
+
+    function buildSearchUi(ma) {
+        SEARCH_STATE[ma] = { term: '', tokens: [], brands: [] };
+
+        const input = document.querySelector('[data-step-search="' + ma + '"]');
+        if (!input) return;
+
+        input.addEventListener('input', function () {
+            const state = SEARCH_STATE[ma];
+            state.term = input.value;
+            state.tokens = normalizeText(input.value).split(/\s+/).filter(Boolean);
+            rebuildSelectOptions(ma);
+            applyFilters();
+        });
+
+        const clearButton = document.querySelector('[data-step-search-clear="' + ma + '"]');
+        if (clearButton) {
+            clearButton.addEventListener('click', function () {
+                input.value = '';
+                input.dispatchEvent(new Event('input', { bubbles: true }));
+                input.focus();
+            });
+        }
+
+        const holder = document.querySelector('[data-brand-chips="' + ma + '"]');
+        if (!holder) return;
+
+        const counts = new Map();
+        (ALL_OPTIONS[ma] || []).forEach(option => {
+            const label = (option.dataset.brand || '').trim();
+            if (!label) return;
+            const key = label.toLowerCase();
+            const entry = counts.get(key) || { label: label, count: 0 };
+            entry.count++;
+            counts.set(key, entry);
+        });
+
+        if (counts.size < 2) {
+            holder.classList.add('d-none');
+            return;
+        }
+
+        holder.innerHTML = Array.from(counts.entries())
+            .sort((a, b) => a[1].label.localeCompare(b[1].label, 'vi'))
+            .map(([key, entry]) => '<button type="button" class="tz-build-chip" data-chip-brand="' +
+                escapeHtml(key) + '">' + escapeHtml(entry.label) + '<small>' + entry.count + '</small></button>')
+            .join('');
+
+        holder.addEventListener('click', function (event) {
+            const chip = event.target.closest('[data-chip-brand]');
+            if (!chip) return;
+            const key = chip.dataset.chipBrand;
+            const state = SEARCH_STATE[ma];
+            const index = state.brands.indexOf(key);
+            if (index >= 0) state.brands.splice(index, 1);
+            else state.brands.push(key);
+            chip.classList.toggle('is-active', state.brands.indexOf(key) >= 0);
+            rebuildSelectOptions(ma);
+            applyFilters();
+        });
+    }
+
+    function clearSearchFilters() {
+        Object.keys(SEARCH_STATE).forEach(ma => {
+            SEARCH_STATE[ma] = { term: '', tokens: [], brands: [] };
+            const input = document.querySelector('[data-step-search="' + ma + '"]');
+            if (input) input.value = '';
+            const clearButton = document.querySelector('[data-step-search-clear="' + ma + '"]');
+            if (clearButton) clearButton.classList.add('d-none');
+            document.querySelectorAll('[data-brand-chips="' + ma + '"] .tz-build-chip.is-active')
+                .forEach(chip => chip.classList.remove('is-active'));
+            rebuildSelectOptions(ma);
+        });
     }
 
     function getSelect(ma) {
@@ -86,6 +228,7 @@
             ram: option.dataset.ram || '',
             form: option.dataset.form || '',
             tdp: numOrNull(option.dataset.tdp),
+            tieuThu: numOrNull(option.dataset.tieuThu),
             watt: numOrNull(option.dataset.watt),
             vram: numOrNull(option.dataset.vram),
             length: numOrNull(option.dataset.length),
@@ -174,8 +317,13 @@
         const cpuTdp = cpu ? (cpu.tdp !== null ? cpu.tdp : 95) : 0;
         let vgaConsume = 0;
         if (vga) {
-            const vgaWatt = vga.watt !== null ? vga.watt : 0;
-            vgaConsume = vgaWatt > 0 ? Math.max(75, Math.round(vgaWatt * 0.4)) : 75;
+            if (vga.tieuThu !== null && vga.tieuThu > 0) {
+                vgaConsume = vga.tieuThu;
+            } else if (vga.watt !== null && vga.watt > 0) {
+                vgaConsume = Math.max(75, Math.round(vga.watt * 0.4));
+            } else {
+                vgaConsume = 150;
+            }
         }
         const estimate = cpuTdp + vgaConsume + 100;
         const vgaRequired = vga && vga.watt !== null ? vga.watt : 0;
@@ -202,19 +350,19 @@
         const cooler = items.TANNHIET;
 
         if (cpu && mainboard && !socketMatchesAny(cpu.socket, [mainboard.socket].concat(mainboard.sockets))) {
-            errors.push('CPU "' + shortName(cpu.name, ['CPU']) + '" dùng chân cắm ' + (cpu.socket || 'chưa rõ') + ', còn mainboard "' + shortName(mainboard.name, ['Mainboard', 'Bo mạch chủ']) + '" dùng chân cắm ' + (mainboard.socket || 'chưa rõ') + '. Hai loại chân cắm khác nhau nên không lắp vào nhau được — hãy chọn CPU và mainboard cùng chân cắm.');
+            errors.push('CPU "' + shortName(cpu.name, ['CPU']) + '" không lắp vừa với mainboard "' + shortName(mainboard.name, ['Mainboard', 'Bo mạch chủ']) + '" đã chọn. Hãy đổi một trong hai linh kiện này.');
         }
         if (mainboard && ram && !ramCompatible(mainboard.ram, ram.ram)) {
-            errors.push('Thanh RAM "' + shortName(ram.name, ['RAM']) + '" là loại ' + (ram.ram || 'chưa rõ') + ', nhưng mainboard "' + shortName(mainboard.name, ['Mainboard', 'Bo mạch chủ']) + '" chỉ dùng được RAM ' + (mainboard.ram || 'chưa rõ') + '. Hãy chọn thanh RAM đúng chuẩn.');
+            errors.push('Thanh RAM "' + shortName(ram.name, ['RAM']) + '" không dùng được cho mainboard "' + shortName(mainboard.name, ['Mainboard', 'Bo mạch chủ']) + '" đã chọn. Hãy chọn thanh RAM khác.');
         }
         if (mainboard && caseInfo && !caseSupportsForm(caseInfo, mainboard.form)) {
-            errors.push('Mainboard "' + shortName(mainboard.name, ['Mainboard', 'Bo mạch chủ']) + '" có kích thước ' + (mainboard.form || 'chưa rõ') + ', không vừa vỏ case "' + shortName(caseInfo.name, ['Vỏ case', 'Case']) + '". Hãy chọn vỏ case phù hợp hơn.');
+            errors.push('Mainboard "' + shortName(mainboard.name, ['Mainboard', 'Bo mạch chủ']) + '" không vừa với vỏ case "' + shortName(caseInfo.name, ['Vỏ case', 'Case']) + '" đã chọn. Hãy chọn vỏ case lớn hơn.');
         }
         if (vga && caseInfo && vga.length !== null && caseInfo.maxLength !== null && vga.length > caseInfo.maxLength) {
             errors.push('Card màn hình "' + shortName(vga.name, ['Card màn hình', 'VGA']) + '" dài ' + vga.length + ' mm, nhưng vỏ case "' + shortName(caseInfo.name, ['Vỏ case', 'Case']) + '" chỉ chứa được card tối đa ' + caseInfo.maxLength + ' mm. Hãy chọn card ngắn hơn hoặc vỏ case lớn hơn.');
         }
         if (cooler && cpu && cooler.sockets.length && !socketMatchesAny(cpu.socket, cooler.sockets)) {
-            errors.push('Tản nhiệt "' + shortName(cooler.name, ['Tản nhiệt']) + '" không lắp được cho CPU "' + shortName(cpu.name, ['CPU']) + '" vì không hỗ trợ chân cắm ' + (cpu.socket || 'của CPU') + '. Hãy chọn tản nhiệt khác.');
+            errors.push('Tản nhiệt "' + shortName(cooler.name, ['Tản nhiệt']) + '" không lắp vừa với CPU "' + shortName(cpu.name, ['CPU']) + '" đã chọn. Hãy chọn tản nhiệt khác.');
         }
 
         const power = powerEstimate();
@@ -228,7 +376,7 @@
             }
         }
         if (mainboard && !mainboard.socket) {
-            warnings.push('Mainboard "' + shortName(mainboard.name, ['Mainboard', 'Bo mạch chủ']) + '" chưa có thông tin chân cắm nên chưa kiểm tra được với CPU.');
+            warnings.push('Mainboard "' + shortName(mainboard.name, ['Mainboard', 'Bo mạch chủ']) + '" chưa có đủ thông tin nên chưa kiểm tra được với CPU, hãy xem lại thông số sản phẩm.');
         }
 
         const itemTotal = STEPS.reduce((sum, ma) => sum + (items[ma] ? items[ma].price : 0), 0);
@@ -267,14 +415,18 @@
         if (info.warranty) meta.push('<span>BH ' + info.warranty + ' tháng</span>');
         if (info.stock > 0) meta.push('<span>Còn ' + info.stock + '</span>');
 
+        const url = productUrl(info.uid);
         box.innerHTML =
-            '<span class="tz-build-selected-thumb">' + image + '</span>' +
-            '<span class="tz-build-selected-body">' +
-                '<span class="tz-build-selected-name">' + escapeHtml(info.name) + '</span>' +
-                '<span class="tz-build-selected-meta">' + meta.join('<span>·</span>') + '</span>' +
-                '<span class="tz-build-selected-price">' + formatVnd(info.price) + '</span>' +
-                (info.specs.length ? '<span class="tz-build-selected-specs">' + escapeHtml(info.specs.slice(0, 2).join(' • ')) + '</span>' : '') +
-            '</span>';
+            '<a class="tz-build-selected-link" href="' + url + '" target="_blank" rel="noopener" title="Xem thông số chi tiết">' +
+                '<span class="tz-build-selected-thumb">' + image + '</span>' +
+                '<span class="tz-build-selected-body">' +
+                    '<span class="tz-build-selected-name">' + escapeHtml(info.name) + '</span>' +
+                    '<span class="tz-build-selected-meta">' + meta.join('<span>·</span>') + '</span>' +
+                    '<span class="tz-build-selected-price">' + formatVnd(info.price) + '</span>' +
+                    (info.specs.length ? '<span class="tz-build-selected-specs">' + escapeHtml(info.specs.slice(0, 2).join(' • ')) + '</span>' : '') +
+                    '<span class="tz-build-selected-view"><i class="fa-solid fa-arrow-up-right-from-square"></i> Xem thông số chi tiết</span>' +
+                '</span>' +
+            '</a>';
 
         box.classList.remove('d-none');
     }
@@ -295,7 +447,7 @@
                 setSummaryRow(ma, 'Chưa chọn', ['is-empty']);
             } else {
                 setSummaryRow(ma,
-                    '<span>' + escapeHtml(info.name) + '</span>' +
+                    '<a class="tz-build-summary-link" href="' + productUrl(info.uid) + '" target="_blank" rel="noopener" title="Xem thông số chi tiết">' + escapeHtml(info.name) + '</a>' +
                     '<span class="tz-build-summary-price">' + formatVnd(info.price) + '</span>',
                     info.stock <= 0 ? ['is-out'] : null);
             }
@@ -469,6 +621,8 @@
             if (!sockets.length || socketMatchesAny(cpu.socket, sockets)) return true;
             return 'không hỗ trợ chân cắm ' + (cpu.socket || 'của CPU') + ' của CPU đã chọn';
         });
+
+        STEPS.forEach(renderPicker);
     }
 
     function filterSelect(ma, check) {
@@ -508,6 +662,69 @@
         updateFilterNote(ma, disabledReasons);
     }
 
+    function renderPicker(ma) {
+        const select = getSelect(ma);
+        const holder = document.querySelector('[data-picker="' + ma + '"]');
+        if (!select || !holder) return;
+
+        const icon = STEP_ICONS[ma] || 'fa-microchip';
+        const detailBase = (document.querySelector('.tz-container[data-chi-tiet-url]') || {}).dataset
+            ? document.querySelector('.tz-container[data-chi-tiet-url]').dataset.chiTietUrl : '';
+        const parts = [];
+
+        if (select.value) {
+            parts.push('<button type="button" class="tz-build-pick-clear" data-pick-clear="' + ma + '">' +
+                '<i class="fa-solid fa-xmark me-1"></i>Bỏ chọn</button>');
+        }
+
+        Array.from(select.options).forEach(option => {
+            if (!option.value) return;
+            const uid = option.value;
+            const disabled = option.disabled;
+            const selected = option.selected;
+            const reason = disabled ? (option.title || 'Không tương thích') : '';
+            const name = option.dataset.name || option.textContent;
+            const price = numOrNull(option.dataset.price);
+            const stock = Number(option.dataset.stock || 0);
+            const metaBits = [];
+            if (option.dataset.brand) metaBits.push(escapeHtml(option.dataset.brand));
+            const warranty = Number(option.dataset.warranty || 0);
+            if (warranty > 0) metaBits.push('Bảo hành ' + warranty + ' tháng');
+            metaBits.push(stock > 0 ? 'Còn ' + stock : 'Hết hàng');
+
+            parts.push(
+                '<button type="button" class="tz-build-pick' + (disabled ? ' is-off' : '') + (selected ? ' is-active' : '') + '"' +
+                    ' data-pick-uid="' + uid + '" data-pick-step="' + ma + '"' +
+                    ' title="' + escapeHtml(disabled ? reason : name) + '">' +
+                    '<span class="tz-build-pick-thumb">' +
+                        (option.dataset.image
+                            ? '<img src="' + escapeHtml(option.dataset.image) + '" alt="" loading="lazy" onerror="tzImgError(this)">' +
+                              '<span class="tz-thumb-fallback" style="display:none"><i class="fa-solid ' + icon + '"></i></span>'
+                            : '<span class="tz-thumb-fallback" style="display:flex"><i class="fa-solid ' + icon + '"></i></span>') +
+                    '</span>' +
+                    '<span class="tz-build-pick-info">' +
+                        '<span class="tz-build-pick-name">' + escapeHtml(name) + '</span>' +
+                        '<span class="tz-build-pick-meta">' + metaBits.join(' · ') + '</span>' +
+                        '<span class="tz-build-pick-price">' + (price !== null ? formatVnd(price) : '') + '</span>' +
+                        (disabled ? '<span class="tz-build-pick-reason"><i class="fa-solid fa-circle-xmark me-1"></i>' + escapeHtml(reason) + '</span>' : '') +
+                    '</span>' +
+                    (selected ? '<span class="tz-build-pick-check"><i class="fa-solid fa-check"></i></span>' : '') +
+                    (detailBase
+                        ? '<a class="tz-build-pick-detail" href="' + escapeHtml(detailBase + uid) + '" target="_blank" rel="noopener" ' +
+                          'title="Xem thông số chi tiết" onclick="event.stopPropagation()">' +
+                          '<i class="fa-solid fa-arrow-up-right-from-square"></i></a>'
+                        : '') +
+                '</button>'
+            );
+        });
+
+        if (!parts.length) {
+            parts.push('<div class="tz-build-pick-empty text-muted small p-3 border rounded-2 w-100">Không có linh kiện nào.</div>');
+        }
+
+        holder.innerHTML = parts.join('');
+    }
+
     function updateFilterNote(ma, reasons) {
         const note = document.querySelector('[data-filter-note="' + ma + '"]');
         if (!note) return;
@@ -518,13 +735,8 @@
             return;
         }
 
-        const unique = [];
-        reasons.forEach(reason => {
-            if (!unique.includes(reason)) unique.push(reason);
-        });
-        const detail = unique.slice(0, 2).join('; ') + (unique.length > 2 ? '; …' : '');
         note.innerHTML = '<i class="fa-solid fa-circle-info me-1"></i>' +
-            escapeHtml('Đang khóa ' + reasons.length + ' lựa chọn: ' + detail);
+            escapeHtml('Đã khóa ' + reasons.length + ' lựa chọn không phù hợp với linh kiện bạn đã chọn — mở danh sách bên dưới để xem lý do chi tiết từng món.');
         note.classList.remove('d-none');
     }
 
@@ -661,6 +873,7 @@
     }
 
     function resetSelections(clearMessages) {
+        clearSearchFilters();
         STEPS.forEach(ma => {
             const select = getSelect(ma);
             if (select) select.value = '';
@@ -857,15 +1070,22 @@
         STEPS.forEach(ma => {
             const select = getSelect(ma);
             if (!select) return;
-            Array.from(select.options).forEach(option => {
-                if (!option.value) return;
+            PLACEHOLDER_OPTIONS[ma] = select.querySelector('option[value=""]');
+            const options = Array.from(select.options).filter(option => option.value);
+            options.forEach(option => {
                 option.dataset.baseLabel = option.textContent.trim();
                 if (option.disabled) option.dataset.stockDisabled = '1';
+                option.dataset.search = searchIndexFor(option);
             });
+            ALL_OPTIONS[ma] = options;
+
             select.addEventListener('change', function () {
                 applyFilters();
                 updateAll();
             });
+
+            buildSearchUi(ma);
+            renderPicker(ma);
         });
 
         Array.from(document.querySelectorAll('.tz-build-accessory')).forEach(input => {
@@ -882,6 +1102,30 @@
         });
 
         byId('tz-build-suggest').addEventListener('click', suggest);
+
+        document.querySelectorAll('[data-picker]').forEach(holder => {
+            holder.addEventListener('click', function (event) {
+                if (event.target.closest('.tz-build-pick-detail')) return;
+
+                const clearButton = event.target.closest('[data-pick-clear]');
+                if (clearButton) {
+                    const ma = clearButton.dataset.pickClear;
+                    const select = getSelect(ma);
+                    if (select) {
+                        select.value = '';
+                        select.dispatchEvent(new Event('change', { bubbles: true }));
+                    }
+                    return;
+                }
+
+                const card = event.target.closest('.tz-build-pick');
+                if (!card || card.classList.contains('is-off')) return;
+                const select = getSelect(card.dataset.pickStep);
+                if (!select) return;
+                select.value = card.dataset.pickUid;
+                select.dispatchEvent(new Event('change', { bubbles: true }));
+            });
+        });
 
         const results = byId('tz-build-suggest-results');
         results.addEventListener('click', function (event) {

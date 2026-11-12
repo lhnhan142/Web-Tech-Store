@@ -25,16 +25,16 @@ public sealed class BuildPcService : IBuildPcService
     private static readonly string[] ThuTuLap =
         { "CPU", "MAINBOARD", "RAM", "VGA", "SSD", "PSU", "CASE", "TANNHIET" };
 
-    private static readonly (string Ma, string Ten, string Icon, bool BatBuoc, string GoiY)[] DinhNghiaBuoc =
+    private static readonly (string Ma, string Ten, string Icon, bool BatBuoc)[] DinhNghiaBuoc =
     {
-        ("CPU",       "Bộ xử lý (CPU)",              "fa-microchip", true,  "Chọn CPU trước để lọc mainboard lắp vừa cùng chân cắm."),
-        ("MAINBOARD", "Bo mạch chủ (Mainboard)",      "fa-server",    true,  "Phải cùng chân cắm với CPU và đúng chuẩn RAM."),
-        ("RAM",       "Bộ nhớ trong (RAM)",           "fa-memory",    true,  "Chọn đúng DDR4/DDR5 theo mainboard."),
-        ("VGA",       "Card đồ họa (VGA)",            "fa-display",   true,  "Kiểm tra chiều dài VGA và công suất nguồn."),
-        ("SSD",       "Ổ cứng SSD",                   "fa-hard-drive",true,  "Ưu tiên NVMe M.2 nếu mainboard hỗ trợ."),
-        ("PSU",       "Nguồn máy tính (PSU)",         "fa-bolt",      true,  "Công suất phải đủ cho CPU và VGA."),
-        ("CASE",      "Vỏ case",                      "fa-desktop",   true,  "Cần hỗ trợ kích thước mainboard và chiều dài VGA."),
-        ("TANNHIET",  "Tản nhiệt (tùy chọn)",         "fa-fan",       false, "Tản nhiệt phải lắp vừa chân cắm của CPU.")
+        ("CPU",       "Bộ xử lý (CPU)",              "fa-microchip", true),
+        ("MAINBOARD", "Bo mạch chủ (Mainboard)",      "fa-server",    true),
+        ("RAM",       "Bộ nhớ trong (RAM)",           "fa-memory",    true),
+        ("VGA",       "Card đồ họa (VGA)",            "fa-display",   true),
+        ("SSD",       "Ổ cứng SSD",                   "fa-hard-drive",true),
+        ("PSU",       "Nguồn máy tính (PSU)",         "fa-bolt",      true),
+        ("CASE",      "Vỏ case",                      "fa-desktop",   true),
+        ("TANNHIET",  "Tản nhiệt (tùy chọn)",         "fa-fan",       false)
     };
 
     private static readonly string[] ThuTuPhuKien =
@@ -83,7 +83,6 @@ public sealed class BuildPcService : IBuildPcService
             Ten = b.Ten,
             Icon = b.Icon,
             BatBuoc = b.BatBuoc,
-            GoiY = b.GoiY,
             ThuTu = i + 1,
             LinhKiens = theoLoai.TryGetValue(b.Ma, out var list)
                 ? list
@@ -204,17 +203,17 @@ public sealed class BuildPcService : IBuildPcService
 
         if (cpu?.Socket != null && mainboard?.Socket != null && !SocketBang(cpu.Socket, mainboard.Socket))
         {
-            ketQua.Loi.Add($"CPU \"{TenGoi(cpu, "CPU")}\" dùng chân cắm {cpu.Socket}, còn mainboard \"{TenGoi(mainboard, "Mainboard", "Bo mạch chủ")}\" dùng chân cắm {mainboard.Socket}. Hai loại chân cắm khác nhau nên không lắp vào nhau được — hãy chọn CPU và mainboard cùng chân cắm.");
+            ketQua.Loi.Add($"CPU \"{TenGoi(cpu, "CPU")}\" không lắp vừa với mainboard \"{TenGoi(mainboard, "Mainboard", "Bo mạch chủ")}\" đã chọn. Hãy đổi một trong hai linh kiện này.");
         }
 
         if (ram?.LoaiRam != null && mainboard?.LoaiRam != null && !RamTuongThich(ram.LoaiRam, mainboard.LoaiRam))
         {
-            ketQua.Loi.Add($"Thanh RAM \"{TenGoi(ram, "RAM")}\" là loại {ram.LoaiRam}, nhưng mainboard \"{TenGoi(mainboard, "Mainboard", "Bo mạch chủ")}\" chỉ dùng được RAM {mainboard.LoaiRam}. Hãy chọn thanh RAM loại {mainboard.LoaiRam}.");
+            ketQua.Loi.Add($"Thanh RAM \"{TenGoi(ram, "RAM")}\" không dùng được cho mainboard \"{TenGoi(mainboard, "Mainboard", "Bo mạch chủ")}\" đã chọn. Hãy chọn thanh RAM khác.");
         }
 
         if (mainboard?.FormFactor != null && voCase != null && !CaseHoTro(mainboard.FormFactor, voCase.FormHoTro))
         {
-            ketQua.Loi.Add($"Mainboard \"{TenGoi(mainboard, "Mainboard", "Bo mạch chủ")}\" có kích thước {mainboard.FormFactor}, không vừa vỏ case \"{TenGoi(voCase, "Vỏ case", "Case")}\" (vỏ này chỉ nhận mainboard {string.Join(", ", voCase.FormHoTro)}). Hãy chọn vỏ case phù hợp hơn.");
+            ketQua.Loi.Add($"Mainboard \"{TenGoi(mainboard, "Mainboard", "Bo mạch chủ")}\" không vừa với vỏ case \"{TenGoi(voCase, "Vỏ case", "Case")}\" đã chọn. Hãy chọn vỏ case lớn hơn.");
         }
 
         if (vga?.ChieuDaiMm is int chieuDaiVga && voCase?.ChieuDaiVgaToiDaMm is int chieuDaiToiDa && chieuDaiVga > chieuDaiToiDa)
@@ -225,7 +224,7 @@ public sealed class BuildPcService : IBuildPcService
         if (tanNhiet != null && cpu?.Socket != null && tanNhiet.SocketHoTro.Count > 0 &&
             !tanNhiet.SocketHoTro.Any(s => SocketBang(s, cpu.Socket)))
         {
-            ketQua.Loi.Add($"Tản nhiệt \"{TenGoi(tanNhiet, "Tản nhiệt")}\" không lắp được cho CPU \"{TenGoi(cpu, "CPU")}\" vì không hỗ trợ chân cắm {cpu.Socket}. Hãy chọn tản nhiệt có hỗ trợ {cpu.Socket}.");
+            ketQua.Loi.Add($"Tản nhiệt \"{TenGoi(tanNhiet, "Tản nhiệt")}\" không lắp vừa với CPU \"{TenGoi(cpu, "CPU")}\" đã chọn. Hãy chọn tản nhiệt khác.");
         }
 
         ketQua.CongSuatUocTinhW = TinhTieuThuHeThongW(cpu, vga);

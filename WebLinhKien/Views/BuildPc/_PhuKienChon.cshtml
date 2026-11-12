@@ -72,6 +72,13 @@
                                 <span>@(item.TonKho > 0 ? $"Còn {item.TonKho}" : "Hết hàng")</span>
                             </span>
                         </span>
+
+                        <a class="tz-build-accessory-detail" href="@Url.Content($"~/SanPham/ChiTiet/{item.Uid}")"
+                           target="_blank" rel="noopener" title="Xem thông số chi tiết"
+                           aria-label="Xem thông số chi tiết @item.TenSanPham"
+                           onclick="event.stopPropagation()">
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                        </a>
                     </label>
                 </div>
             }

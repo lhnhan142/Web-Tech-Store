@@ -13,7 +13,6 @@
                         <span class="text-danger">*</span>
                     }
                 </h2>
-                <div class="text-muted" style="font-size: .75rem;">@Model.GoiY</div>
             </div>
         </div>
         <span class="tz-badge @(Model.LinhKiens.Any(x => x.ConHang) ? "tz-badge-success" : "tz-badge-danger")">
@@ -29,10 +28,26 @@
     }
     else
     {
+        <div class="tz-build-searchbar">
+            <div class="tz-build-search">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <label class="visually-hidden" for="tz-build-search-@Model.MaDanhMuc">Tìm @Model.Ten</label>
+                <input type="search" id="tz-build-search-@Model.MaDanhMuc" class="tz-build-search-input"
+                       data-step-search="@Model.MaDanhMuc" autocomplete="off"
+                       placeholder="Tìm @Model.Ten theo tên, hãng hoặc thông số..." />
+                <button type="button" class="tz-build-search-clear d-none"
+                        data-step-search-clear="@Model.MaDanhMuc" aria-label="Xóa từ khóa tìm kiếm">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="tz-build-chips" data-brand-chips="@Model.MaDanhMuc"></div>
+            <p class="tz-build-search-note d-none" data-search-note="@Model.MaDanhMuc" role="status"></p>
+        </div>
+
         <label class="visually-hidden" for="tz-build-select-@Model.MaDanhMuc">Chọn @Model.Ten</label>
-        <select class="form-select tz-build-select" id="tz-build-select-@Model.MaDanhMuc"
+        <select class="form-select tz-build-select d-none" id="tz-build-select-@Model.MaDanhMuc"
                 data-step="@Model.MaDanhMuc" data-required="@(Model.BatBuoc ? "true" : "false")"
-                aria-label="Chọn @Model.Ten">
+                aria-label="Chọn @Model.Ten" tabindex="-1">
             <option value="" data-price="0" data-stock="0">
                 @(Model.BatBuoc ? $"-- Chưa chọn {Model.Ten} --" : "Không chọn tản nhiệt rời (dùng tản theo CPU)")
             </option>
@@ -50,6 +65,7 @@
                         data-ram="@lk.LoaiRam"
                         data-form="@lk.FormFactor"
                         data-tdp="@lk.TdpW"
+                        data-tieu-thu="@lk.TieuThuW"
                         data-watt="@lk.CongSuatW"
                         data-vram="@lk.VramGb"
                         data-length="@lk.ChieuDaiMm"
@@ -64,6 +80,8 @@
         </select>
 
         <p class="tz-build-filter-note d-none" data-filter-note="@Model.MaDanhMuc" role="status"></p>
+
+        <div class="tz-build-picker" data-picker="@Model.MaDanhMuc"></div>
 
         <div class="tz-build-selected d-none mt-3" data-selected-preview="@Model.MaDanhMuc"></div>
     }

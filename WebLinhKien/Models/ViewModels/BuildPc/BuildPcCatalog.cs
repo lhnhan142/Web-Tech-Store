@@ -57,7 +57,6 @@ public sealed class BuildPcBuoc
     public string Ten { get; init; } = string.Empty;
     public string Icon { get; init; } = "fa-box";
     public bool BatBuoc { get; init; }
-    public string? GoiY { get; init; }
     public int ThuTu { get; init; }
     public IReadOnlyList<BuildPcLinhKien> LinhKiens { get; init; } = Array.Empty<BuildPcLinhKien>();
 }

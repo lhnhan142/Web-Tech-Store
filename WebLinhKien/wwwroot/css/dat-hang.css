@@ -249,23 +249,85 @@
 .dh-toast.is-error { background: var(--dh-danger); }
 .dh-toast.is-success { background: var(--dh-success); }
 
-/* ---------- Responsive ---------- */
-@media (max-width: 900px) {
-    .dh-layout { grid-template-columns: 1fr; }
-    .dh-side { position: static; }
-    .dh-submit-desktop, .dh-side .dh-note { display: none; }
-    .dh-mobilebar { display: flex; }
-    .dh-container { padding-bottom: 110px; }
-    .dh-items { max-height: none; }
+/* ---------- Địa chỉ: Tỉnh/Thành, Phường/Xã, Số nhà ---------- */
+.dh-addr {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
 }
+
+    .dh-addr > input {
+        grid-column: 1 / -1;
+        width: 100%;
+        min-width: 0;
+        box-sizing: border-box;
+        padding: 12px 14px;
+        font: inherit;
+        color: var(--dh-text);
+        background: #fff;
+        border: 1.5px solid var(--dh-border);
+        border-radius: 10px;
+        outline: 0;
+        transition: border-color .15s;
+    }
+
+        .dh-addr > input::placeholder {
+            color: #94a3b8;
+        }
+
+        .dh-addr > input:focus {
+            border-color: var(--dh-primary);
+        }
+
+    .dh-addr .ts-wrapper {
+        min-width: 0;
+    }
+
+        .dh-addr .ts-wrapper .ts-control {
+            padding: 12px 14px;
+            font: inherit;
+            color: var(--dh-text);
+            background: #fff;
+            border: 1.5px solid var(--dh-border);
+            border-radius: 10px;
+            box-shadow: none;
+        }
+
+        .dh-addr .ts-wrapper.focus .ts-control {
+            border-color: var(--dh-primary);
+            box-shadow: none;
+        }
+
+        .dh-addr .ts-wrapper.disabled .ts-control {
+            background: #f8fafc;
+            opacity: 1;
+            cursor: not-allowed;
+        }
+
+        .dh-addr .ts-wrapper .ts-control input {
+            border: 0;
+            padding: 0;
+        }
+
+        .dh-addr .ts-wrapper .ts-dropdown {
+            margin-top: 4px;
+            border: 1.5px solid var(--dh-border);
+            border-radius: 10px;
+            box-shadow: var(--dh-shadow);
+        }
+
+            .dh-addr .ts-wrapper .ts-dropdown .ts-dropdown-content {
+                max-height: 240px;
+            }
+
+.dh-field.has-error .dh-addr > input,
+.dh-field.has-error .dh-addr .ts-wrapper .ts-control {
+    border-color: var(--dh-danger);
+    background: var(--dh-danger-soft);
+}
+
 @media (max-width: 600px) {
-    .dh-steps__item:not(.is-active) { font-size: 0; gap: 0; }   /* thu gọn: chỉ giữ chữ của bước hiện tại */
-    .dh-steps__item + .dh-steps__item::before { width: 14px; margin-right: 6px; }
-    .dh-steps__item span { font-size: .75rem; }
-    .dh-title { font-size: 1.35rem; }
-    .dh-card { padding: 16px; }
-    .dh-grid, .dh-pays { grid-template-columns: 1fr; }
-}
-@media (prefers-reduced-motion: reduce) {
-    .dh-page *, .dh-page *::before, .dh-page *::after { animation: none !important; transition: none !important; }
+    .dh-addr {
+        grid-template-columns: 1fr;
+    }
 }

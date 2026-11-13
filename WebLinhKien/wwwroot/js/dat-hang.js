@@ -193,9 +193,12 @@
                 ? '' : 'Số điện thoại di động không hợp lệ (ví dụ 0912345678).';
         },
         diaChi: (v) => {
-            const s = v.trim();
-            return s.length < 5 || s.length > 200 ? 'Địa chỉ phải từ 5 đến 200 ký tự.' : '';
-        },
+    const s = v.trim();
+    if ($('#diaChi').type === 'hidden' &&
+        (!$('#dc-tinh').value || !$('#dc-xa').value || !$('#dc-duong').value.trim()))
+        return 'Vui lòng chọn tỉnh/thành, phường/xã và nhập số nhà, tên đường.';
+    return s.length < 5 || s.length > 200 ? 'Địa chỉ phải từ 5 đến 200 ký tự.' : '';
+},
         ghiChu: (v) => (v.length > 300 ? 'Ghi chú tối đa 300 ký tự.' : '')
     };
 

@@ -94,23 +94,32 @@ public class ProductFilterRequest
         // Phân tích khoảng giá nhanh nếu người dùng click chọn mức giá có sẵn
         if (!string.IsNullOrWhiteSpace(PriceRange))
         {
-            var parts = PriceRange.Split('-');
-            if (parts.Length == 2)
-            {
-                if (decimal.TryParse(parts[0], NumberStyles.Any, CultureInfo.InvariantCulture, out var min)) MinPrice = min;
-                if (decimal.TryParse(parts[1], NumberStyles.Any, CultureInfo.InvariantCulture, out var max)) MaxPrice = max;
-            }
-            else if (PriceRange.StartsWith("tren-", StringComparison.OrdinalIgnoreCase) &&
-                     decimal.TryParse(PriceRange.Substring(5), NumberStyles.Any, CultureInfo.InvariantCulture, out var minAbove))
+            var range = PriceRange.Trim();
+
+            // Phải xét "tren-" và "duoi-" TRƯỚC khi Split('-'): "tren-20000000" cũng tách ra đúng 2 phần,
+            // nếu để nhánh "min-max" xử lý trước thì "tren" parse lỗi còn 20000000 bị gán nhầm thành MaxPrice.
+            if (range.StartsWith("tren-", StringComparison.OrdinalIgnoreCase) &&
+                decimal.TryParse(range.Substring(5), NumberStyles.Any, CultureInfo.InvariantCulture, out var minAbove))
             {
                 MinPrice = minAbove;
                 MaxPrice = null;
             }
-            else if (PriceRange.StartsWith("duoi-", StringComparison.OrdinalIgnoreCase) &&
-                     decimal.TryParse(PriceRange.Substring(5), NumberStyles.Any, CultureInfo.InvariantCulture, out var maxBelow))
+            else if (range.StartsWith("duoi-", StringComparison.OrdinalIgnoreCase) &&
+                     decimal.TryParse(range.Substring(5), NumberStyles.Any, CultureInfo.InvariantCulture, out var maxBelow))
             {
                 MinPrice = 0;
                 MaxPrice = maxBelow;
+            }
+            else
+            {
+                var parts = range.Split('-');
+                if (parts.Length == 2 &&
+                    decimal.TryParse(parts[0], NumberStyles.Any, CultureInfo.InvariantCulture, out var min) &&
+                    decimal.TryParse(parts[1], NumberStyles.Any, CultureInfo.InvariantCulture, out var max))
+                {
+                    MinPrice = min;
+                    MaxPrice = max;
+                }
             }
         }
 

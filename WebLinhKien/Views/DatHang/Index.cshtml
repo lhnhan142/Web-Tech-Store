@@ -27,6 +27,7 @@
     <title>Đặt hàng - WebLinhKien</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
     <link rel="stylesheet" href="~/css/dat-hang.css" asp-append-version="true" />
+    <link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.default.min.css" rel="stylesheet" />Fs
 </head>
 <body class="dh-page">
 
@@ -81,8 +82,16 @@
                         </div>
 
                         <div class="dh-field dh-field--full" data-field="diaChi">
-                            <label for="diaChi">Địa chỉ nhận hàng <span class="dh-req">*</span></label>
-                            <div class="dh-input">
+                            <label>Địa chỉ nhận hàng <span class="dh-req">*</span></label>
+
+                            <div class="dh-addr" id="dc-box">
+                                <select id="dc-tinh" aria-label="Tỉnh/Thành phố"><option value="">Tỉnh / Thành phố</option></select>
+                                <select id="dc-xa" aria-label="Phường/Xã" disabled><option value="">Phường / Xã</option></select>
+                                <input id="dc-duong" type="text" maxlength="100" autocomplete="address-line1"
+                                       placeholder="Số nhà, tên đường" />
+                            </div>
+
+                            <div class="dh-input" id="dc-free" style="display:none">
                                 <i class="fa-solid fa-location-dot"></i>
                                 <input id="diaChi" name="diaChi" type="text" maxlength="200"
                                        autocomplete="street-address"
@@ -222,6 +231,9 @@
     <div class="dh-toast" id="dh-toast" role="status" aria-live="polite" hidden></div>
 
     <script>window.DAT_HANG = @Json.Serialize(cfg);</script>
+    <script src="~/js/dat-hang.js" asp-append-version="true"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
+    <script src="~/js/dia-chi.js" asp-append-version="true"></script>
     <script src="~/js/dat-hang.js" asp-append-version="true"></script>
 </body>
 </html>

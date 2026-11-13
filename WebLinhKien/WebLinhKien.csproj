@@ -16,6 +16,7 @@
     <PackageReference Include="SkiaSharp" Version="4.153.1" />
     <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="4.153.1" />
     <PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.14" />
+    <PackageReference Include="VietnamAddress" Version="1.0.0" />
   </ItemGroup>
 
   <ItemGroup>

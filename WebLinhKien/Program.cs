@@ -1,11 +1,13 @@
+using FluentValidation;
+using Microsoft.AspNetCore.RateLimiting;
+using System.Threading.RateLimiting;
+using VietnamAddress.AspNetCore;
 using WebLinhKien.Data;
 using WebLinhKien.Helpers;
-using WebLinhKien.WebSockets;
-using FluentValidation;
-using WebLinhKien.Validators;
 using WebLinhKien.Services;
-using System.Threading.RateLimiting;
-using Microsoft.AspNetCore.RateLimiting;
+using WebLinhKien.Validators;
+using WebLinhKien.WebSockets;
+
 
 namespace WebLinhKien
 {
@@ -17,7 +19,7 @@ namespace WebLinhKien
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-
+            builder.Services.AddVietnamAddress();
             builder.Services.AddDataLayer();
             builder.Services.AddAdminAuthentication();
             builder.Services.AddAdminWebSockets();
@@ -45,6 +47,7 @@ namespace WebLinhKien
                 options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
             });
             var app = builder.Build();
+            builder.Services.AddVietnamAddress();
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())

@@ -391,45 +391,68 @@ public class SanPhamRepository : RepositoryBase, ISanPhamRepository
         VALUES (@UidSanPham, @TenThongSo, @GiaTri, @Ordering)";
 
 
-    public async Task<PagedResult<SanPham>> GetPagedAdminAsync(
-        string? tuKhoa, string? maDanhMuc, bool chiSapHet, int nguongSapHet, int page, int pageSize)
-    {
-        var like = string.IsNullOrWhiteSpace(tuKhoa) ? null : "%" + SqlHelper.EscapeLike(tuKhoa.Trim()) + "%";
-        var danhMuc = string.IsNullOrWhiteSpace(maDanhMuc) ? null : maDanhMuc;
-
-        const string dieuKien = @"
+    // Điều kiện lọc dùng chung cho danh sách và bộ đếm kho, để số trên nhãn luôn khớp số dòng trong bảng.
+    // kho: null = tất cả; "sap-het" = còn 1..ngưỡng; "het-hang" = 0.
+    private const string DieuKienAdmin = @"
             WHERE (@Like IS NULL OR TenSanPham LIKE @Like OR MaSanPham LIKE @Like)
               AND (@MaDanhMuc IS NULL OR MaDanhMuc = @MaDanhMuc)
-              AND (@ChiSapHet = 0 OR TonKho <= @Nguong)";
+              AND (@MaThuongHieu IS NULL OR MaThuongHieu = @MaThuongHieu)";
 
-        const string sql =
+    private const string DieuKienKho = @"
+              AND (@Kho IS NULL
+                   OR (@Kho = 'het-hang' AND TonKho = 0)
+                   OR (@Kho = 'sap-het' AND TonKho > 0 AND TonKho <= @Nguong))";
+
+    private static object ThamSoAdmin(string? tuKhoa, string? maDanhMuc, string? maThuongHieu, string? kho, int nguong) => new
+    {
+        Like = string.IsNullOrWhiteSpace(tuKhoa) ? null : "%" + SqlHelper.EscapeLike(tuKhoa.Trim()) + "%",
+        MaDanhMuc = string.IsNullOrWhiteSpace(maDanhMuc) ? null : maDanhMuc.Trim(),
+        MaThuongHieu = string.IsNullOrWhiteSpace(maThuongHieu) ? null : maThuongHieu.Trim(),
+        Kho = kho is "sap-het" or "het-hang" ? kho : null,
+        Nguong = nguong
+    };
+
+    public async Task<PagedResult<SanPham>> GetPagedAdminAsync(
+        string? tuKhoa, string? maDanhMuc, string? kho, int nguongSapHet, int page, int pageSize, string? maThuongHieu = null)
+    {
+        var dieuKien = DieuKienAdmin + DieuKienKho;
+        var sql =
             "SELECT COUNT(*) FROM dbo.SanPhams " + dieuKien + ";" +
             "SELECT " + CotDanhSach + " FROM dbo.SanPhams " + dieuKien + @"
             ORDER BY NgayTao DESC, Uid DESC
             OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY;";
 
+        var p = new DynamicParameters(ThamSoAdmin(tuKhoa, maDanhMuc, maThuongHieu, kho, nguongSapHet));
+        p.Add("Offset", (page - 1) * pageSize);
+        p.Add("PageSize", pageSize);
+
         using var conn = Context.CreateConnection();
-        using var multi = await conn.QueryMultipleAsync(sql, new
-        {
-            Like = like,
-            MaDanhMuc = danhMuc,
-            ChiSapHet = chiSapHet,
-            Nguong = nguongSapHet,
-            Offset = (page - 1) * pageSize,
-            PageSize = pageSize
-        });
+        using var multi = await conn.QueryMultipleAsync(sql, p);
 
         var total = await multi.ReadSingleAsync<int>();
         var items = (await multi.ReadAsync<SanPham>()).ToList();
         return new PagedResult<SanPham>(items, page, pageSize, total);
     }
 
-    public async Task<int> DemSapHetAsync(int nguongSapHet)
+    public async Task<(int SoSapHet, int SoHetHang)> DemKhoAsync(
+        string? tuKhoa, string? maDanhMuc, string? maThuongHieu, int nguongSapHet)
     {
-        const string sql = "SELECT COUNT(*) FROM dbo.SanPhams WHERE TonKho <= @Nguong";
+        var sql = @"
+            SELECT
+                COALESCE(SUM(CASE WHEN TonKho > 0 AND TonKho <= @Nguong THEN 1 ELSE 0 END), 0) AS SoSapHet,
+                COALESCE(SUM(CASE WHEN TonKho = 0 THEN 1 ELSE 0 END), 0) AS SoHetHang
+            FROM dbo.SanPhams " + DieuKienAdmin;
 
         using var conn = Context.CreateConnection();
-        return await conn.ExecuteScalarAsync<int>(sql, new { Nguong = nguongSapHet });
+        var r = await conn.QuerySingleAsync<DemKhoRow>(
+            sql, ThamSoAdmin(tuKhoa, maDanhMuc, maThuongHieu, null, nguongSapHet));
+        return (r.SoSapHet, r.SoHetHang);
+    }
+
+    private sealed class DemKhoRow
+    {
+        public int SoSapHet { get; set; }
+        public int SoHetHang { get; set; }
     }
 
     public async Task<bool> MaSanPhamTonTaiAsync(string maSanPham, int? boQuaUid = null)

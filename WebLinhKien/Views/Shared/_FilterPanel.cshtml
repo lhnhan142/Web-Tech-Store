@@ -9,6 +9,7 @@
     var maxInputId = $"{prefix}-max-price";
     var brandContainerId = $"{prefix}-brand-filter-container";
     var priceValidationId = $"{prefix}-price-validation-msg";
+    var laAdmin = string.Equals(Model.Mode, "admin", StringComparison.OrdinalIgnoreCase);
 
     var priceRanges = new[]
     {
@@ -21,7 +22,7 @@
     };
 }
 
-<aside class="tz-filter-sidebar bg-white p-3 p-xl-4 rounded-3 border">
+<aside class="tz-filter-sidebar bg-white p-3 p-xl-4 rounded-3 border@(laAdmin ? " ad-filterhost" : "")">
     <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
         <h5 class="fw-bold mb-0 text-dark" style="font-size: 1.05rem;">
             <i class="fa-solid fa-filter text-warning me-2"></i>Bộ Lọc Sản Phẩm
@@ -33,15 +34,26 @@
             </a>
         }
     </div>
-
     <form id="@formId" action="@Model.ActionUrl" method="get" autocomplete="off">
         <!-- Giữ lại từ khóa tìm kiếm nếu có -->
         @if (!string.IsNullOrEmpty(Model.Q))
         {
-            <input type="hidden" name="q" value="@Model.Q" />
+            <!-- Admin: ô tìm kiếm nằm ngay trong bộ lọc bên trái -->
+            <div class="tz-filter-group mb-4">
+                <h6 class="tz-filter-title">Tìm kiếm</h6>
+                <input type="search" name="q" value="@Model.Q" class="form-control form-control-sm" placeholder="Tên hoặc mã sản phẩm..." aria-label="Tìm sản phẩm" />
+            </div>
         }
-        <input type="hidden" name="sort" value="@Model.Sort" />
-        <input type="hidden" name="pageSize" value="@Model.PageSize" />
+        else
+        {
+            <!-- Giữ lại từ khóa tìm kiếm nếu có -->
+            @if (!string.IsNullOrEmpty(Model.Q))
+            {
+                <input type="hidden" name="q" value="@Model.Q" />
+            }
+            <input type="hidden" name="sort" value="@Model.Sort" />
+            <input type="hidden" name="pageSize" value="@Model.PageSize" />
+        }
 
         <!-- Nhóm 1: Danh mục linh kiện -->
         <div class="tz-filter-group mb-4">
@@ -196,7 +208,35 @@
             </div>
         }
 
-        @if (Model.ShowStockFilter)
+        @if (Model.ShowStockFilter && laAdmin)
+        {
+            <!-- Nhóm 4 (admin): tình trạng kho, tách "sắp hết" (1..ngưỡng) và "hết hàng" (0) -->
+            <div class="tz-filter-group mb-4">
+                <h6 class="tz-filter-title">Tình Trạng Kho</h6>
+                <div class="tz-filter-options">
+                    @foreach (var (val, label, dem) in new[]
+                    {
+                        ("", "Tất cả", (int?)null),
+                        ("sap-het", $"Sắp hết (còn 1–{Model.NguongSapHet})", Model.SoSapHet),
+                        ("het-hang", "Hết hàng (0)", Model.SoHetHang)
+                    })
+                    {
+                        var isChecked = (Model.Kho ?? "") == val;
+                        <label class="tz-filter-radio @(isChecked ? "active" : "")">
+                            <input type="radio" name="kho" value="@val" @(isChecked ? "checked" : "") onchange="this.form.submit()" />
+                            <span class="d-flex align-items-center justify-content-between w-100">
+                                <span>@label</span>
+                                @if (dem.HasValue)
+                                {
+                                    <span class="badge bg-light text-muted border fw-normal">@dem</span>
+                                }
+                            </span>
+                        </label>
+                    }
+                </div>
+            </div>
+        }
+        else if (Model.ShowStockFilter)
         {
             <!-- Nhóm 4: Tình trạng kho -->
             <div class="tz-filter-group mb-4">

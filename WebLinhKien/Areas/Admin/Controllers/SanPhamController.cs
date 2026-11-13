@@ -40,45 +40,55 @@ public class SanPhamController : AdminController
         _env = env;
     }
 
-    // GET /Admin/SanPham?q=...&danhMuc=CPU&thuongHieu=INTEL&kho=sap-het&page=1
+    // GET /Admin/SanPham?q=...&danhMuc=CPU&thuongHieu=INTEL&kho=sap-het&page=1&ts=ram-ddr5
     // kho: "sap-het" (còn 1..ngưỡng) | "het-hang" (tồn 0) | bỏ trống (tất cả)
-    public async Task<IActionResult> Index(string? q, string? danhMuc, string? thuongHieu, string? kho, int page = 1)
+    public async Task<IActionResult> Index([FromQuery] ProductFilterRequest request)
     {
-        page = Math.Max(1, page);
-        var nguong = await LayNguongAsync();
-        q = string.IsNullOrWhiteSpace(q) ? null : q.Trim();
-        danhMuc = string.IsNullOrWhiteSpace(danhMuc) ? null : danhMuc.Trim();
-        thuongHieu = string.IsNullOrWhiteSpace(thuongHieu) ? null : thuongHieu.Trim();
-        kho = kho is "sap-het" or "het-hang" ? kho : null;
-        if (danhMuc is null) thuongHieu = null;   // hãng chỉ có nghĩa khi đã chọn loại
+        request ??= new ProductFilterRequest();
+        request.Normalize(); // Chẩn hóa: Trim khoảng trắng, loại bỏ query độc hại, gán giới hạn min/max
 
-        var ketQua = await _repo.GetPagedAdminAsync(q, danhMuc, kho, nguong, page, PageSize, thuongHieu);
-        if (ketQua.TotalPages > 0 && page > ketQua.TotalPages)
+        var nguong = await LayNguongAsync();
+
+        if (request.DanhMuc is null)
+            request.ThuongHieu = null; // hãng chỉ có nghĩa khi đã chọn loại
+
+        // Phân trang với PageSize cố định của Admin (15), không bị ép theo chuẩn 12/24/36 của Client
+        var ketQua = await _repo.GetPagedAdminAsync(request, nguong, PageSize);
+
+        if (ketQua.TotalPages > 0 && request.Page > ketQua.TotalPages)
         {
-            page = ketQua.TotalPages;
-            ketQua = await _repo.GetPagedAdminAsync(q, danhMuc, kho, nguong, page, PageSize, thuongHieu);
+            request.Page = ketQua.TotalPages;
+            ketQua = await _repo.GetPagedAdminAsync(request, nguong, PageSize);
         }
 
-        var (soSapHet, soHetHang) = await _repo.DemKhoAsync(q, danhMuc, thuongHieu, nguong);
+        var (soSapHet, soHetHang) = await _repo.DemKhoAsync(request, nguong);
+
+        var facets = request.DanhMuc is null
+            ? new Dictionary<string, int>()
+            : await _repo.GetSpecFacetsAsync(request, admin: true, nguong: nguong);
+
         var vm = new SanPhamListViewModel
         {
             Items = ketQua.Items,
-            Page = page,
+            Page = request.Page,
             TotalPages = ketQua.TotalPages,
             TotalItems = ketQua.TotalItems,
-            Q = q,
-            MaDanhMuc = danhMuc,
-            MaThuongHieu = thuongHieu,
-            Kho = kho,
+            Q = request.Q,
+            MaDanhMuc = request.DanhMuc,
+            MaThuongHieu = request.ThuongHieu,
+            Kho = request.Kho,
             NguongSapHet = nguong,
             SoSapHet = soSapHet,
             SoHetHang = soHetHang,
             DanhMucs = await _danhMucRepo.GetAllAsync(chiHienThi: false),
             ThuongHieus = await _thuongHieuRepo.GetAllAsync(chiHienThi: false),
-            HangTheoLoai = danhMuc is null
+            HangTheoLoai = request.DanhMuc is null
                 ? Array.Empty<ThuongHieuFilterItem>()
-                : await _repo.GetBrandsByCategoryAsync(danhMuc)
+                : await _repo.GetBrandsByCategoryAsync(request.DanhMuc),
+            Ts = request.Ts,
+            SpecFacets = facets
         };
+
         return View(vm);
     }
 

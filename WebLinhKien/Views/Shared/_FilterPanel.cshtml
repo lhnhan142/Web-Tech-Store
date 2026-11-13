@@ -140,7 +140,10 @@
                             var token = sg.Key + ":" + opt.Value;
                             var isSpecChecked = Model.SelectedSpecs.Any(s => string.Equals(s, token, StringComparison.OrdinalIgnoreCase));
                             var count = Model.SpecFacets.TryGetValue(token, out var c) ? c : 0;
-                            if (count == 0 && !isSpecChecked) { continue; }
+                            
+                            // [ĐÃ SỬA]: Luôn hiển thị nếu là Admin
+                            if (count == 0 && !isSpecChecked && !laAdmin) { continue; } 
+                            
                             shown++;
                             <label class="tz-filter-checkbox @(isSpecChecked ? "active" : "") @(shown > 6 && !isSpecChecked ? "tz-spec-extra" : "")">
                                 <input type="checkbox" name="ts" value="@token"
@@ -353,4 +356,3 @@
         form.submit();
     }
 </script>
-

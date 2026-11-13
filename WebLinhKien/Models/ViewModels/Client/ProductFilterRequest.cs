@@ -29,6 +29,18 @@ public class ProductFilterRequest
     /// <summary>Chỉ hiển thị sản phẩm còn hàng (TonKho > 0)</summary>
     public bool? ConHang { get; set; }
 
+    /// <summary>
+    /// Các lựa chọn lọc theo thông số kỹ thuật, dạng "khóa:giá trị" (vd: "ram_loai:DDR5", "ram_dl:32").
+    /// URL có thể lặp nhiều lần (ts=a&amp;ts=b) hoặc nối bằng dấu phẩy (ts=a,b). Sau Normalize chỉ còn lựa chọn hợp lệ.
+    /// </summary>
+    public List<string>? Ts { get; set; }
+
+    /// <summary>Các giá trị đang chọn của một nhóm thông số (vd: key = "ram_dl" trả về "16", "32")</summary>
+    public IEnumerable<string> GetSpecValues(string key) =>
+        (Ts ?? new List<string>())
+            .Where(t => t.StartsWith(key + ":", StringComparison.OrdinalIgnoreCase))
+            .Select(t => t.Substring(key.Length + 1));
+
     /// <summary>Tiêu chí sắp xếp: "default", "gia-tang", "gia-giam", "moi-nhat", "ten-az"</summary>
     public string? Sort { get; set; } = "default";
 
@@ -63,6 +75,15 @@ public class ProductFilterRequest
         DanhMuc = string.IsNullOrWhiteSpace(DanhMuc) ? null : DanhMuc.Trim().ToUpperInvariant();
         ThuongHieu = string.IsNullOrWhiteSpace(ThuongHieu) ? null : ThuongHieu.Trim().ToUpperInvariant();
         Sort = string.IsNullOrWhiteSpace(Sort) ? "default" : Sort.Trim().ToLowerInvariant();
+
+        // Lọc theo thông số: tách dấu phẩy, bỏ lựa chọn không thuộc danh mục hiện tại, bỏ trùng
+        Ts = (Ts ?? new List<string>())
+            .SelectMany(s => (s ?? "").Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+            .Select(t => SpecFilterDefinitions.Canonicalize(DanhMuc, t))
+            .Where(t => t != null)
+            .Select(t => t!)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
 
         if (Page < 1) Page = 1;
         if (PageSize != 12 && PageSize != 24 && PageSize != 36) PageSize = 12;
@@ -112,6 +133,8 @@ public class ProductFilterRequest
             if (MinPrice.HasValue) dict["minPrice"] = MinPrice.Value.ToString("0");
             if (MaxPrice.HasValue) dict["maxPrice"] = MaxPrice.Value.ToString("0");
         }
+
+        if (Ts != null && Ts.Count > 0) dict["ts"] = string.Join(",", Ts);
 
         if (ConHang.HasValue) dict["conHang"] = ConHang.Value.ToString().ToLowerInvariant();
         if (!string.IsNullOrEmpty(Sort) && Sort != "default") dict["sort"] = Sort;

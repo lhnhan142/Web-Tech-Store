@@ -44,6 +44,8 @@
                  && string.IsNullOrEmpty(activeBrand)
                  && string.IsNullOrEmpty(querySearch);
 
+    var isBuildPc = currentPath.StartsWith("/BuildPc", StringComparison.OrdinalIgnoreCase);
+
     bool IsCatActive(string catCode) => string.Equals(activeCat, catCode, StringComparison.OrdinalIgnoreCase);
     bool IsBrandActive(string brandCode) => string.Equals(activeBrand, brandCode, StringComparison.OrdinalIgnoreCase);
 }
@@ -250,6 +252,12 @@
                         <span>Phụ kiện</span>
                     </a>
                 </li>
+                <li class="tz-nav-item">
+                    <a href="~/BuildPc" class="tz-nav-link @(isBuildPc ? "active" : "")">
+                        <i class="fa-solid fa-screwdriver-wrench"></i>
+                        <span>Build PC</span>
+                    </a>
+                </li>
 
                 <!-- Dropdown Thương hiệu -->
                 <li class="tz-nav-item">
@@ -315,6 +323,7 @@
             <li><a href="~/SanPham?danhMuc=PSU" class="@(IsCatActive("PSU") ? "active" : "")"><i class="fa-solid fa-bolt"></i> Nguồn máy tính (PSU)</a></li>
             <li><a href="~/SanPham?danhMuc=CASE" class="@(IsCatActive("CASE") ? "active" : "")"><i class="fa-solid fa-desktop"></i> Vỏ Case Gaming</a></li>
             <li><a href="~/SanPham?danhMuc=PHUKIEN" class="@(IsCatActive("PHUKIEN") ? "active" : "")"><i class="fa-solid fa-computer-mouse"></i> Phụ kiện & Gear</a></li>
+            <li><a href="~/BuildPc" class="@(isBuildPc ? "active" : "")"><i class="fa-solid fa-screwdriver-wrench"></i> Build PC</a></li>
             <li><a href="~/DatHang"><i class="fa-solid fa-cart-shopping"></i> Giỏ hàng (@soLuongGioHang)</a></li>
             <li><a href="~/Admin/Account/Login"><i class="fa-regular fa-user"></i> Đăng nhập Quản trị</a></li>
         </ul>

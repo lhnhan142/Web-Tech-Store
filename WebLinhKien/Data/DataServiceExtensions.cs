@@ -21,6 +21,7 @@ public static class DataServiceExtensions
         services.AddScoped<ITinhTrangDonHangRepository, TinhTrangDonHangRepository>();
         services.AddScoped<ICaiDatRepository, CaiDatRepository>();
         services.AddScoped<ITaiKhoanRepository, TaiKhoanRepository>();
+        services.AddScoped<IBuildPcRepository, BuildPcRepository>();
 
         return services;
     }

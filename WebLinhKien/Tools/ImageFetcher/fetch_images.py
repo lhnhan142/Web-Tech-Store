@@ -293,9 +293,12 @@ def main():
     )
 
     ap.add_argument(
-        "--sql",
-        default="update_anh.sql"
-    )
+       "--sql",
+       default=str(
+           Path(__file__).resolve().parents[2]
+           / "Database" / "update_anh.sql"
+       )
+   )
 
     ap.add_argument(
         "--prefix",

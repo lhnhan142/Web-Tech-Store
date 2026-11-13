@@ -23,6 +23,11 @@ public sealed class SpecGroup
     public string TenThongSo { get; }
     public IReadOnlyList<SpecOption> Options { get; }
 
+    /// <summary>Tên "thông số" đặc biệt: nhóm này lọc theo TÊN SẢN PHẨM thay vì bảng ThongSoKyThuats.</summary>
+    public const string TheoTenSanPham = "@TenSanPham";
+
+    public bool LocTheoTenSanPham => TenThongSo == TheoTenSanPham;
+
     public SpecGroup(string key, string label, string tenThongSo, params SpecOption[] options)
     {
         Key = key;
@@ -38,7 +43,7 @@ public static class SpecFilterDefinitions
     {
         ["CPU"] = new[]
         {
-            new SpecGroup("cpu_gen", "Thế hệ CPU", "Thế hệ",
+            new SpecGroup("cpu_gen", "Thế hệ CPU", SpecGroup.TheoTenSanPham,
                 new SpecOption("intel-core-ultra-2", "Intel Core Ultra (Series 2)", "%Ultra% 2%"),
                 new SpecOption("intel-14", "Intel Core Gen 14", "%-14%", "% 14%"),
                 new SpecOption("intel-13", "Intel Core Gen 13", "%-13%", "% 13%"),

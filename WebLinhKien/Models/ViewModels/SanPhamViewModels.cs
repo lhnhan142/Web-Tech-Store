@@ -15,13 +15,17 @@ public class SanPhamListViewModel
     public string? MaThuongHieu { get; set; }
     public string? Kho { get; set; }           // null | "sap-het" | "het-hang"
 
+    /// <summary>Các lựa chọn lọc theo thông số đang chọn, dạng "khóa:giá trị" (vd: ram_loai:DDR5)</summary>
+    public List<string> Ts { get; set; } = new();
+
+    /// <summary>Số sản phẩm của từng lựa chọn lọc thông số</summary>
+    public IReadOnlyDictionary<string, int> SpecFacets { get; set; } = new Dictionary<string, int>();
+
     public int NguongSapHet { get; set; }
     public int SoSapHet { get; set; }          // còn 1..ngưỡng, đếm theo cùng bộ lọc với danh sách
     public int SoHetHang { get; set; }         // tồn kho = 0, đếm theo cùng bộ lọc với danh sách
 
     public IReadOnlyList<ThuongHieuFilterItem> HangTheoLoai { get; set; } = Array.Empty<ThuongHieuFilterItem>();
-    public List<string>? Ts { get; set; } = new List<string>();
-    public IReadOnlyDictionary<string, int>? SpecFacets { get; set; } = new Dictionary<string, int>();
 
     /// <summary>Tham số hiện tại để giữ nguyên bộ lọc khi chuyển trang hoặc đổi trạng thái kho.</summary>
     public Dictionary<string, string?> RouteValues(string? kho, int? page = null)
@@ -30,6 +34,7 @@ public class SanPhamListViewModel
         if (!string.IsNullOrEmpty(Q)) d["q"] = Q;
         if (!string.IsNullOrEmpty(MaDanhMuc)) d["danhMuc"] = MaDanhMuc;
         if (!string.IsNullOrEmpty(MaThuongHieu)) d["thuongHieu"] = MaThuongHieu;
+        if (Ts.Count > 0) d["ts"] = string.Join(",", Ts);
         if (!string.IsNullOrEmpty(kho)) d["kho"] = kho;
         if (page is > 1) d["page"] = page.Value.ToString();
         return d;
@@ -49,6 +54,8 @@ public class SanPhamListViewModel
         ShowPriceFilter = false,
         ShowStockFilter = true,
         Kho = Kho,
+        SelectedSpecs = Ts,
+        SpecFacets = SpecFacets,
         NguongSapHet = NguongSapHet,
         SoSapHet = SoSapHet,
         SoHetHang = SoHetHang

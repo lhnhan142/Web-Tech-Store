@@ -14,7 +14,7 @@ Chạy tất cả:
 CSV cần có:
     Name, ImageFile
 
-Có thể có:
+Có thể có:z
     MaSanPham hoặc Sku, ImageUrl
 """
 

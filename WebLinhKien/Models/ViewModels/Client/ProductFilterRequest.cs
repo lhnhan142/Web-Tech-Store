@@ -29,9 +29,12 @@ public class ProductFilterRequest
     /// <summary>Chỉ hiển thị sản phẩm còn hàng (TonKho > 0)</summary>
     public bool? ConHang { get; set; }
 
+    /// <summary>Chỉ admin dùng: "sap-het" | "het-hang" | null</summary>
+    public string? Kho { get; set; }
+
     /// <summary>
     /// Các lựa chọn lọc theo thông số kỹ thuật, dạng "khóa:giá trị" (vd: "ram_loai:DDR5", "ram_dl:32").
-    /// URL có thể lặp nhiều lần (ts=a&amp;ts=b) hoặc nối bằng dấu phẩy (ts=a,b). Sau Normalize chỉ còn lựa chọn hợp lệ.
+    /// URL có thể lặp nhiều lần (ts=a&ts=b) hoặc nối bằng dấu phẩy (ts=a,b). Sau Normalize chỉ còn lựa chọn hợp lệ.
     /// </summary>
     public List<string>? Ts { get; set; }
 
@@ -113,6 +116,9 @@ public class ProductFilterRequest
 
         if (MinPrice.HasValue && MinPrice.Value < 0) MinPrice = 0;
         if (MaxPrice.HasValue && MaxPrice.Value < 0) MaxPrice = 0;
+
+        // [MỚI] Đồng bộ hỗ trợ lọc Kho cho Admin
+        Kho = Kho is "sap-het" or "het-hang" ? Kho : null;
     }
 
     /// <summary>Chuyển các điều kiện lọc hiện tại thành Dictionary để giữ nguyên trên Pagination link</summary>
@@ -139,7 +145,10 @@ public class ProductFilterRequest
         if (ConHang.HasValue) dict["conHang"] = ConHang.Value.ToString().ToLowerInvariant();
         if (!string.IsNullOrEmpty(Sort) && Sort != "default") dict["sort"] = Sort;
         if (PageSize != 12) dict["pageSize"] = PageSize.ToString();
+
+        // [MỚI] Giữ lại params Kho khi Admin phân trang
+        if (!string.IsNullOrEmpty(Kho)) dict["kho"] = Kho;
+
         return dict;
     }
 }
-

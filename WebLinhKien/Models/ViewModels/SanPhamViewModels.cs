@@ -20,6 +20,8 @@ public class SanPhamListViewModel
     public int SoHetHang { get; set; }         // tồn kho = 0, đếm theo cùng bộ lọc với danh sách
 
     public IReadOnlyList<ThuongHieuFilterItem> HangTheoLoai { get; set; } = Array.Empty<ThuongHieuFilterItem>();
+    public List<string>? Ts { get; set; } = new List<string>();
+    public IReadOnlyDictionary<string, int>? SpecFacets { get; set; } = new Dictionary<string, int>();
 
     /// <summary>Tham số hiện tại để giữ nguyên bộ lọc khi chuyển trang hoặc đổi trạng thái kho.</summary>
     public Dictionary<string, string?> RouteValues(string? kho, int? page = null)

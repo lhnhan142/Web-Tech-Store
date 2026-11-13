@@ -38,7 +38,7 @@ public interface ISanPhamRepository
     Task<PagedResult<SanPham>> GetPagedProductsAsync(ProductFilterRequest filter);
 
     /// <summary>Số sản phẩm của từng lựa chọn lọc thông số trong danh mục đang chọn (khóa dạng "ram_loai:DDR5")</summary>
-    Task<Dictionary<string, int>> GetSpecFacetsAsync(ProductFilterRequest filter);
+    Task<IReadOnlyDictionary<string, int>> GetSpecFacetsAsync(ProductFilterRequest filter, bool admin = false, int nguong = 0);
 
     /// <summary>Gợi ý tìm kiếm nhanh (Live Search) theo từ khóa (tên hoặc mã sản phẩm)</summary>
     Task<IReadOnlyList<SanPham>> SearchSuggestionsAsync(string keyword, int limit = 6);
@@ -58,10 +58,10 @@ public interface ISanPhamRepository
     /// Danh sách cho trang quản trị: thấy cả sản phẩm đang ẩn, không lấy cột MoTa cho nhẹ.
     /// kho: null = tất cả, "sap-het" = tồn từ 1 đến ngưỡng, "het-hang" = tồn 0.
     /// </summary>
-    Task<PagedResult<SanPham>> GetPagedAdminAsync(string? tuKhoa, string? maDanhMuc, string? kho, int nguongSapHet, int page, int pageSize, string? maThuongHieu = null);
+    Task<PagedResult<SanPham>> GetPagedAdminAsync(ProductFilterRequest filter, int nguong, int pageSize);
 
     /// <summary>Đếm sắp hết (1..ngưỡng) và hết hàng (0) theo CÙNG điều kiện tìm kiếm/danh mục/thương hiệu với danh sách.</summary>
-    Task<(int SoSapHet, int SoHetHang)> DemKhoAsync(string? tuKhoa, string? maDanhMuc, string? maThuongHieu, int nguongSapHet);
+    Task<(int SoSapHet, int SoHetHang)> DemKhoAsync(ProductFilterRequest filter, int nguong);
 
     Task<bool> MaSanPhamTonTaiAsync(string maSanPham, int? boQuaUid = null);
 

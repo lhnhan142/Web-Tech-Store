@@ -5,6 +5,7 @@ namespace WebLinhKien.Repositories.Interfaces;
 public partial interface IThuongHieuRepository
 {
     Task<IReadOnlyList<ThuongHieu>> GetAllAsync(bool chiHienThi = true);
+    Task<IReadOnlyList<ThuongHieu>> GetByDanhMucAsync(string maDanhMuc);
     Task<ThuongHieu?> GetByMaAsync(string maThuongHieu);
     Task<bool> InsertAsync(ThuongHieu thuongHieu);
     Task<bool> UpdateAsync(ThuongHieu thuongHieu);

@@ -1,0 +1,87 @@
+@model WebLinhKien.Models.ViewModels.BuildPc.BuildPcPhuKienNhom
+@using System.Globalization
+
+@functions {
+    string IconPhuKien(string loai) => (loai ?? string.Empty).ToLowerInvariant() switch
+    {
+        "màn hình" => "fa-tv",
+        "bàn phím" => "fa-keyboard",
+        "chuột" => "fa-computer-mouse",
+        "tai nghe" => "fa-headphones",
+        "loa" => "fa-volume-high",
+        "webcam" => "fa-video",
+        "microphone" => "fa-microphone",
+        "bàn di chuột" => "fa-border-all",
+        _ => "fa-plug"
+    };
+}
+
+<details class="tz-build-accessory-group" data-accessory-group="@Model.Loai">
+    <summary class="tz-build-accessory-summary">
+        <span class="d-flex align-items-center gap-2">
+            <i class="fa-solid @IconPhuKien(Model.Loai) text-warning"></i>
+            <span class="fw-semibold">@Model.Loai</span>
+            <span class="badge bg-light text-muted border fw-normal">@Model.Items.Count</span>
+        </span>
+        <i class="fa-solid fa-chevron-down tz-build-accessory-chevron"></i>
+    </summary>
+
+    <div class="tz-build-accessory-body">
+        <div class="row g-2">
+            @foreach (var item in Model.Items)
+            {
+                var icon = IconPhuKien(item.LoaiPhuKien ?? Model.Loai);
+                <div class="col-md-6">
+                    <label class="tz-build-accessory-item @(item.TonKho <= 0 ? "is-disabled" : "")">
+                        <input type="checkbox" class="tz-build-accessory" value="@item.Uid"
+                               data-kind="@(item.LoaiPhuKien ?? Model.Loai)"
+                               data-name="@item.TenSanPham"
+                               data-brand="@item.TenThuongHieu"
+                               data-price="@item.GiaBan.ToString("0", CultureInfo.InvariantCulture)"
+                               data-original-price="@item.GiaGoc.ToString("0", CultureInfo.InvariantCulture)"
+                               data-image="@item.AnhDaiDien"
+                               data-stock="@item.TonKho"
+                               data-warranty="@item.BaoHanhThang"
+                               data-connect="@item.KetNoi"
+                               data-resolution="@item.DoPhanGiaiNgang"
+                               data-hz="@item.TanSoQuetHz"
+                               disabled="@(item.TonKho <= 0)" />
+
+                        <span class="tz-build-accessory-thumb">
+                            @if (!string.IsNullOrEmpty(item.AnhDaiDien))
+                            {
+                                <img src="@item.AnhDaiDien" alt="@item.TenSanPham" loading="lazy"
+                                     onerror="tzImgError(this)" />
+                                <span class="tz-thumb-fallback" style="display: none;">
+                                    <i class="fa-solid @icon"></i>
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="tz-thumb-fallback" style="display: flex;">
+                                    <i class="fa-solid @icon"></i>
+                                </span>
+                            }
+                        </span>
+
+                        <span class="tz-build-accessory-info">
+                            <span class="tz-build-accessory-name">@item.TenSanPham</span>
+                            <span class="tz-build-accessory-meta">
+                                <span class="fw-bold text-accent">@item.GiaBanText</span>
+                                <span>·</span>
+                                <span>@(item.TonKho > 0 ? $"Còn {item.TonKho}" : "Hết hàng")</span>
+                            </span>
+                        </span>
+
+                        <a class="tz-build-accessory-detail" href="@Url.Content($"~/SanPham/ChiTiet/{item.Uid}")"
+                           target="_blank" rel="noopener" title="Xem thông số chi tiết"
+                           aria-label="Xem thông số chi tiết @item.TenSanPham"
+                           onclick="event.stopPropagation()">
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                        </a>
+                    </label>
+                </div>
+            }
+        </div>
+    </div>
+</details>

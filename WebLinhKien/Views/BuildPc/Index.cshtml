@@ -1,0 +1,238 @@
+@model WebLinhKien.Models.ViewModels.BuildPc.BuildPcIndexViewModel
+@using System.Globalization
+@{
+    ViewData["Title"] = "Build PC";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/build-pc.css" asp-append-version="true" />
+}
+
+@await Html.PartialAsync("_Breadcrumb", Model.Breadcrumbs)
+
+<div class="tz-container pb-5" data-chi-tiet-url="@Url.Content("~/SanPham/ChiTiet/")">
+    @Html.AntiForgeryToken()
+
+    <div class="tz-category-header mb-4 p-4 rounded-3 bg-white border">
+        <div class="d-flex align-items-center gap-3 flex-wrap">
+            <div class="tz-cat-icon" style="width: 58px; height: 58px; font-size: 1.45rem;">
+                <i class="fa-solid fa-screwdriver-wrench"></i>
+            </div>
+            <div>
+                <h1 class="h3 fw-bold mb-1 text-dark">Build PC – Lắp ráp cấu hình theo ý bạn</h1>
+                <p class="text-muted mb-0 small">
+                    Chọn linh kiện từng bước, kiểm tra tương thích tự động và thêm cả bộ vào giỏ hàng.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    @if (!Model.CoDuLieu)
+    {
+        @await Html.PartialAsync("_EmptyState", new EmptyStateViewModel
+        {
+            Icon = "fa-screwdriver-wrench",
+            Title = "Chưa có dữ liệu linh kiện Build PC",
+            Description = "Kho linh kiện hiện chưa có sản phẩm còn hiển thị. Vui lòng quay lại sau hoặc xem danh sách sản phẩm.",
+            ActionText = "Xem sản phẩm",
+            ActionUrl = "/SanPham"
+        })
+    }
+    else
+    {
+        <ul class="nav nav-pills tz-build-tabs mb-4" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="tz-build-manual-tab" data-bs-toggle="pill"
+                        data-bs-target="#tz-build-manual" type="button" role="tab"
+                        aria-controls="tz-build-manual" aria-selected="true">
+                    <i class="fa-solid fa-list-check me-1"></i> Tự chọn linh kiện
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tz-build-budget-tab" data-bs-toggle="pill"
+                        data-bs-target="#tz-build-budget" type="button" role="tab"
+                        aria-controls="tz-build-budget" aria-selected="false">
+                    <i class="fa-solid fa-wand-magic-sparkles me-1"></i> Gợi ý theo ngân sách
+                </button>
+            </li>
+        </ul>
+
+        <div class="tab-content">
+            <!-- ========================= TAB TỰ CHỌN ========================= -->
+            <div class="tab-pane fade show active" id="tz-build-manual" role="tabpanel" aria-labelledby="tz-build-manual-tab">
+                <div class="row g-4">
+                    <div class="col-lg-8">
+                        <p class="text-muted small mb-3">
+                            <i class="fa-solid fa-circle-info text-warning me-1"></i>
+                            Mục bị làm mờ là linh kiện không tương thích với lựa chọn hiện tại;
+                            lý do hiển thị ngay trong tên mục và ở ghi chú dưới ô chọn.
+                        </p>
+                        @foreach (var buoc in Model.Buocs)
+                        {
+                            @await Html.PartialAsync("_BuocChon", buoc)
+                        }
+
+                        <section class="tz-build-step-card tz-card bg-white border rounded-3 p-3 p-md-4 mb-3" id="tz-build-accessories">
+                            <div class="d-flex align-items-start justify-content-between gap-3 mb-3">
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="tz-build-step-index"><i class="fa-solid fa-plug"></i></span>
+                                    <div>
+                                        <h2 class="h6 fw-bold mb-0">
+                                            <i class="fa-solid fa-headphones text-warning me-1"></i>Phụ kiện (tùy chọn)
+                                        </h2>
+                                        <div class="text-muted" style="font-size: .75rem;">
+                                            Chọn một hoặc nhiều phụ kiện; hệ thống kiểm tra cổng kết nối và độ phân giải màn hình.
+                                        </div>
+                                    </div>
+                                </div>
+                                <span class="tz-badge tz-badge-dark" id="tz-build-accessory-count">0 đã chọn</span>
+                            </div>
+
+                            @if (Model.PhuKienNhoms.Any())
+                            {
+                                @foreach (var nhom in Model.PhuKienNhoms)
+                                {
+                                    @await Html.PartialAsync("_PhuKienChon", nhom)
+                                }
+                            }
+                            else
+                            {
+                                <div class="p-3 bg-light rounded-2 text-center text-muted small border">
+                                    Hiện chưa có phụ kiện nào còn hiển thị.
+                                </div>
+                            }
+                        </section>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <aside class="tz-filter-sidebar tz-build-summary bg-white p-3 p-xl-4 rounded-3 border" id="tz-build-summary">
+                            <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
+                                <h2 class="h6 fw-bold mb-0 text-dark">
+                                    <i class="fa-solid fa-clipboard-list text-warning me-2"></i>Cấu hình của bạn
+                                </h2>
+                                <button type="button" class="btn btn-link text-danger small text-decoration-none p-0" id="tz-build-reset">
+                                    <i class="fa-solid fa-rotate-left me-1"></i>Đặt lại
+                                </button>
+                            </div>
+
+                            <div class="tz-build-summary-list">
+                                @foreach (var buoc in Model.Buocs)
+                                {
+                                    <div class="tz-build-summary-row" data-summary="@buoc.MaDanhMuc">
+                                        <div class="tz-build-summary-label">
+                                            <i class="fa-solid @buoc.Icon"></i>
+                                            <span>@buoc.Ten</span>
+                                        </div>
+                                        <div class="tz-build-summary-value text-muted">Chưa chọn</div>
+                                    </div>
+                                }
+                                <div class="tz-build-summary-row" data-summary="PHUKIEN">
+                                    <div class="tz-build-summary-label">
+                                        <i class="fa-solid fa-plug"></i>
+                                        <span>Phụ kiện</span>
+                                    </div>
+                                    <div class="tz-build-summary-value text-muted">Chưa chọn</div>
+                                </div>
+                            </div>
+
+                            <div id="tz-build-messages" class="tz-build-messages mt-3"></div>
+
+                            <div class="tz-build-totals mt-3 pt-3 border-top">
+                                <div class="d-flex align-items-center justify-content-between mb-1">
+                                    <span class="text-muted small fw-semibold">Tổng tạm tính</span>
+                                    <strong class="tz-price-current" id="tz-build-total">0 đ</strong>
+                                </div>
+                                <div class="d-flex align-items-center justify-content-between small text-muted">
+                                    <span>Số linh kiện</span>
+                                    <span id="tz-build-count">0</span>
+                                </div>
+                                <div class="d-flex align-items-center justify-content-between small text-muted">
+                                    <span>Công suất ước tính</span>
+                                    <span id="tz-build-power">--</span>
+                                </div>
+                            </div>
+
+                            <div class="d-flex flex-column gap-2 mt-3">
+                                <button type="button" class="tz-btn tz-btn-outline w-100" id="tz-build-check">
+                                    <i class="fa-solid fa-circle-check"></i> Kiểm tra tương thích
+                                </button>
+                                <button type="button" class="tz-btn tz-btn-accent w-100" id="tz-build-add" disabled>
+                                    <i class="fa-solid fa-cart-plus"></i> Thêm cả bộ vào giỏ
+                                </button>
+                                <a href="~/DatHang" id="tz-build-cart-link" class="tz-btn tz-btn-primary w-100 d-none">
+                                    <i class="fa-solid fa-cart-shopping"></i> Xem giỏ hàng
+                                </a>
+                            </div>
+                            <p class="text-muted small mt-3 mb-0">
+                                Cần chọn đủ <strong>7 linh kiện chính</strong> (CPU, Mainboard, RAM, VGA, SSD, PSU, Case) để thêm cả bộ. Mỗi linh kiện được thêm với số lượng 1, giá và tồn kho sẽ được kiểm tra lại khi thêm vào giỏ.
+                            </p>
+                        </aside>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========================= TAB NGÂN SÁCH ========================= -->
+            <div class="tab-pane fade" id="tz-build-budget" role="tabpanel" aria-labelledby="tz-build-budget-tab">
+                <div class="row g-4">
+                    <div class="col-lg-4">
+                        <aside class="tz-filter-sidebar bg-white p-3 p-xl-4 rounded-3 border">
+                            <h2 class="h6 fw-bold mb-3 pb-2 border-bottom text-dark">
+                                <i class="fa-solid fa-wallet text-warning me-2"></i>Ngân sách của bạn
+                            </h2>
+
+                            <label for="tz-build-budget-input" class="form-label small fw-semibold">Ngân sách (VNĐ)</label>
+                            <input type="text" id="tz-build-budget-input" class="tz-input"
+                                   inputmode="numeric" autocomplete="off"
+                                   value="@Model.NganSachMacDinh.ToString("N0", CultureInfo.GetCultureInfo("vi-VN"))" />
+
+                            <div class="d-flex gap-2 flex-wrap mt-2">
+                                @foreach (var muc in Model.NganSachGoiY)
+                                {
+                                    var nhan = muc % 1_000_000m == 0
+                                        ? (muc / 1_000_000m).ToString("0.##", CultureInfo.GetCultureInfo("vi-VN")) + " triệu"
+                                        : muc.ToString("N0", CultureInfo.GetCultureInfo("vi-VN")) + " đ";
+                                    <button type="button" class="tz-btn tz-btn-outline tz-btn-sm tz-build-budget-preset"
+                                            data-budget="@muc.ToString("0", CultureInfo.InvariantCulture)">@nhan</button>
+                                }
+                            </div>
+
+                            <div class="mt-3 pt-3 border-top">
+                                <span class="small text-muted fw-semibold d-block mb-2">Mục đích sử dụng</span>
+                                <div class="tz-filter-options">
+                                    <label class="tz-filter-radio active">
+                                        <input type="radio" name="tz-build-purpose" value="gaming" checked />
+                                        <span><i class="fa-solid fa-gamepad text-warning me-1"></i> Gaming</span>
+                                    </label>
+                                    <label class="tz-filter-radio">
+                                        <input type="radio" name="tz-build-purpose" value="office" />
+                                        <span><i class="fa-solid fa-briefcase text-warning me-1"></i> Văn phòng / Học tập</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <button type="button" class="tz-btn tz-btn-accent w-100 mt-3" id="tz-build-suggest">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i> Gợi ý cấu hình
+                            </button>
+                            <p class="text-muted small mt-2 mb-0">
+                                Hệ thống chia ngân sách theo tỷ lệ hợp lý, chỉ chọn linh kiện còn hàng và tương thích. Mỗi phương án luôn gồm đủ <strong>7 linh kiện chính</strong>; nếu ngân sách thấp hơn cấu hình rẻ nhất, hệ thống sẽ báo ngân sách tối thiểu.
+                            </p>
+                        </aside>
+                    </div>
+
+                    <div class="col-lg-8">
+                        <div id="tz-build-suggest-message"></div>
+                        <div id="tz-build-suggest-results" class="d-flex flex-column gap-3"></div>
+                        <div id="tz-build-suggest-empty" class="p-4 bg-white border rounded-3 text-center text-muted">
+                            <i class="fa-solid fa-lightbulb fa-2x text-warning mb-2"></i>
+                            <p class="mb-0 small">Nhập ngân sách và bấm <strong>Gợi ý cấu hình</strong> để xem ít nhất 2 phương án phù hợp.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script src="~/js/build-pc.js" asp-append-version="true"></script>
+}

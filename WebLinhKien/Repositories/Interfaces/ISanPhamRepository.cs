@@ -37,6 +37,9 @@ public interface ISanPhamRepository
     /// <summary>Lọc sản phẩm đa tiêu chí kết hợp sắp xếp và phân trang tại SQL Server</summary>
     Task<PagedResult<SanPham>> GetPagedProductsAsync(ProductFilterRequest filter);
 
+    /// <summary>Số sản phẩm của từng lựa chọn lọc thông số trong danh mục đang chọn (khóa dạng "ram_loai:DDR5")</summary>
+    Task<Dictionary<string, int>> GetSpecFacetsAsync(ProductFilterRequest filter);
+
     /// <summary>Gợi ý tìm kiếm nhanh (Live Search) theo từ khóa (tên hoặc mã sản phẩm)</summary>
     Task<IReadOnlyList<SanPham>> SearchSuggestionsAsync(string keyword, int limit = 6);
 

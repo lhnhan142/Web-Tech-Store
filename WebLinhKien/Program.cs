@@ -25,6 +25,8 @@ namespace WebLinhKien
             builder.Services.AddScoped<IDatHangService, DatHangService>();
             builder.Services.AddChatbot(builder.Configuration);   // D: chatbot tư vấn (khóa API trong user-secrets)
 
+            builder.Services.AddScoped<IBuildPcService, BuildPcService>();
+
             // Giới hạn tần suất theo IP cho đặt hàng và lấy mã QR (chống spam đơn hàng): 10 lần mỗi phút
             builder.Services.AddRateLimiter(options =>
             {

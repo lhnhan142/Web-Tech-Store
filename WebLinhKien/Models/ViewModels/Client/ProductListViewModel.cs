@@ -24,6 +24,9 @@ public class ProductListViewModel
     public IReadOnlyList<ThuongHieu> Brands { get; set; } = Array.Empty<ThuongHieu>();
     public IReadOnlyList<ThuongHieuFilterItem> CategoryBrands { get; set; } = Array.Empty<ThuongHieuFilterItem>();
 
+    /// <summary>Số sản phẩm của từng lựa chọn lọc thông số, khóa dạng "khóa:giá trị" (vd: "ram_loai:DDR5")</summary>
+    public IReadOnlyDictionary<string, int> SpecFacets { get; set; } = new Dictionary<string, int>();
+
     public DanhMuc? CurrentCategory { get; set; }
     public ThuongHieu? CurrentBrand { get; set; }
 
@@ -41,6 +44,7 @@ public class ProductListViewModel
         Filter.MinPrice.HasValue ||
         Filter.MaxPrice.HasValue ||
         !string.IsNullOrEmpty(Filter.PriceRange) ||
+        (Filter.Ts != null && Filter.Ts.Count > 0) ||
         Filter.ConHang == true;
 
     /// <summary>Chuyển đổi dữ liệu sang FilterPanelViewModel để dùng chung cho Partial _FilterPanel</summary>
@@ -61,7 +65,9 @@ public class ProductListViewModel
         PageSize = Filter.PageSize,
         PriceErrorMessage = PriceErrorMessage,
         Categories = Categories,
-        CategoryBrands = CategoryBrands
+        CategoryBrands = CategoryBrands,
+        SelectedSpecs = Filter.Ts ?? new List<string>(),
+        SpecFacets = SpecFacets
     };
 }
 

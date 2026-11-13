@@ -1,0 +1,88 @@
+@model WebLinhKien.Models.ViewModels.BuildPc.BuildPcBuoc
+@using System.Globalization
+
+<div class="tz-build-step-card tz-card bg-white border rounded-3 p-3 p-md-4 mb-3" data-step="@Model.MaDanhMuc">
+    <div class="d-flex align-items-start justify-content-between gap-3 mb-2">
+        <div class="d-flex align-items-center gap-2">
+            <span class="tz-build-step-index">@Model.ThuTu</span>
+            <div>
+                <h2 class="h6 fw-bold mb-0">
+                    <i class="fa-solid @Model.Icon text-warning me-1"></i>@Model.Ten
+                    @if (Model.BatBuoc)
+                    {
+                        <span class="text-danger">*</span>
+                    }
+                </h2>
+            </div>
+        </div>
+        <span class="tz-badge @(Model.LinhKiens.Any(x => x.ConHang) ? "tz-badge-success" : "tz-badge-danger")">
+            @Model.LinhKiens.Count(x => x.ConHang) còn hàng
+        </span>
+    </div>
+
+    @if (Model.LinhKiens.Count == 0)
+    {
+        <div class="p-3 bg-light rounded-2 text-center text-muted small border">
+            Chưa có sản phẩm trong nhóm này.
+        </div>
+    }
+    else
+    {
+        <div class="tz-build-searchbar">
+            <div class="tz-build-search">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <label class="visually-hidden" for="tz-build-search-@Model.MaDanhMuc">Tìm @Model.Ten</label>
+                <input type="search" id="tz-build-search-@Model.MaDanhMuc" class="tz-build-search-input"
+                       data-step-search="@Model.MaDanhMuc" autocomplete="off"
+                       placeholder="Tìm @Model.Ten theo tên, hãng hoặc thông số..." />
+                <button type="button" class="tz-build-search-clear d-none"
+                        data-step-search-clear="@Model.MaDanhMuc" aria-label="Xóa từ khóa tìm kiếm">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="tz-build-chips" data-brand-chips="@Model.MaDanhMuc"></div>
+            <p class="tz-build-search-note d-none" data-search-note="@Model.MaDanhMuc" role="status"></p>
+        </div>
+
+        <label class="visually-hidden" for="tz-build-select-@Model.MaDanhMuc">Chọn @Model.Ten</label>
+        <select class="form-select tz-build-select d-none" id="tz-build-select-@Model.MaDanhMuc"
+                data-step="@Model.MaDanhMuc" data-required="@(Model.BatBuoc ? "true" : "false")"
+                aria-label="Chọn @Model.Ten" tabindex="-1">
+            <option value="" data-price="0" data-stock="0">
+                @(Model.BatBuoc ? $"-- Chưa chọn {Model.Ten} --" : "Không chọn tản nhiệt rời (dùng tản theo CPU)")
+            </option>
+            @foreach (var lk in Model.LinhKiens)
+            {
+                <option value="@lk.Uid"
+                        data-price="@lk.GiaBan.ToString("0", CultureInfo.InvariantCulture)"
+                        data-original-price="@lk.GiaGoc.ToString("0", CultureInfo.InvariantCulture)"
+                        data-name="@lk.TenSanPham"
+                        data-brand="@lk.TenThuongHieu"
+                        data-image="@lk.AnhDaiDien"
+                        data-stock="@lk.TonKho"
+                        data-warranty="@lk.BaoHanhThang"
+                        data-socket="@lk.Socket"
+                        data-ram="@lk.LoaiRam"
+                        data-form="@lk.FormFactor"
+                        data-tdp="@lk.TdpW"
+                        data-tieu-thu="@lk.TieuThuW"
+                        data-watt="@lk.CongSuatW"
+                        data-vram="@lk.VramGb"
+                        data-length="@lk.ChieuDaiMm"
+                        data-max-length="@lk.ChieuDaiVgaToiDaMm"
+                        data-forms="@string.Join("|", lk.FormHoTro)"
+                        data-sockets="@string.Join("|", lk.SocketHoTro)"
+                        data-specs="@string.Join("|", lk.ThongSoChinh.Select(t => $"{t.Ten}: {t.GiaTri}"))"
+                        disabled="@(lk.TonKho <= 0)">
+                    @lk.TenSanPham — @lk.GiaBanText@(lk.TonKho <= 0 ? " (Hết hàng)" : "")
+                </option>
+            }
+        </select>
+
+        <p class="tz-build-filter-note d-none" data-filter-note="@Model.MaDanhMuc" role="status"></p>
+
+        <div class="tz-build-picker" data-picker="@Model.MaDanhMuc"></div>
+
+        <div class="tz-build-selected d-none mt-3" data-selected-preview="@Model.MaDanhMuc"></div>
+    }
+</div>

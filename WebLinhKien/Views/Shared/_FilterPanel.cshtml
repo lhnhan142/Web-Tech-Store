@@ -34,9 +34,9 @@
             </a>
         }
     </div>
-
-    <form id="@formId" action="@Model.ActionUrl" method="get">
-        @if (laAdmin)
+    <form id="@formId" action="@Model.ActionUrl" method="get" autocomplete="off">
+        <!-- Giữ lại từ khóa tìm kiếm nếu có -->
+        @if (!string.IsNullOrEmpty(Model.Q))
         {
             <!-- Admin: ô tìm kiếm nằm ngay trong bộ lọc bên trái -->
             <div class="tz-filter-group mb-4">
@@ -124,6 +124,42 @@
                 }
             </div>
         </div>
+
+        @if (!string.IsNullOrEmpty(Model.SelectedDanhMuc))
+        {
+            var specGroups = SpecFilterDefinitions.ForCategory(Model.SelectedDanhMuc);
+            foreach (var sg in specGroups)
+            {
+                <!-- Lọc theo thông số: @sg.Label -->
+                <div class="tz-filter-group mb-4 tz-spec-group">
+                    <h6 class="tz-filter-title">@sg.Label <span class="tz-spec-badge">theo thông số</span></h6>
+                    <div class="tz-filter-options">
+                        @{ var shown = 0; }
+                        @foreach (var opt in sg.Options)
+                        {
+                            var token = sg.Key + ":" + opt.Value;
+                            var isSpecChecked = Model.SelectedSpecs.Any(s => string.Equals(s, token, StringComparison.OrdinalIgnoreCase));
+                            var count = Model.SpecFacets.TryGetValue(token, out var c) ? c : 0;
+                            if (count == 0 && !isSpecChecked) { continue; }
+                            shown++;
+                            <label class="tz-filter-checkbox @(isSpecChecked ? "active" : "") @(shown > 6 && !isSpecChecked ? "tz-spec-extra" : "")">
+                                <input type="checkbox" name="ts" value="@token"
+                                       @(isSpecChecked ? "checked" : "")
+                                       onchange="this.form.submit()" />
+                                <span class="d-flex align-items-center justify-content-between w-100">
+                                    <span>@opt.Label</span>
+                                    <span class="badge bg-light text-muted border fw-normal" style="font-size: 0.75rem;">@count</span>
+                                </span>
+                            </label>
+                        }
+                        @if (shown > 6)
+                        {
+                            <button type="button" class="tz-spec-more" onclick="toggleSpecMore_@(prefix)(this)">Xem thêm</button>
+                        }
+                    </div>
+                </div>
+            }
+        }
 
         @if (Model.ShowPriceFilter)
         {
@@ -221,12 +257,33 @@
     </form>
 </aside>
 
+<style>
+    .tz-spec-badge { font-size: .65rem; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; color: #F97316; background: #FFF7ED; border: 1px solid #FED7AA; border-radius: 999px; padding: 1px 7px; margin-left: 6px; vertical-align: middle; }
+    .tz-spec-group .tz-spec-extra { display: none; }
+    .tz-spec-group.expanded .tz-spec-extra { display: flex; }
+    .tz-spec-more { background: none; border: 0; color: #F97316; font-size: .85rem; font-weight: 600; padding: 4px 0; text-align: left; cursor: pointer; }
+</style>
 <script>
+        // Khi bấm Back, trình duyệt có thể khôi phục lại nút đã chọn cũ -> đưa form về đúng trạng thái server vẽ
+    window.addEventListener('pageshow', function (e) {
+        if (e.persisted) {
+            const form = document.getElementById('@formId');
+            if (form) form.reset();
+        }
+    });
+    function toggleSpecMore_@(prefix)(btn) {
+        const group = btn.closest('.tz-spec-group');
+        if (!group) return;
+        const open = group.classList.toggle('expanded');
+        btn.textContent = open ? 'Thu gọn' : 'Xem thêm';
+    }
+
     function onCategoryChanged_@(prefix)(radio) {
         const form = document.getElementById('@formId');
         if (!form) return;
         const brandRadios = form.querySelectorAll('input[name="thuongHieu"]');
         brandRadios.forEach(r => r.checked = false);
+        form.querySelectorAll('input[name="ts"]').forEach(r => r.checked = false);
         form.submit();
     }
 

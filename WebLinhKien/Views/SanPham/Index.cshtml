@@ -49,7 +49,7 @@
                 }
                 @if (Model.CurrentCategory != null)
                 {
-                    <a href="~/SanPham?@GetQueryWithout("danhMuc", "thuongHieu")" class="tz-filter-pill" title="Bỏ lọc danh mục">
+                    <a href="~/SanPham?@GetQueryWithout("danhMuc", "thuongHieu", "ts")" class="tz-filter-pill" title="Bỏ lọc danh mục">
                         <span>Danh mục: @Model.CurrentCategory.TenDanhMuc</span>
                         <i class="fa-solid fa-xmark ms-1"></i>
                     </a>
@@ -82,6 +82,16 @@
                 {
                     <a href="~/SanPham?@GetQueryWithout("conHang")" class="tz-filter-pill" title="Bỏ lọc tình trạng kho">
                         <span>Chỉ còn hàng</span>
+                        <i class="fa-solid fa-xmark ms-1"></i>
+                    </a>
+                }
+
+                @foreach (var specToken in Model.Filter.Ts ?? new List<string>())
+                {
+                    var specInfo = SpecFilterDefinitions.Describe(Model.Filter.DanhMuc, specToken);
+                    if (specInfo == null) { continue; }
+                    <a href="~/SanPham?@GetQueryWithoutSpec(specToken)" class="tz-filter-pill" title="Bỏ lọc thông số">
+                        <span>@specInfo.Value.Group: @specInfo.Value.Option</span>
                         <i class="fa-solid fa-xmark ms-1"></i>
                     </a>
                 }
@@ -205,6 +215,17 @@
         {
             dict.Remove(k);
         }
+        return string.Join("&", dict.Select(kvp => $"{kvp.Key}={Uri.EscapeDataString(kvp.Value ?? "")}"));
+    }
+
+    // Bỏ một lựa chọn thông số khỏi URL, giữ nguyên các bộ lọc khác
+    string GetQueryWithoutSpec(string token)
+    {
+        var dict = Model.Filter.ToRouteDictionary();
+        var remaining = (Model.Filter.Ts ?? new List<string>())
+            .Where(t => !string.Equals(t, token, StringComparison.OrdinalIgnoreCase))
+            .ToList();
+        if (remaining.Count > 0) dict["ts"] = string.Join(",", remaining); else dict.Remove("ts");
         return string.Join("&", dict.Select(kvp => $"{kvp.Key}={Uri.EscapeDataString(kvp.Value ?? "")}"));
     }
 

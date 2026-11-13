@@ -17,7 +17,7 @@
     <section class="ad-card">
         @for (var i = 0; i < Model.Items.Count; i++)
         {
-            var so = Model.Items[i].Loai != CaiDatLoai.Text;
+            var so = Model.Items[i].Loai is CaiDatLoai.Money or CaiDatLoai.Int;
             <div class="ad-setting">
                 <div>
                     <input type="hidden" asp-for="Items[i].Khoa" />
@@ -28,7 +28,14 @@
                     }
                 </div>
                 <div class="ad-field" style="margin:0">
-                    <input asp-for="Items[i].GiaTri" inputmode="@(so ? "numeric" : "text")" data-digits="@(so ? "1" : null)" class="ad-input" />
+                    @if (so)
+                    {
+                        <input asp-for="Items[i].GiaTri" inputmode="numeric" data-digits="1" class="ad-input" />
+                    }
+                    else
+                    {
+                        <input asp-for="Items[i].GiaTri" inputmode="text" class="ad-input" />
+                    }
                     <span asp-validation-for="Items[i].GiaTri" class="ad-error"></span>
                 </div>
             </div>

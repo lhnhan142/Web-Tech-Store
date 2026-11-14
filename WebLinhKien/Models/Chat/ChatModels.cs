@@ -74,6 +74,12 @@ public class ChatReply
     public ChatState? State { get; set; }
 }
 
+/// <summary>Danh sách sản phẩm (Uid) của một cấu hình để thêm cả bộ vào giỏ hàng.</summary>
+public class ChatCartRequest
+{
+    public List<int> Uids { get; set; } = new();
+}
+
 /// <summary>Cấu hình chatbot, đọc từ mục "Chatbot" (khóa API đặt trong user-secrets, KHÔNG commit).</summary>
 public class ChatbotOptions
 {

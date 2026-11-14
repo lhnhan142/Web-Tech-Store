@@ -33,6 +33,16 @@
     .tzc-build__sum b { color: #dc2626; }
     .tzc-build__notes { margin: 0; padding: 8px 10px 8px 26px; font-size: 12px; color: #92400e; background: #fffbeb; }
 
+    .tzc-build__actions { display: flex; flex-wrap: wrap; gap: 6px; padding: 8px 10px; border-top: 1px solid #f1f5f9; background: #fff; }
+    .tzc-btn { border: 1px solid #0f172a; background: #fff; color: #0f172a; border-radius: 8px; padding: 7px 12px; font-size: 13px; font-weight: 600; cursor: pointer; }
+    .tzc-btn:hover { background: #f1f5f9; }
+    .tzc-btn--primary { background: #f59e0b; border-color: #f59e0b; color: #fff; }
+    .tzc-btn--primary:hover { background: #d97706; }
+    .tzc-btn:disabled { opacity: .55; cursor: default; }
+    .tzc-build__status { padding: 0 10px 8px; font-size: 12.5px; color: #166534; }
+    .tzc-build__status a { color: #b45309; font-weight: 600; }
+    .tzc-build__status.is-error { color: #b91c1c; }
+
     .tzc-form { display: flex; gap: 6px; padding: 10px; border-top: 1px solid #e2e8f0; }
     .tzc-form input { flex: 1; padding: 8px 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; }
     .tzc-form button { padding: 0 14px; border: 0; border-radius: 8px; background: #0f172a; color: #fff; cursor: pointer; }
@@ -104,7 +114,51 @@
             b.notes.forEach(function (n) { ul.appendChild(el('li', null, n)); });
             w.appendChild(ul);
         }
+
+        // Thêm cả bộ vào giỏ / đặt hàng ngay (giá và tồn kho được server kiểm lại khi thêm)
+        var uids = (b.items || []).map(function (it) { return it.card.uid; });
+        var actions = el('div', 'tzc-build__actions');
+        var status = el('div', 'tzc-build__status');
+        status.hidden = true;
+        var addBtn = el('button', 'tzc-btn', 'Thêm cả bộ vào giỏ'); addBtn.type = 'button';
+        var buyBtn = el('button', 'tzc-btn tzc-btn--primary', 'Đặt hàng ngay'); buyBtn.type = 'button';
+        addBtn.addEventListener('click', function () { addBuild(uids, false, [addBtn, buyBtn], status); });
+        buyBtn.addEventListener('click', function () { addBuild(uids, true, [addBtn, buyBtn], status); });
+        actions.appendChild(addBtn); actions.appendChild(buyBtn);
+        w.appendChild(actions); w.appendChild(status);
         return w;
+    }
+
+    function addBuild(uids, goCheckout, buttons, status) {
+        buttons.forEach(function (b) { b.disabled = true; });
+        status.hidden = false; status.className = 'tzc-build__status'; status.textContent = 'Đang thêm vào giỏ hàng...';
+        var tokenEl = document.querySelector('#tz-antiforgery-form input[name="__RequestVerificationToken"]');
+
+        fetch('/Chat/ThemBoVaoGio', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'RequestVerificationToken': tokenEl ? tokenEl.value : '' },
+            body: JSON.stringify({ uids: uids })
+        }).then(function (r) {
+            if (r.status === 429) throw new Error('Bạn thao tác hơi nhanh, vui lòng thử lại sau ít phút.');
+            return r.json().then(function (d) { return { ok: r.ok, d: d }; });
+        }).then(function (res) {
+            var d = res.d;
+            if (!res.ok || !d.success) throw new Error(d.message || 'Không thêm được vào giỏ hàng, vui lòng thử lại.');
+            var badge = document.getElementById('tz-header-cart-count');
+            if (badge && d.totalCount !== undefined) badge.textContent = d.totalCount;
+
+            if (goCheckout) { window.location.href = d.redirectUrl || '/DatHang'; return; }
+            status.textContent = 'Đã thêm ' + d.added + ' linh kiện vào giỏ hàng. ';
+            var a = el('a', null, 'Xem giỏ hàng và đặt hàng →'); a.href = d.redirectUrl || '/DatHang';
+            status.appendChild(a);
+            if (d.skipped && d.skipped.length) {
+                status.appendChild(document.createElement('br'));
+                status.appendChild(document.createTextNode('Không thêm được (hết hàng): ' + d.skipped.join(', ')));
+            }
+        }).catch(function (err) {
+            status.className = 'tzc-build__status is-error';
+            status.textContent = err.message;
+        }).finally(function () { buttons.forEach(function (b) { b.disabled = false; }); });
     }
 
     function choices(list) {

@@ -233,7 +233,7 @@ Các loại message dự kiến: `NEW_ORDER` (đơn mới), `LOW_STOCK` (sắp h
 
 Khung chat nổi ở góc phải trang khách hàng, hỏi từng bước (bấm nút hoặc gõ tự do):
 
-- **Ghép cấu hình PC**: chọn mục đích (văn phòng, gaming, đồ họa) và ngân sách (ví dụ "gaming 15 triệu"). Cấu hình gồm CPU, mainboard, RAM, VGA (trừ máy văn phòng), SSD, nguồn, case và tản nhiệt nếu còn ngân sách; tổng tiền không vượt ngân sách và đã kiểm tra tương thích (socket, loại RAM, kích thước case, độ dài card, công suất nguồn). Ngân sách quá thấp thì hiển thị cấu hình rẻ nhất hiện có và ghi rõ phần vượt.
+- **Ghép cấu hình PC**: chọn mục đích (văn phòng, gaming, đồ họa) và ngân sách (ví dụ "gaming 15 triệu"). Cấu hình gồm CPU, mainboard, RAM, VGA (trừ máy văn phòng), SSD, nguồn, case và tản nhiệt nếu còn ngân sách; tổng tiền không vượt ngân sách và đã kiểm tra tương thích (socket, loại RAM, kích thước case, độ dài card, công suất nguồn). Ngân sách quá thấp thì hiển thị cấu hình rẻ nhất hiện có và ghi rõ phần vượt. Dưới cấu hình có hai nút: "Thêm cả bộ vào giỏ" và "Đặt hàng ngay" (chuyển tới trang đặt hàng); giá và tồn kho được kiểm lại ở server khi thêm, món hết hàng thì bỏ qua và báo lại.
 - **Tìm linh kiện**: chọn loại (CPU, RAM, VGA...), mức giá (dưới X, từ X đến Y, trên X) và hãng, ví dụ "ram kingston dưới 2 triệu".
 - Hai chế độ trên tính bằng code (không nhờ AI tính tiền), nên đúng giá, đúng tồn kho và chạy được khi chưa có khóa API. Câu hỏi tự do khác nhờ mô hình AI, chỉ được chọn trong sản phẩm thật; mã sản phẩm AI trả về luôn được kiểm lại với database.
 

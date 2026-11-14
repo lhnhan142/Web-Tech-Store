@@ -231,7 +231,15 @@ Các loại message dự kiến: `NEW_ORDER` (đơn mới), `LOW_STOCK` (sắp h
 
 ## Chatbot tư vấn (thành viên D)
 
-Khung chat nổi ở góc phải trang khách hàng. Server tìm sản phẩm còn hàng trong database rồi nhờ mô hình AI chọn trong danh sách đó; mã sản phẩm mô hình trả về luôn được kiểm lại với database. Không có khóa API thì chatbot vẫn gợi ý theo luật đơn giản.
+Khung chat nổi ở góc phải trang khách hàng, hỏi từng bước (bấm nút hoặc gõ tự do):
+
+- **Ghép cấu hình PC**: chọn mục đích (văn phòng, gaming, đồ họa) và ngân sách (ví dụ "gaming 15 triệu"). Cấu hình gồm CPU, mainboard, RAM, VGA (trừ máy văn phòng), SSD, nguồn, case và tản nhiệt nếu còn ngân sách; tổng tiền không vượt ngân sách và đã kiểm tra tương thích (socket, loại RAM, kích thước case, độ dài card, công suất nguồn). Ngân sách quá thấp thì hiển thị cấu hình rẻ nhất hiện có và ghi rõ phần vượt.
+- **Tìm linh kiện**: chọn loại (CPU, RAM, VGA...), mức giá (dưới X, từ X đến Y, trên X) và hãng, ví dụ "ram kingston dưới 2 triệu".
+- Hai chế độ trên tính bằng code (không nhờ AI tính tiền), nên đúng giá, đúng tồn kho và chạy được khi chưa có khóa API. Câu hỏi tự do khác nhờ mô hình AI, chỉ được chọn trong sản phẩm thật; mã sản phẩm AI trả về luôn được kiểm lại với database.
+
+Việc ghép cấu hình đọc thông số theo quy ước trong bảng `ThongSoKyThuats` (Socket, TDP, Loại RAM, Form factor, Công suất, Chiều dài VGA...), thiếu thông số thì dùng tên sản phẩm để đoán.
+
+Khóa API (chỉ cần cho câu hỏi tự do):
 
 ```
 cd WebLinhKien
@@ -239,4 +247,4 @@ dotnet user-secrets set "Chatbot:ApiKey" "<khóa API>"
 # tùy chọn: dotnet user-secrets set "Chatbot:Model" "claude-haiku-5-5"
 ```
 
-Không đưa khóa API vào `appsettings*.json`. Giới hạn 8 câu hỏi/phút/IP.
+Không đưa khóa API vào `appsettings*.json`. Giới hạn 20 lượt hỏi (kể cả bấm nút) mỗi phút cho mỗi IP.

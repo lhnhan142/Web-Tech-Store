@@ -14,11 +14,11 @@ public static class ChatServiceExtensions
         services.Configure<ChatbotOptions>(config.GetSection("Chatbot"));
         services.AddHttpClient<IChatService, ChatService>(c => c.Timeout = TimeSpan.FromSeconds(25));
 
-        // Giới hạn 8 câu hỏi mỗi phút cho mỗi IP để tránh lạm dụng khóa API
+        // Giới hạn 20 câu hỏi (kể cả bấm nút) mỗi phút cho mỗi IP để tránh lạm dụng khóa API
         services.AddRateLimiter(o => o.AddPolicy("chat", ctx =>
             RateLimitPartition.GetFixedWindowLimiter(
                 ctx.Connection.RemoteIpAddress?.ToString() ?? "unknown",
-                _ => new FixedWindowRateLimiterOptions { PermitLimit = 8, Window = TimeSpan.FromMinutes(1) })));
+                _ => new FixedWindowRateLimiterOptions { PermitLimit = 20, Window = TimeSpan.FromMinutes(1) })));
         return services;
     }
 }

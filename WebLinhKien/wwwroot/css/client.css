@@ -2163,3 +2163,29 @@ img {
         padding-right: 3.5rem;
     }
 }
+
+/* =====================================================================
+   SỬA VỠ THANH ĐIỀU HƯỚNG: chữ không được xuống dòng, phần dư thì thu gọn dần
+   (trước đây nút "DANH MỤC LINH KIỆN" và "Trang chủ" bị bẻ thành 2-3 dòng khi hết chỗ)
+   ===================================================================== */
+.tz-megamenu-toggle { white-space: nowrap; flex-shrink: 0; }
+.tz-nav-menu { flex: 0 0 auto; flex-wrap: nowrap; }
+.tz-nav-item { flex-shrink: 0; }
+.tz-nav-link { white-space: nowrap; }
+
+/* Số hotline: nhường chỗ trước, cắt bớt thay vì làm các mục khác xuống dòng */
+.tz-nav-hotline { display: none; align-items: center; gap: 0.5rem; font-size: 0.875rem; flex: 0 1 auto; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.tz-nav-hotline__label { display: none; }
+@media (min-width: 1200px) { .tz-nav-hotline { display: flex; } }
+
+/* Hết chỗ cho biểu tượng thì bỏ biểu tượng ở các mục menu (giữ chữ) */
+@media (max-width: 1359px) {
+    .tz-nav-link > i:first-child { display: none; }
+    .tz-nav-link { padding-left: 0.7rem; padding-right: 0.7rem; }
+}
+/* Màn hình hẹp: thu nhỏ nút danh mục */
+@media (max-width: 1099px) {
+    .tz-megamenu-toggle { padding: 0 0.9rem; gap: 0.5rem; font-size: 0.8125rem; }
+    .tz-megamenu-toggle .ms-auto { display: none; }
+    .tz-nav-link { padding-left: 0.5rem; padding-right: 0.5rem; font-size: 0.8125rem; }
+}
